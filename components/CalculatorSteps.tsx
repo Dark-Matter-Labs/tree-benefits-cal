@@ -159,13 +159,13 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                 >
                   <option value="small">
-                    {t("Small (&lt;25k)", "Petite (&lt;25k)")}
+                    {t("Small (<25k)", "Petite (<25k)")}
                   </option>
                   <option value="medium">
                     {t("Medium (25k–200k)", "Moyenne (25k–200k)")}
                   </option>
                   <option value="large">
-                    {t("Large (&gt;200k)", "Grande (&gt;200k)")}
+                    {t("Large (>200k)", "Grande (>200k)")}
                   </option>
                 </select>
               </div>
