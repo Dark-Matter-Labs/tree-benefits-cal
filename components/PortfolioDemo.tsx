@@ -1,5 +1,9 @@
 "use client";
 
+import { useState, useMemo } from "react";
+import Map, { Marker, Popup } from "react-map-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+
 type Language = "en" | "fr";
 
 interface PortfolioDemoProps {
@@ -14,6 +18,9 @@ type RegionKey =
   | "bc"
   | "territories";
 
+type Typology = "urban-forest" | "riparian" | "street-trees" | "park-restoration" | "green-infrastructure";
+type Stage = "planning" | "approved" | "planting" | "monitoring" | "completed";
+
 interface MockProject {
   id: string;
   name: string;
@@ -21,10 +28,14 @@ interface MockProject {
   province: string;
   region: RegionKey;
   size: "small" | "medium" | "large";
+  typology: Typology;
+  stage: Stage;
   year: number;
   trees: number;
   carbonTonnes: number;
   stormwaterLitres: number;
+  lat: number;
+  lng: number;
 }
 
 const mockProjects: MockProject[] = [
@@ -35,10 +46,14 @@ const mockProjects: MockProject[] = [
     province: "NS",
     region: "atlantic",
     size: "medium",
+    typology: "urban-forest",
+    stage: "planting",
     year: 2025,
     trees: 750,
     carbonTonnes: 15,
-    stormwaterLitres: 2200000
+    stormwaterLitres: 2200000,
+    lat: 44.6488,
+    lng: -63.5752
   },
   {
     id: "p2",
@@ -47,10 +62,14 @@ const mockProjects: MockProject[] = [
     province: "QC",
     region: "quebec",
     size: "large",
+    typology: "street-trees",
+    stage: "approved",
     year: 2025,
     trees: 1200,
     carbonTonnes: 24,
-    stormwaterLitres: 3800000
+    stormwaterLitres: 3800000,
+    lat: 45.5017,
+    lng: -73.5673
   },
   {
     id: "p3",
@@ -59,10 +78,14 @@ const mockProjects: MockProject[] = [
     province: "SK",
     region: "prairies",
     size: "medium",
+    typology: "riparian",
+    stage: "monitoring",
     year: 2024,
     trees: 600,
     carbonTonnes: 12,
-    stormwaterLitres: 1900000
+    stormwaterLitres: 1900000,
+    lat: 52.1332,
+    lng: -106.6700
   },
   {
     id: "p4",
@@ -71,10 +94,14 @@ const mockProjects: MockProject[] = [
     province: "BC",
     region: "bc",
     size: "large",
+    typology: "urban-forest",
+    stage: "completed",
     year: 2025,
     trees: 1500,
     carbonTonnes: 30,
-    stormwaterLitres: 4500000
+    stormwaterLitres: 4500000,
+    lat: 49.2827,
+    lng: -123.1207
   },
   {
     id: "p5",
@@ -83,10 +110,126 @@ const mockProjects: MockProject[] = [
     province: "PE",
     region: "atlantic",
     size: "small",
+    typology: "street-trees",
+    stage: "planting",
     year: 2024,
     trees: 120,
     carbonTonnes: 3,
-    stormwaterLitres: 450000
+    stormwaterLitres: 450000,
+    lat: 46.2382,
+    lng: -63.1311
+  },
+  {
+    id: "p6",
+    name: "Riverside Park Enhancement",
+    municipality: "Toronto",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "park-restoration",
+    stage: "approved",
+    year: 2025,
+    trees: 2000,
+    carbonTonnes: 40,
+    stormwaterLitres: 6000000,
+    lat: 43.6532,
+    lng: -79.3832
+  },
+  {
+    id: "p7",
+    name: "Community Green Corridor",
+    municipality: "Calgary",
+    province: "AB",
+    region: "prairies",
+    size: "medium",
+    typology: "green-infrastructure",
+    stage: "planning",
+    year: 2025,
+    trees: 850,
+    carbonTonnes: 17,
+    stormwaterLitres: 2500000,
+    lat: 51.0447,
+    lng: -114.0719
+  },
+  {
+    id: "p8",
+    name: "Wetland Edge Restoration",
+    municipality: "Winnipeg",
+    province: "MB",
+    region: "prairies",
+    size: "medium",
+    typology: "riparian",
+    stage: "monitoring",
+    year: 2024,
+    trees: 450,
+    carbonTonnes: 9,
+    stormwaterLitres: 1400000,
+    lat: 49.8951,
+    lng: -97.1384
+  },
+  {
+    id: "p9",
+    name: "Indigenous Community Forest",
+    municipality: "Whitehorse",
+    province: "YT",
+    region: "territories",
+    size: "small",
+    typology: "urban-forest",
+    stage: "planting",
+    year: 2025,
+    trees: 200,
+    carbonTonnes: 4,
+    stormwaterLitres: 600000,
+    lat: 60.7212,
+    lng: -135.0568
+  },
+  {
+    id: "p10",
+    name: "Boulevard Canopy Expansion",
+    municipality: "Ottawa",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "street-trees",
+    stage: "completed",
+    year: 2024,
+    trees: 1800,
+    carbonTonnes: 36,
+    stormwaterLitres: 5400000,
+    lat: 45.4215,
+    lng: -75.6972
+  },
+  {
+    id: "p11",
+    name: "Coastal Buffer Zone",
+    municipality: "St. John's",
+    province: "NL",
+    region: "atlantic",
+    size: "small",
+    typology: "riparian",
+    stage: "approved",
+    year: 2025,
+    trees: 180,
+    carbonTonnes: 4,
+    stormwaterLitres: 550000,
+    lat: 47.5615,
+    lng: -52.7126
+  },
+  {
+    id: "p12",
+    name: "Urban Heat Island Mitigation",
+    municipality: "Edmonton",
+    province: "AB",
+    region: "prairies",
+    size: "large",
+    typology: "green-infrastructure",
+    stage: "planning",
+    year: 2025,
+    trees: 1600,
+    carbonTonnes: 32,
+    stormwaterLitres: 4800000,
+    lat: 53.5461,
+    lng: -113.4938
   }
 ];
 
@@ -126,172 +269,305 @@ const regionLabels: Record<
   }
 };
 
+const typologyLabels: Record<Typology, { en: string; fr: string }> = {
+  "urban-forest": { en: "Urban forest", fr: "Forêt urbaine" },
+  "riparian": { en: "Riparian buffer", fr: "Zone tampon riveraine" },
+  "street-trees": { en: "Street trees", fr: "Arbres de rue" },
+  "park-restoration": { en: "Park restoration", fr: "Restauration de parc" },
+  "green-infrastructure": { en: "Green infrastructure", fr: "Infrastructure verte" }
+};
+
+const stageLabels: Record<Stage, { en: string; fr: string }> = {
+  "planning": { en: "Planning", fr: "Planification" },
+  "approved": { en: "Approved", fr: "Approuvé" },
+  "planting": { en: "Planting", fr: "Plantation" },
+  "monitoring": { en: "Monitoring", fr: "Surveillance" },
+  "completed": { en: "Completed", fr: "Terminé" }
+};
+
 export function PortfolioDemo({ language }: PortfolioDemoProps) {
   const t = (en: string, fr: string) => (language === "fr" ? fr : en);
 
-  const totalProjects = mockProjects.length;
-  const totalTrees = mockProjects.reduce((sum, p) => sum + p.trees, 0);
-  const totalCarbon = mockProjects.reduce(
-    (sum, p) => sum + p.carbonTonnes,
-    0
-  );
-  const totalStormwater = mockProjects.reduce(
-    (sum, p) => sum + p.stormwaterLitres,
-    0
-  );
+  const [selectedRegion, setSelectedRegion] = useState<RegionKey | "all">("all");
+  const [selectedTypology, setSelectedTypology] = useState<Typology | "all">("all");
+  const [selectedSize, setSelectedSize] = useState<"small" | "medium" | "large" | "all">("all");
+  const [selectedStage, setSelectedStage] = useState<Stage | "all">("all");
+  const [selectedProject, setSelectedProject] = useState<MockProject | null>(null);
+  const [viewState, setViewState] = useState({
+    longitude: -95,
+    latitude: 55,
+    zoom: 3.5
+  });
+
+  const filteredProjects = useMemo(() => {
+    return mockProjects.filter(p => {
+      if (selectedRegion !== "all" && p.region !== selectedRegion) return false;
+      if (selectedTypology !== "all" && p.typology !== selectedTypology) return false;
+      if (selectedSize !== "all" && p.size !== selectedSize) return false;
+      if (selectedStage !== "all" && p.stage !== selectedStage) return false;
+      return true;
+    });
+  }, [selectedRegion, selectedTypology, selectedSize, selectedStage]);
+
+  const totalProjects = filteredProjects.length;
+  const totalTrees = filteredProjects.reduce((sum, p) => sum + p.trees, 0);
+  const totalCarbon = filteredProjects.reduce((sum, p) => sum + p.carbonTonnes, 0);
+  const totalStormwater = filteredProjects.reduce((sum, p) => sum + p.stormwaterLitres, 0);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-6 space-y-5">
-      <section className="grid gap-4 md:grid-cols-[2fr,1.4fr] items-start">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 shadow-md">
-          <h2 className="text-sm font-semibold text-slate-900 mb-1">
-            {t(
-              "National portfolio snapshot (demo)",
-              "Aperçu national du portefeuille (démo)"
-            )}
-          </h2>
-          <p className="text-xs text-slate-600 mb-4">
-            {t(
-              "Mock view of how FCM could see aggregated impacts across funded projects.",
-              "Vue fictive de la façon dont le FCM pourrait voir les impacts agrégés des projets financés."
-            )}
-          </p>
+    <main className="mx-auto max-w-[1600px] px-4 py-6 space-y-5">
+      {/* Summary Stats */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 shadow-md">
+        <h2 className="text-sm font-semibold text-slate-900 mb-1">
+          {t(
+            "National portfolio snapshot (demo)",
+            "Aperçu national du portefeuille (démo)"
+          )}
+        </h2>
+        <p className="text-xs text-slate-600 mb-4">
+          {t(
+            "Mock view of how FCM could see aggregated impacts across funded projects.",
+            "Vue fictive de la façon dont le FCM pourrait voir les impacts agrégés des projets financés."
+          )}
+        </p>
 
-          <div className="grid gap-3 sm:grid-cols-4">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-              <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                {t("Projects", "Projets")}
-              </div>
-              <div className="mt-1 text-lg font-bold text-slate-900">
-                {totalProjects}
-              </div>
+        <div className="grid gap-3 sm:grid-cols-4">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+              {t("Projects", "Projets")}
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-              <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                {t("Trees & shrubs", "Arbres et arbustes")}
-              </div>
-              <div className="mt-1 text-lg font-bold text-slate-900">
-                {totalTrees.toLocaleString()}
-              </div>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-              <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                {t("Carbon (tCO₂e/yr)", "Carbone (tCO₂e/an)")}
-              </div>
-              <div className="mt-1 text-lg font-bold text-slate-900">
-                {totalCarbon.toLocaleString(undefined, {
-                  maximumFractionDigits: 0
-                })}
-              </div>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-              <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                {t("Stormwater (L/yr)", "Eaux pluviales (L/an)")}
-              </div>
-              <div className="mt-1 text-lg font-bold text-slate-900">
-                {(totalStormwater / 1_000_000).toLocaleString(undefined, {
-                  maximumFractionDigits: 1
-                })}{" "}
-                M
-              </div>
+            <div className="mt-1 text-lg font-bold text-slate-900">
+              {totalProjects}
             </div>
           </div>
-
-          <div className="mt-6">
-            <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
-              {t(
-                "Regional distribution",
-                "Répartition régionale (symbolique)"
-              )}
-            </h3>
-            <div className="relative h-44 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white overflow-hidden flex items-end justify-stretch shadow-sm">
-              {(
-                Object.keys(regionLabels) as Array<keyof typeof regionLabels>
-              ).map(region => {
-                const sumTrees = mockProjects
-                  .filter(p => p.region === region)
-                  .reduce((s, p) => s + p.trees, 0);
-                const share =
-                  totalTrees === 0 ? 0 : Math.max(0.05, sumTrees / totalTrees);
-                return (
-                  <div
-                    key={region}
-                    className="flex-1 flex flex-col justify-end items-center h-full"
-                  >
-                    <div
-                      className={`w-8 rounded-t-full bg-gradient-to-t ${regionLabels[region].color} shadow-[0_0_15px_rgba(0,0,0,0.6)] transition-all`}
-                      style={{ height: `${share * 100}%` }}
-                    />
-                    <div className="mt-2 text-[10px] text-slate-700 text-center px-1 font-medium">
-                      {language === "fr"
-                        ? regionLabels[region].fr
-                        : regionLabels[region].en}
-                    </div>
-                  </div>
-                );
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+              {t("Trees & shrubs", "Arbres et arbustes")}
+            </div>
+            <div className="mt-1 text-lg font-bold text-slate-900">
+              {totalTrees.toLocaleString()}
+            </div>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+              {t("Carbon (tCO₂e/yr)", "Carbone (tCO₂e/an)")}
+            </div>
+            <div className="mt-1 text-lg font-bold text-slate-900">
+              {totalCarbon.toLocaleString(undefined, {
+                maximumFractionDigits: 0
               })}
             </div>
-            <p className="mt-2 text-[11px] text-slate-600 italic">
-              {t(
-                "In production, this could drive both a PowerBI dashboard and a public map of funded projects.",
-                "En production, cela pourrait alimenter à la fois un tableau de bord PowerBI et une carte publique des projets financés."
-              )}
-            </p>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+              {t("Stormwater (L/yr)", "Eaux pluviales (L/an)")}
+            </div>
+            <div className="mt-1 text-lg font-bold text-slate-900">
+              {(totalStormwater / 1_000_000).toLocaleString(undefined, {
+                maximumFractionDigits: 1
+              })}{" "}
+              M
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 h-full shadow-md">
-          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
-            {t("Project list (demo data)", "Liste de projets (données démo)")}
-          </h3>
-          <div className="space-y-2 max-h-72 overflow-auto pr-2 custom-scrollbar text-xs">
-            {mockProjects.map(p => (
-              <div
-                key={p.id}
-                className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 shadow-sm hover:shadow-md transition"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="font-medium text-slate-900 truncate">
-                    {p.name}
-                  </div>
-                  <span className="rounded-full bg-primary-100 border border-primary-200 px-2 py-0.5 text-[10px] text-primary-700 font-medium">
-                    {p.year}
-                  </span>
-                </div>
-                <div className="mt-0.5 text-[11px] text-slate-600 flex justify-between">
-                  <span>
-                    {p.municipality}, {p.province}
-                  </span>
-                  <span className="capitalize text-slate-600 font-medium">
-                    {p.size === "small"
-                      ? t("Small", "Petite")
-                      : p.size === "medium"
-                      ? t("Medium", "Moyenne")
-                      : t("Large", "Grande")}
-                  </span>
-                </div>
-                <div className="mt-1 flex items-center justify-between text-[11px] text-slate-700">
-                  <span>
-                    🌲 {p.trees.toLocaleString()}{" "}
-                    {t("trees", "arbres")}
-                  </span>
-                  <span>
-                    CO₂: {p.carbonTonnes.toLocaleString()} t /{" "}
-                    {t("yr", "an")}
-                  </span>
-                </div>
-              </div>
-            ))}
+      {/* Filters */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-md">
+        <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
+          {t("Filter projects", "Filtrer les projets")}
+        </h3>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <label className="text-[11px] font-medium text-slate-700 block mb-1.5">
+              {t("Region", "Région")}
+            </label>
+            <select
+              value={selectedRegion}
+              onChange={e => setSelectedRegion(e.target.value as RegionKey | "all")}
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+            >
+              <option value="all">{t("All regions", "Toutes les régions")}</option>
+              {Object.entries(regionLabels).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {language === "fr" ? label.fr : label.en}
+                </option>
+              ))}
+            </select>
           </div>
-          <p className="mt-3 text-[11px] text-slate-600 italic">
-            {t(
-              "Workshop talking point: ask how FCM staff would want to filter (by region, typology, year, equity) before building the real integration.",
-              "Point de discussion pour l’atelier : demander comment le personnel du FCM souhaiterait filtrer (par région, typologie, année, équité) avant de bâtir l’intégration réelle."
+
+          <div>
+            <label className="text-[11px] font-medium text-slate-700 block mb-1.5">
+              {t("Typology", "Typologie")}
+            </label>
+            <select
+              value={selectedTypology}
+              onChange={e => setSelectedTypology(e.target.value as Typology | "all")}
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+            >
+              <option value="all">{t("All types", "Tous les types")}</option>
+              {Object.entries(typologyLabels).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {language === "fr" ? label.fr : label.en}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-[11px] font-medium text-slate-700 block mb-1.5">
+              {t("Community size", "Taille de la communauté")}
+            </label>
+            <select
+              value={selectedSize}
+              onChange={e => setSelectedSize(e.target.value as typeof selectedSize)}
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+            >
+              <option value="all">{t("All sizes", "Toutes les tailles")}</option>
+              <option value="small">{t("Small", "Petite")}</option>
+              <option value="medium">{t("Medium", "Moyenne")}</option>
+              <option value="large">{t("Large", "Grande")}</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-[11px] font-medium text-slate-700 block mb-1.5">
+              {t("Stage", "Étape")}
+            </label>
+            <select
+              value={selectedStage}
+              onChange={e => setSelectedStage(e.target.value as Stage | "all")}
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+            >
+              <option value="all">{t("All stages", "Toutes les étapes")}</option>
+              {Object.entries(stageLabels).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {language === "fr" ? label.fr : label.en}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Map and List Layout */}
+      <section className="grid gap-4 lg:grid-cols-[1.2fr,1fr] items-start">
+        {/* Map */}
+        <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-md" style={{ height: "600px" }}>
+          <Map
+            {...viewState}
+            onMove={evt => setViewState(evt.viewState)}
+            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"}
+            style={{ width: "100%", height: "100%" }}
+            mapStyle="mapbox://styles/mapbox/light-v11"
+          >
+            {filteredProjects.map(p => (
+              <Marker
+                key={p.id}
+                longitude={p.lng}
+                latitude={p.lat}
+                anchor="bottom"
+                onClick={() => setSelectedProject(p)}
+              >
+                <div className="cursor-pointer">
+                  <div className="w-6 h-6 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">🌲</span>
+                  </div>
+                </div>
+              </Marker>
+            ))}
+
+            {selectedProject && (
+              <Popup
+                longitude={selectedProject.lng}
+                latitude={selectedProject.lat}
+                anchor="bottom"
+                onClose={() => setSelectedProject(null)}
+                closeButton={true}
+                closeOnClick={false}
+              >
+                <div className="p-2 text-xs">
+                  <div className="font-semibold text-slate-900 mb-1">
+                    {selectedProject.name}
+                  </div>
+                  <div className="text-slate-600 mb-1">
+                    {selectedProject.municipality}, {selectedProject.province}
+                  </div>
+                  <div className="text-slate-600">
+                    🌲 {selectedProject.trees.toLocaleString()} {t("trees", "arbres")}
+                  </div>
+                </div>
+              </Popup>
             )}
-          </p>
+          </Map>
+        </div>
+
+        {/* Project List */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 shadow-md">
+          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
+            {t("Project list", "Liste de projets")} ({totalProjects})
+          </h3>
+          <div className="space-y-2 max-h-[540px] overflow-auto pr-2 custom-scrollbar text-xs">
+            {filteredProjects.length === 0 ? (
+              <div className="text-center py-8 text-slate-500 text-sm">
+                {t("No projects match the selected filters.", "Aucun projet ne correspond aux filtres sélectionnés.")}
+              </div>
+            ) : (
+              filteredProjects.map(p => (
+                <div
+                  key={p.id}
+                  className={`rounded-xl border px-3 py-2 shadow-sm hover:shadow-md transition cursor-pointer ${
+                    selectedProject?.id === p.id
+                      ? "border-primary-500 bg-primary-50"
+                      : "border-slate-200 bg-slate-50"
+                  }`}
+                  onClick={() => setSelectedProject(p)}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="font-medium text-slate-900 truncate">
+                      {p.name}
+                    </div>
+                    <span className="rounded-full bg-primary-100 border border-primary-200 px-2 py-0.5 text-[10px] text-primary-700 font-medium flex-shrink-0">
+                      {p.year}
+                    </span>
+                  </div>
+                  <div className="mt-0.5 text-[11px] text-slate-600 flex justify-between">
+                    <span>
+                      {p.municipality}, {p.province}
+                    </span>
+                    <span className="capitalize text-slate-600 font-medium">
+                      {p.size === "small"
+                        ? t("Small", "Petite")
+                        : p.size === "medium"
+                        ? t("Medium", "Moyenne")
+                        : t("Large", "Grande")}
+                    </span>
+                  </div>
+                  <div className="mt-1 flex items-center justify-between text-[11px] text-slate-700">
+                    <span>
+                      🌲 {p.trees.toLocaleString()}{" "}
+                      {t("trees", "arbres")}
+                    </span>
+                    <span>
+                      CO₂: {p.carbonTonnes.toLocaleString()} t /{" "}
+                      {t("yr", "an")}
+                    </span>
+                  </div>
+                  <div className="mt-1 flex items-center gap-2 text-[10px] text-slate-500">
+                    <span>
+                      {language === "fr" ? typologyLabels[p.typology].fr : typologyLabels[p.typology].en}
+                    </span>
+                    <span>•</span>
+                    <span>
+                      {language === "fr" ? stageLabels[p.stage].fr : stageLabels[p.stage].en}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </section>
     </main>
   );
 }
-
