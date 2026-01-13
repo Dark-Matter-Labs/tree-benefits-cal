@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import Map, { Marker, Popup } from "react-map-gl";
+import { useState, useMemo, useRef, useEffect } from "react";
+import Map, { Marker, Popup, MapRef } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 type Language = "en" | "fr";
@@ -296,6 +296,8 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
   const [selectedSize, setSelectedSize] = useState<"small" | "medium" | "large" | "all">("all");
   const [selectedStage, setSelectedStage] = useState<Stage | "all">("all");
   const [selectedProject, setSelectedProject] = useState<MockProject | null>(null);
+  const [activeMapLayer, setActiveMapLayer] = useState<"temperature" | "canopy" | "indigenous" | null>(null);
+  const mapRef = useRef<MapRef>(null);
   const [viewState, setViewState] = useState({
     longitude: -95,
     latitude: 55,
@@ -333,6 +335,325 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
       : averageTreesPerProject > 300
       ? t("moderate", "modéré")
       : t("emerging", "émergent");
+
+  // Manage map layers
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    const map = mapRef.current.getMap();
+    
+    // Wait for map to be loaded
+    if (!map.loaded()) {
+      const onLoad = () => {
+        updateLayers();
+      };
+      map.on("load", onLoad);
+      return () => {
+        map.off("load", onLoad);
+      };
+    }
+
+    updateLayers();
+
+    function updateLayers() {
+      // Remove existing overlay layers
+      const existingLayers = ["temperature-layer", "canopy-layer", "indigenous-layer"];
+      const existingSources = ["temperature-source", "canopy-source", "indigenous-source"];
+      
+      existingLayers.forEach(layerId => {
+        if (map.getLayer(layerId)) {
+          map.removeLayer(layerId);
+        }
+      });
+      
+      existingSources.forEach(sourceId => {
+        if (map.getSource(sourceId)) {
+          map.removeSource(sourceId);
+        }
+      });
+
+      if (!activeMapLayer) return;
+
+      let sourceId: string;
+      let layerId: string;
+      let data: any;
+
+      if (activeMapLayer === "temperature") {
+        sourceId = "temperature-source";
+        layerId = "temperature-layer";
+        // Create placeholder temperature data with regional variation
+        // Different regions have different temperature values (in Celsius)
+        data = {
+          type: "FeatureCollection" as const,
+          features: [
+            // Northern regions (cold)
+            {
+              type: "Feature" as const,
+              properties: { temperature: 5 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-141, 60],
+                  [-100, 60],
+                  [-100, 84],
+                  [-141, 84],
+                  [-141, 60]
+                ]]
+              }
+            },
+            // Central regions (moderate)
+            {
+              type: "Feature" as const,
+              properties: { temperature: 15 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-110, 49],
+                  [-85, 49],
+                  [-85, 60],
+                  [-110, 60],
+                  [-110, 49]
+                ]]
+              }
+            },
+            // Southern regions (warm)
+            {
+              type: "Feature" as const,
+              properties: { temperature: 22 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-125, 41],
+                  [-60, 41],
+                  [-60, 49],
+                  [-125, 49],
+                  [-125, 41]
+                ]]
+              }
+            },
+            // Eastern regions (moderate-warm)
+            {
+              type: "Feature" as const,
+              properties: { temperature: 18 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-85, 41],
+                  [-52, 41],
+                  [-52, 55],
+                  [-85, 55],
+                  [-85, 41]
+                ]]
+              }
+            },
+            // Western regions (cool-moderate)
+            {
+              type: "Feature" as const,
+              properties: { temperature: 12 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-141, 49],
+                  [-110, 49],
+                  [-110, 60],
+                  [-141, 60],
+                  [-141, 49]
+                ]]
+              }
+            }
+          ]
+        };
+      } else if (activeMapLayer === "canopy") {
+        sourceId = "canopy-source";
+        layerId = "canopy-layer";
+        // Create placeholder canopy cover data with regional variation
+        // Different regions have different canopy percentages
+        data = {
+          type: "FeatureCollection" as const,
+          features: [
+            // High canopy regions (urban forests)
+            {
+              type: "Feature" as const,
+              properties: { canopy: 55 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-125, 49],
+                  [-110, 49],
+                  [-110, 55],
+                  [-125, 55],
+                  [-125, 49]
+                ]]
+              }
+            },
+            // Medium-high canopy
+            {
+              type: "Feature" as const,
+              properties: { canopy: 40 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-85, 45],
+                  [-70, 45],
+                  [-70, 50],
+                  [-85, 50],
+                  [-85, 45]
+                ]]
+              }
+            },
+            // Medium canopy
+            {
+              type: "Feature" as const,
+              properties: { canopy: 30 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-110, 49],
+                  [-85, 49],
+                  [-85, 55],
+                  [-110, 55],
+                  [-110, 49]
+                ]]
+              }
+            },
+            // Low-medium canopy
+            {
+              type: "Feature" as const,
+              properties: { canopy: 20 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-110, 55],
+                  [-95, 55],
+                  [-95, 60],
+                  [-110, 60],
+                  [-110, 55]
+                ]]
+              }
+            },
+            // Low canopy (prairies, northern)
+            {
+              type: "Feature" as const,
+              properties: { canopy: 10 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-110, 49],
+                  [-100, 49],
+                  [-100, 55],
+                  [-110, 55],
+                  [-110, 49]
+                ]]
+              }
+            },
+            // Very low canopy (northern/arctic)
+            {
+              type: "Feature" as const,
+              properties: { canopy: 5 },
+              geometry: {
+                type: "Polygon" as const,
+                coordinates: [[
+                  [-141, 60],
+                  [-100, 60],
+                  [-100, 84],
+                  [-141, 84],
+                  [-141, 60]
+                ]]
+              }
+            }
+          ]
+        };
+      } else {
+        sourceId = "indigenous-source";
+        layerId = "indigenous-layer";
+        // Create placeholder points for indigenous communities
+        data = {
+          type: "FeatureCollection" as const,
+          features: [
+            { type: "Feature" as const, properties: { count: 3 }, geometry: { type: "Point" as const, coordinates: [-95, 55] } },
+            { type: "Feature" as const, properties: { count: 5 }, geometry: { type: "Point" as const, coordinates: [-110, 60] } },
+            { type: "Feature" as const, properties: { count: 2 }, geometry: { type: "Point" as const, coordinates: [-100, 50] } },
+            { type: "Feature" as const, properties: { count: 4 }, geometry: { type: "Point" as const, coordinates: [-85, 50] } },
+            { type: "Feature" as const, properties: { count: 6 }, geometry: { type: "Point" as const, coordinates: [-120, 55] } },
+            { type: "Feature" as const, properties: { count: 3 }, geometry: { type: "Point" as const, coordinates: [-75, 45] } }
+          ]
+        };
+      }
+
+      // Add source
+      map.addSource(sourceId, {
+        type: "geojson",
+        data: data
+      });
+
+      // Add layer based on type
+      if (activeMapLayer === "temperature") {
+        map.addLayer({
+          id: layerId,
+          type: "fill",
+          source: sourceId,
+          paint: {
+            "fill-color": [
+              "interpolate",
+              ["linear"],
+              ["get", "temperature"],
+              0, "#2166ac",   // Dark blue (cold)
+              5, "#4393c3",   // Medium blue
+              10, "#92c5de",  // Light blue
+              15, "#d1e5f0",  // Very light blue
+              20, "#fddbc7",  // Light orange
+              25, "#f4a582",  // Medium orange
+              30, "#d6604d",  // Red-orange (warm)
+              35, "#b2182b"   // Dark red (hot)
+            ],
+            "fill-opacity": 0.6
+          }
+        });
+      } else if (activeMapLayer === "canopy") {
+        map.addLayer({
+          id: layerId,
+          type: "fill",
+          source: sourceId,
+          paint: {
+            "fill-color": [
+              "interpolate",
+              ["linear"],
+              ["get", "canopy"],
+              0, "#f7f7f7",   // Very light gray (no canopy)
+              5, "#e8f5e9",   // Very light green
+              10, "#c8e6c9",  // Light green
+              20, "#a5d6a7",  // Medium-light green
+              30, "#81c784",  // Medium green
+              40, "#66bb6a",  // Medium-dark green
+              50, "#4caf50",  // Dark green
+              60, "#388e3c",  // Very dark green (high canopy)
+              70, "#2e7d32"   // Darkest green (very high canopy)
+            ],
+            "fill-opacity": 0.5
+          }
+        });
+      } else if (activeMapLayer === "indigenous") {
+        map.addLayer({
+          id: layerId,
+          type: "circle",
+          source: sourceId,
+          paint: {
+            "circle-radius": [
+              "interpolate",
+              ["linear"],
+              ["get", "count"],
+              0, 6,
+              10, 20
+            ],
+            "circle-color": "#8b5cf6",
+            "circle-opacity": 0.7,
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "#ffffff"
+          }
+        });
+      }
+    }
+  }, [activeMapLayer]);
 
   // Project detail mock page
   if (view === "project" && selectedProject) {
@@ -832,8 +1153,59 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
       {/* Map and List Layout */}
       <section className="grid gap-4 lg:grid-cols-[1.2fr,1fr] items-start">
         {/* Map */}
-        <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-md" style={{ height: "600px" }}>
+        <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-md relative" style={{ height: "600px" }}>
+          {/* Map Layer Controls */}
+          <div className="absolute top-3 left-3 z-10 bg-white rounded-lg border border-slate-200 shadow-lg p-2">
+            <div className="text-[10px] font-semibold text-slate-700 uppercase tracking-wide mb-2 px-1">
+              {t("Map layers", "Couches de carte")}
+            </div>
+            <div className="space-y-1">
+              <button
+                type="button"
+                onClick={() => setActiveMapLayer(activeMapLayer === "temperature" ? null : "temperature")}
+                className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-medium transition ${
+                  activeMapLayer === "temperature"
+                    ? "bg-primary-100 text-primary-900 border border-primary-300"
+                    : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                🌡️ {t("Mean temperature", "Température moyenne")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveMapLayer(activeMapLayer === "canopy" ? null : "canopy")}
+                className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-medium transition ${
+                  activeMapLayer === "canopy"
+                    ? "bg-primary-100 text-primary-900 border border-primary-300"
+                    : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                🌳 {t("Canopy cover", "Couverture de canopée")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveMapLayer(activeMapLayer === "indigenous" ? null : "indigenous")}
+                className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-medium transition ${
+                  activeMapLayer === "indigenous"
+                    ? "bg-primary-100 text-primary-900 border border-primary-300"
+                    : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                🏘️ {t("Indigenous communities", "Communautés autochtones")}
+              </button>
+            </div>
+            {activeMapLayer && (
+              <button
+                type="button"
+                onClick={() => setActiveMapLayer(null)}
+                className="w-full mt-2 px-2 py-1 text-[10px] text-slate-600 hover:text-slate-900"
+              >
+                {t("Clear layer", "Effacer la couche")}
+              </button>
+            )}
+          </div>
           <Map
+            ref={mapRef}
             {...viewState}
             onMove={evt => setViewState(evt.viewState)}
             mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"}
