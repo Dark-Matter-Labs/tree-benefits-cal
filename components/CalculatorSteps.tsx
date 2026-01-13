@@ -1033,9 +1033,61 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
             <p className="text-xs text-slate-600">
               {t(
                 "These figures are illustrative demo values for workshop purposes.",
-                "Ces valeurs sont illustratives pour les besoins de l’atelier."
+                "Ces valeurs sont illustratives pour les besoins de l'atelier."
               )}
             </p>
+
+            {/* Key User Inputs */}
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
+              <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-3">
+                {t("Project inputs", "Entrées du projet")}
+              </h4>
+              <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
+                <div>
+                  <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
+                    {t("Region", "Région")}
+                  </div>
+                  <div className="text-sm font-semibold text-slate-900">
+                    {region === "atlantic"
+                      ? t("Atlantic", "Atlantique")
+                      : region === "quebec"
+                      ? "Québec"
+                      : region === "ontario"
+                      ? "Ontario"
+                      : region === "prairies"
+                      ? t("Prairies", "Prairies")
+                      : region === "bc"
+                      ? t("British Columbia", "Colombie-Britannique")
+                      : t("Territories", "Territoires")}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
+                    {t("Number of trees", "Nombre d'arbres")}
+                  </div>
+                  <div className="text-sm font-semibold text-slate-900">
+                    {numberOfTrees.toLocaleString()}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
+                    {t("Area", "Superficie")}
+                  </div>
+                  <div className="text-sm font-semibold text-slate-900">
+                    {projectAreaHa.toFixed(1)} {t("Ha", "Ha")}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
+                    {t("Year", "Année")}
+                  </div>
+                  <div className="text-sm font-semibold text-slate-900">
+                    {year}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="grid gap-4 md:grid-cols-2">
               {selectedBenefits.includes("carbon") && (
                 <div className="rounded-xl border border-primary-300 bg-gradient-to-br from-primary-50 to-primary-100/50 p-4 shadow-sm">
