@@ -32,7 +32,7 @@ const allBenefitCategories: { id: BenefitCategory; labelEn: string; labelFr: str
   ];
 
 export function CalculatorSteps({ language }: CalculatorStepsProps) {
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [region, setRegion] = useState<Region>("ontario");
   const [municipalitySize, setMunicipalitySize] =
     useState<MunicipalitySize>("medium");
@@ -67,6 +67,37 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
     "heat"
   ]);
 
+  // Benefit-specific details
+  const [carbonDetails, setCarbonDetails] = useState({
+    baselineEmissions: 0, // tCO₂e/year
+    carbonPrice: 65 // $/tCO₂e
+  });
+  const [stormwaterDetails, setStormwaterDetails] = useState({
+    imperviousSurfaceArea: 0, // ha
+    averageRainfall: 1000, // mm/year
+    infrastructureCostPerLiter: 0.001 // $/L
+  });
+  const [healthDetails, setHealthDetails] = useState({
+    proximityToResidential: true,
+    accessibilityScore: 7 // 1-10
+  });
+  const [heatDetails, setHeatDetails] = useState({
+    currentMaxTemp: 35, // °C
+    targetTempReduction: 2 // °C
+  });
+  const [airQualityDetails, setAirQualityDetails] = useState({
+    proximityToRoads: true,
+    trafficVolume: "medium" as "low" | "medium" | "high"
+  });
+  const [biodiversityDetails, setBiodiversityDetails] = useState({
+    nativeSpeciesPercent: 80, // %
+    habitatConnectivity: true
+  });
+  const [propertyValueDetails, setPropertyValueDetails] = useState({
+    adjacentProperties: 0,
+    averagePropertyValue: 500000 // $
+  });
+
   const [results, setResults] = useState<BenefitResults | null>(null);
 
   const t = (en: string, fr: string) => (language === "fr" ? fr : en);
@@ -89,7 +120,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
       year
     });
     setResults(res);
-    setStep(4);
+    setStep(5);
   };
 
   return (
@@ -102,13 +133,13 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
             </h2>
             <p className="text-xs text-slate-600">
               {t(
-                "3 quick steps to estimate your project benefits.",
-                "3 étapes rapides pour estimer les bénéfices de votre projet."
+                "5 steps to estimate your project benefits.",
+                "5 étapes pour estimer les bénéfices de votre projet."
               )}
             </p>
           </div>
           <ol className="flex items-center gap-2 text-xs">
-            {[1, 2, 3].map(i => (
+            {[1, 2, 3, 4, 5].map(i => (
               <li
                 key={i}
                 className={`flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium ${
@@ -610,6 +641,381 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </button>
               <button
                 type="button"
+                onClick={() => setStep(4)}
+                disabled={selectedBenefits.length === 0}
+                className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-primary-500 to-primary-600 px-4 py-2 text-sm font-medium text-white shadow-md shadow-primary-500/30 hover:shadow-lg hover:shadow-primary-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {t("Next: Benefit details", "Suivant : Détails des bénéfices")}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div className="space-y-5">
+            <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
+              {t("Benefit details", "Détails des bénéfices")}
+            </h3>
+            <p className="text-xs text-slate-600">
+              {t(
+                "Provide additional details for the selected benefit categories to refine calculations.",
+                "Fournissez des détails supplémentaires pour les catégories de bénéfices sélectionnées afin d'affiner les calculs."
+              )}
+            </p>
+
+            <div className="space-y-6">
+              {selectedBenefits.includes("carbon") && (
+                <div className="rounded-xl border border-primary-200 bg-primary-50/30 p-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-primary-900 uppercase tracking-wide">
+                    {t("Carbon sequestration", "Séquestration du carbone")}
+                  </h4>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Baseline emissions (tCO₂e/year)", "Émissions de base (tCO₂e/an)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={carbonDetails.baselineEmissions}
+                        onChange={e =>
+                          setCarbonDetails(prev => ({
+                            ...prev,
+                            baselineEmissions: Math.max(0, Number(e.target.value) || 0)
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      />
+                      <p className="text-[11px] text-slate-500 italic">
+                        {t("Current annual emissions in project area", "Émissions annuelles actuelles dans la zone du projet")}
+                      </p>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Carbon price ($/tCO₂e)", "Prix du carbone ($/tCO₂e)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={carbonDetails.carbonPrice}
+                        onChange={e =>
+                          setCarbonDetails(prev => ({
+                            ...prev,
+                            carbonPrice: Math.max(0, Number(e.target.value) || 0)
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      />
+                      <p className="text-[11px] text-slate-500 italic">
+                        {t("Canadian carbon pricing (default: $65)", "Tarification du carbone au Canada (par défaut : 65 $)")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedBenefits.includes("stormwater") && (
+                <div className="rounded-xl border border-secondary-200 bg-secondary-50/30 p-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-secondary-900 uppercase tracking-wide">
+                    {t("Stormwater management", "Gestion des eaux pluviales")}
+                  </h4>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Impervious surface area (Ha)", "Superficie imperméable (Ha)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={stormwaterDetails.imperviousSurfaceArea}
+                        onChange={e =>
+                          setStormwaterDetails(prev => ({
+                            ...prev,
+                            imperviousSurfaceArea: Math.max(0, Number(e.target.value) || 0)
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Average annual rainfall (mm)", "Précipitations annuelles moyennes (mm)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={stormwaterDetails.averageRainfall}
+                        onChange={e =>
+                          setStormwaterDetails(prev => ({
+                            ...prev,
+                            averageRainfall: Math.max(0, Number(e.target.value) || 0)
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition"
+                      />
+                    </div>
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Infrastructure cost per liter ($/L)", "Coût d'infrastructure par litre ($/L)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.0001"
+                        value={stormwaterDetails.infrastructureCostPerLiter}
+                        onChange={e =>
+                          setStormwaterDetails(prev => ({
+                            ...prev,
+                            infrastructureCostPerLiter: Math.max(0, Number(e.target.value) || 0)
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition"
+                      />
+                      <p className="text-[11px] text-slate-500 italic">
+                        {t("Cost of managing stormwater through infrastructure", "Coût de gestion des eaux pluviales par l'infrastructure")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedBenefits.includes("health") && (
+                <div className="rounded-xl border border-accent-200 bg-accent-50/30 p-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-accent-900 uppercase tracking-wide">
+                    {t("Health & well-being", "Santé et bien-être")}
+                  </h4>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={healthDetails.proximityToResidential}
+                          onChange={e =>
+                            setHealthDetails(prev => ({
+                              ...prev,
+                              proximityToResidential: e.target.checked
+                            }))
+                          }
+                          className="w-4 h-4 rounded border-slate-300 text-accent-600 focus:ring-2 focus:ring-accent-500"
+                        />
+                        <span className="text-xs font-medium text-slate-700">
+                          {t("Proximity to residential areas", "Proximité des zones résidentielles")}
+                        </span>
+                      </label>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Accessibility score (1-10)", "Score d'accessibilité (1-10)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="10"
+                        value={healthDetails.accessibilityScore}
+                        onChange={e =>
+                          setHealthDetails(prev => ({
+                            ...prev,
+                            accessibilityScore: Math.min(10, Math.max(1, Number(e.target.value) || 1))
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 transition"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedBenefits.includes("heat") && (
+                <div className="rounded-xl border border-orange-200 bg-orange-50/30 p-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-orange-900 uppercase tracking-wide">
+                    {t("Heat island mitigation", "Atténuation des îlots de chaleur")}
+                  </h4>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Current max temperature (°C)", "Température maximale actuelle (°C)")}
+                      </label>
+                      <input
+                        type="number"
+                        value={heatDetails.currentMaxTemp}
+                        onChange={e =>
+                          setHeatDetails(prev => ({
+                            ...prev,
+                            currentMaxTemp: Number(e.target.value) || 0
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Target temperature reduction (°C)", "Réduction cible de la température (°C)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={heatDetails.targetTempReduction}
+                        onChange={e =>
+                          setHeatDetails(prev => ({
+                            ...prev,
+                            targetTempReduction: Math.max(0, Number(e.target.value) || 0)
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedBenefits.includes("airQuality") && (
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+                    {t("Air quality improvement", "Amélioration de la qualité de l'air")}
+                  </h4>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={airQualityDetails.proximityToRoads}
+                          onChange={e =>
+                            setAirQualityDetails(prev => ({
+                              ...prev,
+                              proximityToRoads: e.target.checked
+                            }))
+                          }
+                          className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                        />
+                        <span className="text-xs font-medium text-slate-700">
+                          {t("Proximity to major roads", "Proximité des routes principales")}
+                        </span>
+                      </label>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Traffic volume", "Volume de trafic")}
+                      </label>
+                      <select
+                        value={airQualityDetails.trafficVolume}
+                        onChange={e =>
+                          setAirQualityDetails(prev => ({
+                            ...prev,
+                            trafficVolume: e.target.value as "low" | "medium" | "high"
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="low">{t("Low", "Faible")}</option>
+                        <option value="medium">{t("Medium", "Moyen")}</option>
+                        <option value="high">{t("High", "Élevé")}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedBenefits.includes("biodiversity") && (
+                <div className="rounded-xl border border-green-200 bg-green-50/30 p-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-green-900 uppercase tracking-wide">
+                    {t("Biodiversity & habitat", "Biodiversité et habitat")}
+                  </h4>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Native species percentage (%)", "Pourcentage d'espèces indigènes (%)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={biodiversityDetails.nativeSpeciesPercent}
+                        onChange={e =>
+                          setBiodiversityDetails(prev => ({
+                            ...prev,
+                            nativeSpeciesPercent: Math.min(100, Math.max(0, Number(e.target.value) || 0))
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="flex items-center gap-2 cursor-pointer pt-6">
+                        <input
+                          type="checkbox"
+                          checked={biodiversityDetails.habitatConnectivity}
+                          onChange={e =>
+                            setBiodiversityDetails(prev => ({
+                              ...prev,
+                              habitatConnectivity: e.target.checked
+                            }))
+                          }
+                          className="w-4 h-4 rounded border-slate-300 text-green-600 focus:ring-2 focus:ring-green-500"
+                        />
+                        <span className="text-xs font-medium text-slate-700">
+                          {t("Enhances habitat connectivity", "Améliore la connectivité de l'habitat")}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedBenefits.includes("propertyValue") && (
+                <div className="rounded-xl border border-amber-200 bg-amber-50/30 p-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-amber-900 uppercase tracking-wide">
+                    {t("Property value impact", "Impact sur la valeur foncière")}
+                  </h4>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Adjacent properties", "Propriétés adjacentes")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={propertyValueDetails.adjacentProperties}
+                        onChange={e =>
+                          setPropertyValueDetails(prev => ({
+                            ...prev,
+                            adjacentProperties: Math.max(0, Number(e.target.value) || 0)
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Average property value ($)", "Valeur moyenne des propriétés ($)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={propertyValueDetails.averagePropertyValue}
+                        onChange={e =>
+                          setPropertyValueDetails(prev => ({
+                            ...prev,
+                            averagePropertyValue: Math.max(0, Number(e.target.value) || 0)
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-between">
+              <button
+                type="button"
+                onClick={() => setStep(3)}
+                className="text-xs text-slate-600 hover:text-slate-900 transition"
+              >
+                {t("Back to benefit categories", "Retour aux catégories de bénéfices")}
+              </button>
+              <button
+                type="button"
                 onClick={handleCalculate}
                 className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-primary-500 to-primary-600 px-4 py-2 text-sm font-medium text-white shadow-md shadow-primary-500/30 hover:shadow-lg hover:shadow-primary-500/40 transition-all"
               >
@@ -619,7 +1025,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
           </div>
         )}
 
-        {step === 4 && results && (
+        {step === 5 && results && (
           <div className="space-y-5">
             <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
               {t("Summary", "Résumé")}
@@ -785,12 +1191,12 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
             <div className="flex justify-between items-center pt-2 border-t border-slate-200 mt-2">
               <button
                 type="button"
-                onClick={() => setStep(3)}
+                onClick={() => setStep(4)}
                 className="text-xs text-slate-600 hover:text-slate-900 transition"
               >
                 {t(
-                  "Adjust benefit categories",
-                  "Ajuster les catégories de bénéfices"
+                  "Adjust benefit details",
+                  "Ajuster les détails des bénéfices"
                 )}
               </button>
               <button
