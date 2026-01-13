@@ -288,6 +288,9 @@ const stageLabels: Record<Stage, { en: string; fr: string }> = {
 export function PortfolioDemo({ language }: PortfolioDemoProps) {
   const t = (en: string, fr: string) => (language === "fr" ? fr : en);
 
+  const [view, setView] = useState<"portfolio" | "project" | "portfolioBenefits">(
+    "portfolio"
+  );
   const [selectedRegion, setSelectedRegion] = useState<RegionKey | "all">("all");
   const [selectedTypology, setSelectedTypology] = useState<Typology | "all">("all");
   const [selectedSize, setSelectedSize] = useState<"small" | "medium" | "large" | "all">("all");
@@ -312,7 +315,259 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
   const totalProjects = filteredProjects.length;
   const totalTrees = filteredProjects.reduce((sum, p) => sum + p.trees, 0);
   const totalCarbon = filteredProjects.reduce((sum, p) => sum + p.carbonTonnes, 0);
-  const totalStormwater = filteredProjects.reduce((sum, p) => sum + p.stormwaterLitres, 0);
+  const totalStormwater = filteredProjects.reduce(
+    (sum, p) => sum + p.stormwaterLitres,
+    0
+  );
+
+  const averageTreesPerProject =
+    totalProjects === 0 ? 0 : Math.round(totalTrees / totalProjects);
+
+  const communityImpactIndicator =
+    totalProjects === 0
+      ? t("No data", "Aucune donnée")
+      : averageTreesPerProject > 1500
+      ? t("very strong", "très fort")
+      : averageTreesPerProject > 700
+      ? t("strong", "fort")
+      : averageTreesPerProject > 300
+      ? t("moderate", "modéré")
+      : t("emerging", "émergent");
+
+  // Project detail mock page
+  if (view === "project" && selectedProject) {
+    return (
+      <main className="mx-auto max-w-[1200px] px-4 py-6 space-y-5">
+        <button
+          type="button"
+          onClick={() => setView("portfolio")}
+          className="text-xs text-slate-600 hover:text-slate-900"
+        >
+          ←{" "}
+          {t(
+            "Back to portfolio overview",
+            "Retour à la vue d'ensemble du portefeuille"
+          )}
+        </button>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md space-y-4">
+          <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+              <h1 className="text-base md:text-lg font-semibold text-slate-900">
+                {selectedProject.name}
+              </h1>
+              <p className="text-xs text-slate-600">
+                {selectedProject.municipality}, {selectedProject.province} ·{" "}
+                {selectedProject.year}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 text-[10px]">
+              <span className="rounded-full bg-primary-50 border border-primary-200 px-2 py-1 text-primary-800 font-medium">
+                {language === "fr"
+                  ? regionLabels[selectedProject.region].fr
+                  : regionLabels[selectedProject.region].en}
+              </span>
+              <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium">
+                {language === "fr"
+                  ? typologyLabels[selectedProject.typology].fr
+                  : typologyLabels[selectedProject.typology].en}
+              </span>
+              <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium">
+                {language === "fr"
+                  ? stageLabels[selectedProject.stage].fr
+                  : stageLabels[selectedProject.stage].en}
+              </span>
+              <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium capitalize">
+                {selectedProject.size === "small"
+                  ? t("Small community", "Petite collectivité")
+                  : selectedProject.size === "medium"
+                  ? t("Medium community", "Collectivité moyenne")
+                  : t("Large community", "Grande collectivité")}
+              </span>
+            </div>
+          </header>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+              <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+                {t("Trees & shrubs", "Arbres et arbustes")}
+              </div>
+              <div className="mt-1 text-lg font-bold text-slate-900">
+                {selectedProject.trees.toLocaleString()}
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1">
+                {t(
+                  "Includes woody shrubs where reported",
+                  "Comprend les arbustes ligneux lorsque déclarés"
+                )}
+              </p>
+            </div>
+            <div className="rounded-xl border border-primary-200 bg-primary-50 p-3 shadow-sm">
+              <div className="text-[11px] uppercase tracking-wide text-primary-800 font-medium">
+                {t("Carbon (tCO₂e/yr)", "Carbone (tCO₂e/an)")}
+              </div>
+              <div className="mt-1 text-lg font-bold text-primary-900">
+                {selectedProject.carbonTonnes.toLocaleString(undefined, {
+                  maximumFractionDigits: 0
+                })}
+              </div>
+            </div>
+            <div className="rounded-xl border border-secondary-200 bg-secondary-50 p-3 shadow-sm">
+              <div className="text-[11px] uppercase tracking-wide text-secondary-800 font-medium">
+                {t("Stormwater (L/yr)", "Eaux pluviales (L/an)")}
+              </div>
+              <div className="mt-1 text-lg font-bold text-secondary-900">
+                {(selectedProject.stormwaterLitres / 1_000_000).toLocaleString(
+                  undefined,
+                  { maximumFractionDigits: 1 }
+                )}{" "}
+                M
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-[1.3fr,1fr] items-start">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+              <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+                {t("Project story (demo)", "Récit du projet (démo)")}
+              </h2>
+              <p className="text-xs text-slate-700">
+                {t(
+                  "Use this space to capture a 3–4 sentence narrative about who benefits, how the site is changing, and what risks are being reduced.",
+                  "Utilisez cet espace pour saisir un récit de 3–4 phrases sur les bénéficiaires, la transformation du site et les risques réduits."
+                )}
+              </p>
+              <ul className="text-[11px] text-slate-600 list-disc pl-4 space-y-1">
+                <li>
+                  {t(
+                    "Highlight small-community impact by referencing per-capita and per-household metrics.",
+                    "Soulignez l’impact pour les petites collectivités en faisant référence aux indicateurs par habitant et par ménage."
+                  )}
+                </li>
+                <li>
+                  {t(
+                    "Connect physical benefits (trees, stormwater, cooling) to equity and health outcomes.",
+                    "Reliez les bénéfices physiques (arbres, eaux pluviales, refroidissement) aux résultats en matière d’équité et de santé."
+                  )}
+                </li>
+              </ul>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3 shadow-sm">
+              <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+                {t("Mock layout guidance", "Gabarit fictif")}
+              </h3>
+              <p className="text-[11px] text-slate-600">
+                {t(
+                  "In a full build, this page could be auto-populated from the application form, with editable narrative blocks and exportable PDFs.",
+                  "Dans une version complète, cette page pourrait être alimentée automatiquement à partir du formulaire de demande, avec des blocs narratifs modifiables et des PDF exportables."
+                )}
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  // Portfolio benefits mock page
+  if (view === "portfolioBenefits") {
+    return (
+      <main className="mx-auto max-w-[1200px] px-4 py-6 space-y-5">
+        <button
+          type="button"
+          onClick={() => setView("portfolio")}
+          className="text-xs text-slate-600 hover:text-slate-900"
+        >
+          ←{" "}
+          {t(
+            "Back to portfolio overview",
+            "Retour à la vue d'ensemble du portefeuille"
+          )}
+        </button>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md space-y-4">
+          <header className="space-y-1">
+            <h1 className="text-base md:text-lg font-semibold text-slate-900">
+              {t("Portfolio benefits (demo)", "Bénéfices du portefeuille (démo)")}
+            </h1>
+            <p className="text-xs text-slate-600">
+              {t(
+                "Using the current filters, this mock-up shows how FCM could see aggregated benefits by group.",
+                "Avec les filtres actuels, cette maquette montre comment le FCM pourrait voir les bénéfices agrégés par groupe."
+              )}
+            </p>
+          </header>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-primary-200 bg-primary-50 p-4 shadow-sm">
+              <h2 className="text-xs font-semibold text-primary-900 uppercase tracking-wide mb-2">
+                {t("Climate / carbon", "Climat / carbone")}
+              </h2>
+              <p className="text-lg font-bold text-primary-900">
+                {totalCarbon.toLocaleString(undefined, {
+                  maximumFractionDigits: 0
+                })}{" "}
+                tCO₂e / {t("yr", "an")}
+              </p>
+              <p className="text-[11px] text-primary-900 mt-1">
+                {t(
+                  "Aggregated annual carbon benefit across all filtered projects.",
+                  "Bénéfice annuel en carbone agrégé pour tous les projets filtrés."
+                )}
+              </p>
+            </div>
+            <div className="rounded-xl border border-secondary-200 bg-secondary-50 p-4 shadow-sm">
+              <h2 className="text-xs font-semibold text-secondary-900 uppercase tracking-wide mb-2">
+                {t("Stormwater / flooding", "Eaux pluviales / inondations")}
+              </h2>
+              <p className="text-lg font-bold text-secondary-900">
+                {(totalStormwater / 1_000_000).toLocaleString(undefined, {
+                  maximumFractionDigits: 1
+                })}{" "}
+                M {t("L intercepted", "L interceptés")}
+              </p>
+              <p className="text-[11px] text-secondary-900 mt-1">
+                {t(
+                  "Relative avoided runoff that could be compared to grey infrastructure.",
+                  "Ruissellement évité pouvant être comparé à l'infrastructure grise."
+                )}
+              </p>
+            </div>
+            <div className="rounded-xl border border-accent-200 bg-accent-50 p-4 shadow-sm">
+              <h2 className="text-xs font-semibold text-accent-900 uppercase tracking-wide mb-2">
+                {t("Health / equity (proxy)", "Santé / équité (proxy)")}
+              </h2>
+              <p className="text-lg font-bold text-accent-900">
+                {totalTrees.toLocaleString()}{" "}
+                {t(
+                  "trees near homes & routes",
+                  "arbres près des habitations et des parcours"
+                )}
+              </p>
+              <p className="text-[11px] text-accent-900 mt-1">
+                {t(
+                  "Indicative count of trees contributing to shade, cooling and walkability.",
+                  "Nombre indicatif d’arbres contribuant à l’ombre, au refroidissement et à la marchabilité."
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm space-y-3">
+            <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+              {t("Mock layout guidance", "Gabarit fictif")}
+            </h3>
+            <p className="text-[11px] text-slate-600">
+              {t(
+                "In a production version, this page could drive funder reports, with export to PowerBI or PDF and drill-down into regional or typology-based views.",
+                "Dans une version de production, cette page pourrait alimenter les rapports aux bailleurs de fonds, avec export vers PowerBI ou PDF et exploration par région ou typologie."
+              )}
+            </p>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-[1600px] px-4 py-6 space-y-5">
@@ -350,13 +605,20 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
           </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-              {t("Carbon (tCO₂e/yr)", "Carbone (tCO₂e/an)")}
+              {t(
+                "Community impact indicator",
+                "Indicateur d'impact communautaire"
+              )}
             </div>
             <div className="mt-1 text-lg font-bold text-slate-900">
-              {totalCarbon.toLocaleString(undefined, {
-                maximumFractionDigits: 0
-              })}
+              {communityImpactIndicator}
             </div>
+            <p className="mt-1 text-[11px] text-slate-500">
+              {t(
+                "Based on trees per project across current portfolio filters.",
+                "Basé sur le nombre d’arbres par projet pour les filtres actuels du portefeuille."
+              )}
+            </p>
           </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
@@ -467,7 +729,10 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                 longitude={p.lng}
                 latitude={p.lat}
                 anchor="bottom"
-                onClick={() => setSelectedProject(p)}
+                onClick={() => {
+                  setSelectedProject(p);
+                  setView("project");
+                }}
               >
                 <div className="cursor-pointer">
                   <div className="w-6 h-6 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
@@ -521,7 +786,10 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                       ? "border-primary-500 bg-primary-50"
                       : "border-slate-200 bg-slate-50"
                   }`}
-                  onClick={() => setSelectedProject(p)}
+                  onClick={() => {
+                    setSelectedProject(p);
+                    setView("project");
+                  }}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="font-medium text-slate-900 truncate">
@@ -565,6 +833,18 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                 </div>
               ))
             )}
+          </div>
+          <div className="pt-3">
+            <button
+              type="button"
+              onClick={() => setView("portfolioBenefits")}
+              className="w-full inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-primary-600 px-4 py-2 text-xs font-medium text-white shadow-md shadow-primary-500/40 hover:shadow-lg hover:shadow-primary-500/60 transition"
+            >
+              {t(
+                "Calculate portfolio benefits (demo)",
+                "Calculer les bénéfices du portefeuille (démo)"
+              )}
+            </button>
           </div>
         </div>
       </section>
