@@ -55,8 +55,8 @@ export function WorkshopHeader({
               }`}
             >
               {language === "fr"
-                ? "Simulation municipale"
-                : "Municipal simulator"}
+                ? "Estimateur de bénéfices"
+                : "Benefits estimator"}
             </button>
             <button
               type="button"
