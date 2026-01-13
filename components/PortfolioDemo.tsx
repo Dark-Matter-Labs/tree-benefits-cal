@@ -426,8 +426,77 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             </div>
           </div>
 
+          {/* Project Images Gallery */}
+          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
+              {t("Project gallery", "Galerie du projet")}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="aspect-square rounded-lg bg-gradient-to-br from-green-100 to-green-200 border border-green-300 flex items-center justify-center">
+                <div className="text-center p-2">
+                  <div className="text-2xl mb-1">🌱</div>
+                  <div className="text-[10px] text-slate-600 font-medium">
+                    {t("Planting", "Plantation")}
+                  </div>
+                </div>
+              </div>
+              <div className="aspect-square rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-200 border border-emerald-300 flex items-center justify-center">
+                <div className="text-center p-2">
+                  <div className="text-2xl mb-1">🌳</div>
+                  <div className="text-[10px] text-slate-600 font-medium">
+                    {t("Growth", "Croissance")}
+                  </div>
+                </div>
+              </div>
+              <div className="aspect-square rounded-lg bg-gradient-to-br from-teal-100 to-teal-200 border border-teal-300 flex items-center justify-center">
+                <div className="text-center p-2">
+                  <div className="text-2xl mb-1">👥</div>
+                  <div className="text-[10px] text-slate-600 font-medium">
+                    {t("Community", "Communauté")}
+                  </div>
+                </div>
+              </div>
+              <div className="aspect-square rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 border border-blue-300 flex items-center justify-center">
+                <div className="text-center p-2">
+                  <div className="text-2xl mb-1">💧</div>
+                  <div className="text-[10px] text-slate-600 font-medium">
+                    {t("Impact", "Impact")}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-500 mt-2">
+              {t(
+                "Placeholder images. In production, these would show actual project photos uploaded by municipalities.",
+                "Images de remplacement. En production, celles-ci afficheraient les photos réelles du projet téléchargées par les municipalités."
+              )}
+            </p>
+          </div>
+
+          {/* Project Location Map */}
+          <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm" style={{ height: "300px" }}>
+            <Map
+              longitude={selectedProject.lng}
+              latitude={selectedProject.lat}
+              zoom={12}
+              mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"}
+              style={{ width: "100%", height: "100%" }}
+              mapStyle="mapbox://styles/mapbox/light-v11"
+            >
+              <Marker
+                longitude={selectedProject.lng}
+                latitude={selectedProject.lat}
+                anchor="bottom"
+              >
+                <div className="w-8 h-8 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                  <span className="text-white text-sm font-bold">🌲</span>
+                </div>
+              </Marker>
+            </Map>
+          </div>
+
           <div className="grid gap-4 md:grid-cols-[1.3fr,1fr] items-start">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-4">
               <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
                 {t("Project story (demo)", "Récit du projet (démo)")}
               </h2>
@@ -441,16 +510,64 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                 <li>
                   {t(
                     "Highlight small-community impact by referencing per-capita and per-household metrics.",
-                    "Soulignez l’impact pour les petites collectivités en faisant référence aux indicateurs par habitant et par ménage."
+                    "Soulignez l'impact pour les petites collectivités en faisant référence aux indicateurs par habitant et par ménage."
                   )}
                 </li>
                 <li>
                   {t(
                     "Connect physical benefits (trees, stormwater, cooling) to equity and health outcomes.",
-                    "Reliez les bénéfices physiques (arbres, eaux pluviales, refroidissement) aux résultats en matière d’équité et de santé."
+                    "Reliez les bénéfices physiques (arbres, eaux pluviales, refroidissement) aux résultats en matière d'équité et de santé."
                   )}
                 </li>
               </ul>
+
+              {/* Project Updates Section */}
+              <div className="pt-3 border-t border-slate-300">
+                <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
+                  {t("Project updates", "Mises à jour du projet")}
+                </h3>
+                <div className="space-y-2">
+                  {[selectedProject.year, selectedProject.year + 2, selectedProject.year + 4].map((updateYear, idx) => (
+                    <div
+                      key={idx}
+                      className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm"
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-slate-900">
+                          {t("Update", "Mise à jour")} {updateYear}
+                        </span>
+                        <span className="text-[10px] text-slate-500">
+                          {idx === 0
+                            ? t("Baseline", "Ligne de base")
+                            : idx === 1
+                            ? t("+2 years", "+2 ans")
+                            : t("+4 years", "+4 ans")}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 mb-2">
+                        {t(
+                          "Project progress update and impact metrics will be captured here every 2 years.",
+                          "La mise à jour de l'avancement du projet et les indicateurs d'impact seront saisis ici tous les 2 ans."
+                        )}
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          className="text-[10px] text-primary-600 hover:text-primary-800 font-medium"
+                        >
+                          📄 {t("View report", "Voir le rapport")}
+                        </button>
+                        <button
+                          type="button"
+                          className="text-[10px] text-primary-600 hover:text-primary-800 font-medium"
+                        >
+                          📥 {t("Download PDF", "Télécharger PDF")}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3 shadow-sm">
               <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
