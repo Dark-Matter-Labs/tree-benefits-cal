@@ -606,8 +606,8 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
               {t(
-                "Community impact indicator",
-                "Indicateur d'impact communautaire"
+                "Community impact barometer",
+                "Baromètre d'impact communautaire"
               )}
             </div>
             <div className="mt-1 text-lg font-bold text-slate-900">
