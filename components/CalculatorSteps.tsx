@@ -43,6 +43,13 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [numberOfTrees, setNumberOfTrees] = useState(500);
   const [projectAreaHa, setProjectAreaHa] = useState(2);
   const [year, setYear] = useState(new Date().getFullYear());
+  
+  // Tree planting details
+  const [deciduousPercent, setDeciduousPercent] = useState(60);
+  const [evergreenPercent, setEvergreenPercent] = useState(40);
+  const [improvedGreenSpaceHa, setImprovedGreenSpaceHa] = useState(0);
+  const [newTreesInFootpath, setNewTreesInFootpath] = useState(0);
+  const [hasSustainableWaterSystems, setHasSustainableWaterSystems] = useState(false);
 
   // Optional contextual parameters (lower priority / advanced)
   const [showAdvancedContext, setShowAdvancedContext] = useState(false);
@@ -408,7 +415,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-slate-700">
-                  {t("Project area (ha)", "Superficie du projet (ha)")}
+                  {t("Area of tree Planting (Ha)", "Superficie de plantation d'arbres (Ha)")}
                 </label>
                 <input
                   type="number"
@@ -418,6 +425,124 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   }
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                 />
+              </div>
+            </div>
+
+            {/* Additional tree planting details */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">
+                  {t("Tree species composition", "Composition des espèces d'arbres")}
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] text-slate-600 block mb-1">
+                      {t("Deciduous (%)", "Feuillus (%)")}
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={deciduousPercent}
+                      onChange={e => {
+                        const val = Math.min(100, Math.max(0, Number(e.target.value) || 0));
+                        setDeciduousPercent(val);
+                        setEvergreenPercent(100 - val);
+                      }}
+                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-slate-600 block mb-1">
+                      {t("Evergreen (%)", "Conifères (%)")}
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={evergreenPercent}
+                      onChange={e => {
+                        const val = Math.min(100, Math.max(0, Number(e.target.value) || 0));
+                        setEvergreenPercent(val);
+                        setDeciduousPercent(100 - val);
+                      }}
+                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                    />
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-500 italic">
+                  {t(
+                    "Total should equal 100%",
+                    "Le total doit être égal à 100%"
+                  )}
+                </p>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">
+                  {t("Improved green space (Ha)", "Espace vert amélioré (Ha)")}
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={improvedGreenSpaceHa}
+                  onChange={e =>
+                    setImprovedGreenSpaceHa(Math.max(0, Number(e.target.value) || 0))
+                  }
+                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                />
+                <p className="text-[11px] text-slate-500 italic">
+                  {t(
+                    "Area of green space improved as part of this project",
+                    "Superficie d'espace vert améliorée dans le cadre de ce projet"
+                  )}
+                </p>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">
+                  {t("New trees in footpath", "Nouveaux arbres dans les trottoirs")}
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={newTreesInFootpath}
+                  onChange={e =>
+                    setNewTreesInFootpath(Math.max(0, Number(e.target.value) || 0))
+                  }
+                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                />
+                <p className="text-[11px] text-slate-500 italic">
+                  {t(
+                    "Number of trees planted in footpaths/sidewalks",
+                    "Nombre d'arbres plantés dans les trottoirs"
+                  )}
+                </p>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">
+                  {t(
+                    "Sustainable water systems",
+                    "Systèmes d'eau durables"
+                  )}
+                </label>
+                <div className="flex items-center gap-3 pt-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={hasSustainableWaterSystems}
+                      onChange={e => setHasSustainableWaterSystems(e.target.checked)}
+                      className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                    />
+                    <span className="text-sm text-slate-700">
+                      {t(
+                        "Project combined with sustainable water systems for irrigation or drainage",
+                        "Projet combiné avec des systèmes d'eau durables pour l'irrigation ou le drainage"
+                      )}
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
 
