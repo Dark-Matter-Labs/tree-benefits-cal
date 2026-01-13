@@ -44,6 +44,15 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [projectAreaHa, setProjectAreaHa] = useState(2);
   const [year, setYear] = useState(new Date().getFullYear());
 
+  // Optional contextual parameters (lower priority / advanced)
+  const [showAdvancedContext, setShowAdvancedContext] = useState(false);
+  const [populationDensity, setPopulationDensity] = useState(3200); // people / km²
+  const [baselineCanopy, setBaselineCanopy] = useState(18); // %
+  const [heatVulnerability, setHeatVulnerability] = useState<"low" | "medium" | "high">(
+    "medium"
+  );
+  const [floodRisk, setFloodRisk] = useState<"low" | "medium" | "high">("medium");
+
   const [selectedBenefits, setSelectedBenefits] = useState<BenefitCategory[]>([
     "carbon",
     "stormwater",
@@ -148,7 +157,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">
+                <label className="text-xs font-medium text-slate-700">
                   {t("Municipality size", "Taille de la municipalité")}
                 </label>
                 <select
@@ -171,7 +180,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">
+                <label className="text-xs font-medium text-slate-700">
                   {t("Context", "Contexte")}
                 </label>
                 <select
@@ -200,8 +209,11 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">
-                  {t("Year", "Année")}
+                <label className="text-xs font-medium text-slate-700">
+                  {t(
+                    "Year of planting completion",
+                    "Année de fin de plantation"
+                  )}
                 </label>
                 <input
                   type="number"
@@ -212,10 +224,10 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">
+                <label className="text-xs font-medium text-slate-700">
                   {t(
-                    "Population served (approx.)",
-                    "Population desservie (approx.)"
+                    "Population served (approx pop living <500m)",
+                    "Population desservie (population vivant à <500 m, approx.)"
                   )}
                 </label>
                 <input
@@ -231,10 +243,10 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">
+                <label className="text-xs font-medium text-slate-700">
                   {t(
-                    "Households served (approx.)",
-                    "Ménages desservis (approx.)"
+                    "Households served (approx pop living <500m)",
+                    "Ménages desservis (population vivant à <500 m, approx.)"
                   )}
                 </label>
                 <input
@@ -248,6 +260,110 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                 />
               </div>
+            </div>
+
+            {/* Optional advanced context parameters */}
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/70 px-4 py-3 space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-xs font-semibold text-slate-700">
+                    {t(
+                      "Refine context assumptions (optional)",
+                      "Affiner les hypothèses de contexte (optionnel)"
+                    )}
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    {t(
+                      "These parameters sit behind the regional defaults and can be tweaked when you have better local data.",
+                      "Ces paramètres se trouvent derrière les valeurs régionales par défaut et peuvent être ajustés si vous disposez de données locales plus précises."
+                    )}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedContext(prev => !prev)}
+                  className="inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-100 transition"
+                >
+                  {showAdvancedContext
+                    ? t("Hide details", "Masquer les détails")
+                    : t("Show details", "Afficher les détails")}
+                </button>
+              </div>
+
+              {showAdvancedContext && (
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 pt-1">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-700">
+                      {t(
+                        "Population density (people/km²)",
+                        "Densité de population (pers./km²)"
+                      )}
+                    </label>
+                    <input
+                      type="number"
+                      value={populationDensity}
+                      onChange={e =>
+                        setPopulationDensity(
+                          Math.max(0, Number(e.target.value) || 0)
+                        )
+                      }
+                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-700">
+                      {t("Baseline canopy cover (%)", "Couvert forestier de base (%)")}
+                    </label>
+                    <input
+                      type="number"
+                      value={baselineCanopy}
+                      onChange={e =>
+                        setBaselineCanopy(
+                          Math.min(100, Math.max(0, Number(e.target.value) || 0))
+                        )
+                      }
+                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-700">
+                      {t("Heat vulnerability", "Vulnérabilité à la chaleur")}
+                    </label>
+                    <select
+                      value={heatVulnerability}
+                      onChange={e =>
+                        setHeatVulnerability(
+                          e.target.value as "low" | "medium" | "high"
+                        )
+                      }
+                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
+                    >
+                      <option value="low">{t("Low", "Faible")}</option>
+                      <option value="medium">{t("Medium", "Moyenne")}</option>
+                      <option value="high">{t("High", "Élevée")}</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-700">
+                      {t("Flood / stormwater risk", "Risque d’inondation / eaux pluviales")}
+                    </label>
+                    <select
+                      value={floodRisk}
+                      onChange={e =>
+                        setFloodRisk(e.target.value as "low" | "medium" | "high")
+                      }
+                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
+                    >
+                      <option value="low">{t("Low", "Faible")}</option>
+                      <option value="medium">{t("Medium", "Moyenne")}</option>
+                      <option value="high">{t("High", "Élevé")}</option>
+                    </select>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex justify-end">
               <button
@@ -263,12 +379,12 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
         {step === 2 && (
           <div className="space-y-5">
-            <h3 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+            <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
               {t("Tree planting", "Plantation d’arbres")}
             </h3>
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-1.5 sm:col-span-2">
-                <label className="text-xs font-medium text-slate-300">
+                <label className="text-xs font-medium text-slate-700">
                   {t(
                     "Number of trees and woody shrubs",
                     "Nombre d’arbres et d’arbustes ligneux"
@@ -291,7 +407,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">
+                <label className="text-xs font-medium text-slate-700">
                   {t("Project area (ha)", "Superficie du projet (ha)")}
                 </label>
                 <input
