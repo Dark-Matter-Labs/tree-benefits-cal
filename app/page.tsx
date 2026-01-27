@@ -27,8 +27,8 @@ export default function HomePage() {
           <section className="mb-4">
             <p className="text-sm text-slate-600 max-w-3xl">
               {language === "fr"
-                ? "Cette démonstration montre le parcours principal : une municipalité entre un projet, sélectionne les bénéfices pertinents et obtient un aperçu visuel prêt à être intégré dans une demande de subvention."
-                : "This demo walks through the core journey: a municipality enters a project, selects the most relevant benefits, and gets a visual summary ready to drop into a grant application or council deck."}
+                ? "Cet outil aide les municipalités à transformer un projet de verdissement en un argumentaire clair pour les demandes de financement : saisir le projet, cadrer la typologie et l’équité, puis générer un résumé d’impacts prêt à intégrer dans un dossier de subvention ou une note au conseil."
+                : "This calculator is an MVP of the funding tool: it helps municipalities turn a planting or restoration project into a clear, grant-ready story by capturing core inputs, equity and community impact, then surfacing a concise impact snapshot for applications and council briefs."}
             </p>
           </section>
           <CalculatorSteps language={language} />

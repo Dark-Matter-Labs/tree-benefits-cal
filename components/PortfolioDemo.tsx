@@ -269,12 +269,32 @@ const regionLabels: Record<
   }
 };
 
-const typologyLabels: Record<Typology, { en: string; fr: string }> = {
-  "urban-forest": { en: "Urban forest", fr: "Forêt urbaine" },
-  "riparian": { en: "Riparian buffer", fr: "Zone tampon riveraine" },
-  "street-trees": { en: "Street trees", fr: "Arbres de rue" },
-  "park-restoration": { en: "Park restoration", fr: "Restauration de parc" },
-  "green-infrastructure": { en: "Green infrastructure", fr: "Infrastructure verte" }
+const typologyMeta: Record<Typology, { en: string; fr: string; icon: string }> = {
+  "urban-forest": {
+    en: "Community-wide urban planting",
+    fr: "Plantation urbaine à l’échelle de la collectivité",
+    icon: "🌳"
+  },
+  riparian: {
+    en: "Riparian planting in flood-prone areas",
+    fr: "Plantation riveraine en zones inondables",
+    icon: "🌊"
+  },
+  "street-trees": {
+    en: "Street tree planting",
+    fr: "Plantation d’arbres de rue",
+    icon: "🚶‍♂️"
+  },
+  "park-restoration": {
+    en: "Park tree planting",
+    fr: "Plantation d’arbres dans les parcs",
+    icon: "🏞️"
+  },
+  "green-infrastructure": {
+    en: "Urban planting in low-canopy areas",
+    fr: "Plantation urbaine en zones à faible canopée",
+    icon: "🌿"
+  }
 };
 
 const stageLabels: Record<Stage, { en: string; fr: string }> = {
@@ -655,7 +675,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
     }
   }, [activeMapLayer]);
 
-  // Project detail mock page
+  // Project detail view
   if (view === "project" && selectedProject) {
     return (
       <main className="mx-auto max-w-[1200px] px-4 py-6 space-y-5">
@@ -688,10 +708,13 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                   ? regionLabels[selectedProject.region].fr
                   : regionLabels[selectedProject.region].en}
               </span>
-              <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium">
-                {language === "fr"
-                  ? typologyLabels[selectedProject.typology].fr
-                  : typologyLabels[selectedProject.typology].en}
+              <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium flex items-center gap-1">
+                <span>{typologyMeta[selectedProject.typology].icon}</span>
+                <span>
+                  {language === "fr"
+                    ? typologyMeta[selectedProject.typology].fr
+                    : typologyMeta[selectedProject.typology].en}
+                </span>
               </span>
               <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium">
                 {language === "fr"
@@ -819,7 +842,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
           <div className="grid gap-4 md:grid-cols-[1.3fr,1fr] items-start">
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-4">
               <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
-                {t("Project story (demo)", "Récit du projet (démo)")}
+                {t("Project story", "Récit du projet")}
               </h2>
               <p className="text-xs text-slate-700">
                 {t(
@@ -892,12 +915,12 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3 shadow-sm">
               <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
-                {t("Mock layout guidance", "Gabarit fictif")}
+                {t("How this view is used", "Utilisation de cette vue")}
               </h3>
               <p className="text-[11px] text-slate-600">
                 {t(
-                  "In a full build, this page could be auto-populated from the application form, with editable narrative blocks and exportable PDFs.",
-                  "Dans une version complète, cette page pourrait être alimentée automatiquement à partir du formulaire de demande, avec des blocs narratifs modifiables et des PDF exportables."
+                  "In a full build, this page can be auto-populated from the application form, with editable narrative blocks, project photos and exportable PDFs.",
+                  "Dans une version complète, cette page peut être alimentée automatiquement à partir du formulaire de demande, avec des blocs narratifs modifiables, des photos de projet et des PDF exportables."
                 )}
               </p>
             </div>
@@ -926,12 +949,12 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md space-y-4">
           <header className="space-y-1">
             <h1 className="text-base md:text-lg font-semibold text-slate-900">
-              {t("Portfolio benefits (demo)", "Bénéfices du portefeuille (démo)")}
+              {t("Portfolio benefits", "Bénéfices du portefeuille")}
             </h1>
             <p className="text-xs text-slate-600">
               {t(
-                "Using the current filters, this mock-up shows how FCM could see aggregated benefits by group.",
-                "Avec les filtres actuels, cette maquette montre comment le FCM pourrait voir les bénéfices agrégés par groupe."
+                "Using the current filters, this view summarizes climate, water and health benefits across the portfolio.",
+                "Avec les filtres actuels, cette vue résume les bénéfices climatiques, hydriques et de santé pour l’ensemble du portefeuille."
               )}
             </p>
           </header>
@@ -993,14 +1016,66 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
 
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm space-y-3">
             <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
-              {t("Mock layout guidance", "Gabarit fictif")}
+              {t("Using this in reports", "Utilisation dans les rapports")}
             </h3>
             <p className="text-[11px] text-slate-600">
               {t(
-                "In a production version, this page could drive funder reports, with export to PowerBI or PDF and drill-down into regional or typology-based views.",
-                "Dans une version de production, cette page pourrait alimenter les rapports aux bailleurs de fonds, avec export vers PowerBI ou PDF et exploration par région ou typologie."
+                "In a production version, this page can drive funder reports, with export to PowerBI or PDF and drill-down into regional or typology-based views.",
+                "Dans une version de production, cette page peut alimenter les rapports aux bailleurs de fonds, avec export vers PowerBI ou PDF et exploration par région ou typologie."
               )}
             </p>
+            <button
+              type="button"
+              onClick={() => window.open("#methodology", "_blank")}
+              className="mt-1 inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-100 transition"
+            >
+              {t("Read more about portfolio methodology", "En savoir plus sur la méthodologie du portefeuille")}
+            </button>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
+                {t("Stakeholders benefiting", "Parties prenantes bénéficiaires")}
+              </h3>
+              <p className="text-[11px] text-slate-700 mb-2">
+                {t(
+                  "Use this as a starting point when describing who benefits across the current portfolio filters.",
+                  "Utilisez cette vue comme point de départ pour décrire qui bénéficie des projets dans le périmètre de filtres actuel."
+                )}
+              </p>
+              <div className="flex flex-wrap gap-1.5 text-[11px]">
+                <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
+                  {t("Residents near project sites", "Résident·es près des sites de projet")}
+                </span>
+                <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
+                  {t("People walking, rolling & cycling", "Piétons, cyclistes et usagers en mobilité réduite")}
+                </span>
+                <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
+                  {t("Municipal operations & infrastructure teams", "Services municipaux et équipes d’infrastructure")}
+                </span>
+                <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
+                  {t("Equity-deserving communities (where targeted)", "Communautés en quête d’équité (lorsqu’elles sont ciblées)")}
+                </span>
+              </div>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
+                {t("Compared to other land covers", "Comparaison avec d’autres usages du sol")}
+              </h3>
+              <p className="text-[11px] text-slate-700 mb-1">
+                {t(
+                  "Across this portfolio, tree canopy typically provides much higher carbon, cooling and stormwater benefits than turf or hard surfaces.",
+                  "À l’échelle de ce portefeuille, la canopée arborée offre généralement des bénéfices beaucoup plus élevés en carbone, refroidissement et eaux pluviales que le gazon ou les surfaces imperméables."
+                )}
+              </p>
+              <p className="text-[10px] text-slate-500">
+                {t(
+                  "Exact ratios depend on local conditions; the calculator view lets you explore a simple turf vs trees comparison at the project level.",
+                  "Les rapports exacts dépendent des conditions locales; la vue du calculateur vous permet d’explorer une comparaison simplifiée gazon vs arbres à l’échelle du projet."
+                )}
+              </p>
+            </div>
           </div>
         </section>
       </main>
@@ -1013,14 +1088,14 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
       <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 shadow-md">
         <h2 className="text-sm font-semibold text-slate-900 mb-1">
           {t(
-            "National portfolio snapshot (demo)",
-            "Aperçu national du portefeuille (démo)"
+            "National portfolio snapshot",
+            "Aperçu national du portefeuille"
           )}
         </h2>
         <p className="text-xs text-slate-600 mb-4">
           {t(
-            "Mock view of how FCM could see aggregated impacts across funded projects.",
-            "Vue fictive de la façon dont le FCM pourrait voir les impacts agrégés des projets financés."
+            "Indicative view of how funders and partners could see aggregated benefits across funded projects.",
+            "Vue indicative de la façon dont les bailleurs de fonds et partenaires peuvent voir les bénéfices agrégés des projets financés."
           )}
         </p>
 
@@ -1310,10 +1385,13 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                       {t("yr", "an")}
                     </span>
                   </div>
-                  <div className="mt-1 flex items-center gap-2 text-[10px] text-slate-500">
-                    <span>
-                      {language === "fr" ? typologyLabels[p.typology].fr : typologyLabels[p.typology].en}
-                    </span>
+              <div className="mt-1 flex items-center gap-2 text-[10px] text-slate-500">
+                <span className="flex items-center gap-1">
+                  <span>{typologyMeta[p.typology].icon}</span>
+                  <span>
+                    {language === "fr" ? typologyMeta[p.typology].fr : typologyMeta[p.typology].en}
+                  </span>
+                </span>
                     <span>•</span>
                     <span>
                       {language === "fr" ? stageLabels[p.stage].fr : stageLabels[p.stage].en}
@@ -1330,8 +1408,8 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
               className="w-full inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-primary-600 px-4 py-2 text-xs font-medium text-white shadow-md shadow-primary-500/40 hover:shadow-lg hover:shadow-primary-500/60 transition"
             >
               {t(
-                "Calculate portfolio benefits (demo)",
-                "Calculer les bénéfices du portefeuille (démo)"
+                "View portfolio benefit snapshot",
+                "Voir l’aperçu des bénéfices du portefeuille"
               )}
             </button>
           </div>
