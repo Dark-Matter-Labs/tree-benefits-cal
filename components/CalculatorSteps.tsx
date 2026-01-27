@@ -2362,7 +2362,9 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 </h4>
                 {valueMix ? (
                   <div className="space-y-2 text-[11px]">
-                    {[
+                    {(() => {
+                      const vm = valueMix!;
+                      return [
                       {
                         key: "carbon",
                         label: t("Carbon value", "Valeur carbone"),
@@ -2383,31 +2385,32 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         label: t("Property value", "Valeur foncière"),
                         color: "bg-amber-500"
                       }
-                    ].map(cat => {
-                      const raw =
-                        cat.key === "carbon"
-                          ? valueMix.carbon
-                          : cat.key === "stormwater"
-                          ? valueMix.stormwater
-                          : cat.key === "health"
-                          ? valueMix.health
-                          : valueMix.property;
-                      const pct = Math.round((raw / valueMix.total) * 100);
-                      return (
-                        <div key={cat.key} className="space-y-1">
-                          <div className="flex justify-between">
-                            <span className="text-slate-700">{cat.label}</span>
-                            <span className="text-slate-500">{pct}%</span>
+                      ].map(cat => {
+                        const raw =
+                          cat.key === "carbon"
+                            ? vm.carbon
+                            : cat.key === "stormwater"
+                            ? vm.stormwater
+                            : cat.key === "health"
+                            ? vm.health
+                            : vm.property;
+                        const pct = Math.round((raw / vm.total) * 100);
+                        return (
+                          <div key={cat.key} className="space-y-1">
+                            <div className="flex justify-between">
+                              <span className="text-slate-700">{cat.label}</span>
+                              <span className="text-slate-500">{pct}%</span>
+                            </div>
+                            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                              <div
+                                className={`h-2 rounded-full ${cat.color}`}
+                                style={{ width: `${Math.max(pct, 4)}%` }}
+                              />
+                            </div>
                           </div>
-                          <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-                            <div
-                              className={`h-2 rounded-full ${cat.color}`}
-                              style={{ width: `${Math.max(pct, 4)}%` }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      });
+                    })()}
                     <p className="mt-1 text-[10px] text-slate-500">
                       {t(
                         "Shares are based on the monetary proxies used in this tool (carbon price, avoided stormwater costs, health proxy and property uplift).",
@@ -2431,59 +2434,62 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 </h4>
                 {groupScores ? (
                   <div className="space-y-2 text-[11px]">
-                    {[
+                    {(() => {
+                      const gs = groupScores!;
+                      return [
                       {
                         key: "climate",
                         label: t("Climate / carbon", "Climat / carbone"),
                         color: "bg-primary-500",
-                        value: groupScores.climate
+                        value: gs.climate
                       },
                       {
                         key: "water",
                         label: t("Stormwater / flooding", "Eaux pluviales / inondations"),
                         color: "bg-secondary-500",
-                        value: groupScores.water
+                        value: gs.water
                       },
                       {
                         key: "health",
                         label: t("Health / equity (proxy)", "Santé / équité (proxy)"),
                         color: "bg-accent-500",
-                        value: groupScores.health
+                        value: gs.health
                       },
                       {
                         key: "biodiversity",
                         label: t("Biodiversity", "Biodiversité"),
                         color: "bg-green-500",
-                        value: groupScores.biodiversity
+                        value: gs.biodiversity
                       }
-                    ].map(group => {
-                      const ratio = group.value / groupScores.max;
-                      const widthPct = Math.max(8, Math.round(ratio * 100));
-                      const strength =
-                        ratio >= 0.75
-                          ? t("very strong", "très fort")
-                          : ratio >= 0.5
-                          ? t("strong", "fort")
-                          : ratio >= 0.25
-                          ? t("moderate", "modéré")
-                          : t("emerging", "émergent");
-                      return (
-                        <div key={group.key}>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-slate-700">
-                              {group.label}
-                            </span>
-                            <span className="text-slate-500">{strength}</span>
+                      ].map(group => {
+                        const ratio = group.value / gs.max;
+                        const widthPct = Math.max(8, Math.round(ratio * 100));
+                        const strength =
+                          ratio >= 0.75
+                            ? t("very strong", "très fort")
+                            : ratio >= 0.5
+                            ? t("strong", "fort")
+                            : ratio >= 0.25
+                            ? t("moderate", "modéré")
+                            : t("emerging", "émergent");
+                        return (
+                          <div key={group.key}>
+                            <div className="flex justify-between mb-1">
+                              <span className="text-slate-700">
+                                {group.label}
+                              </span>
+                              <span className="text-slate-500">{strength}</span>
+                            </div>
+                            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                              <div
+                                className={`h-2 rounded-full ${group.color}`}
+                                style={{ width: `${widthPct}%` }}
+                              />
+                            </div>
                           </div>
-                          <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-                            <div
-                              className={`h-2 rounded-full ${group.color}`}
-                              style={{ width: `${widthPct}%` }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      });
+                    })()}
                     <p className="mt-1 text-[10px] text-slate-500">
                       {t(
                         "Relative strength of each group is scaled to the strongest impact in your project.",
