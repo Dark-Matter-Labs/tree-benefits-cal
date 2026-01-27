@@ -140,16 +140,15 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
     infrastructureCostPerLiter: 0.001 // $/L
   });
   const [healthDetails, setHealthDetails] = useState({
-    proximityToResidential: true,
-    accessibilityScore: 7 // 1-10
+    pedestrianActivity: "moderate" as "low" | "moderate" | "high"
   });
   const [heatDetails, setHeatDetails] = useState({
     currentMaxTemp: 35, // °C
     targetTempReduction: 2 // °C
   });
   const [airQualityDetails, setAirQualityDetails] = useState({
-    proximityToRoads: true,
-    trafficVolume: "medium" as "low" | "medium" | "high"
+    trafficVolume: "medium" as "low" | "medium" | "high",
+    noiseLevel: "moderate" as "low" | "moderate" | "high"
   });
   const [biodiversityDetails, setBiodiversityDetails] = useState({
     nativeSpeciesPercent: 80, // %
@@ -910,6 +909,29 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 </p>
               </div>
 
+              <div className="space-y-1.5 sm:col-span-2">
+                <label className="text-xs font-medium text-slate-700">
+                  {t(
+                    "Top 5 species (optional)",
+                    "5 principales espèces (optionnel)"
+                  )}
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder={t(
+                    "List your top species (e.g. red maple, bur oak, linden...)",
+                    "Listez vos principales espèces (p. ex. érable rouge, chêne à gros fruits, tilleul...)"
+                  )}
+                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition resize-y"
+                />
+                <p className="text-[11px] text-slate-500 italic">
+                  {t(
+                    "This helps refine communications and, in future versions, species-specific benefits.",
+                    "Ceci aide à affiner les communications et, dans de futures versions, les bénéfices propres aux espèces."
+                  )}
+                </p>
+              </div>
+
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-slate-700">
                   {t("Improved green space (Ha)", "Espace vert amélioré (Ha)")}
@@ -1630,41 +1652,46 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </h4>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={healthDetails.proximityToResidential}
-                          onChange={e =>
-                            setHealthDetails(prev => ({
-                              ...prev,
-                              proximityToResidential: e.target.checked
-                            }))
-                          }
-                          className="w-4 h-4 rounded border-slate-300 text-accent-600 focus:ring-2 focus:ring-accent-500"
-                        />
-                        <span className="text-xs font-medium text-slate-700">
-                          {t("Proximity to residential areas", "Proximité des zones résidentielles")}
-                        </span>
-                      </label>
-                    </div>
-                    <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-700">
-                        {t("Accessibility score (1-10)", "Score d'accessibilité (1-10)")}
+                        {t(
+                          "What is the typical level of pedestrian activity on these streets?",
+                          "Quel est le niveau habituel d’activité piétonne sur ces rues?"
+                        )}
                       </label>
-                      <input
-                        type="number"
-                        min="1"
-                        max="10"
-                        value={healthDetails.accessibilityScore}
+                      <select
+                        value={healthDetails.pedestrianActivity}
                         onChange={e =>
                           setHealthDetails(prev => ({
                             ...prev,
-                            accessibilityScore: Math.min(10, Math.max(1, Number(e.target.value) || 1))
+                            pedestrianActivity: e.target.value as
+                              | "low"
+                              | "moderate"
+                              | "high"
                           }))
                         }
                         className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 transition"
-                      />
+                      >
+                        <option value="high">
+                          {t(
+                            "High (busy sidewalks throughout the day)",
+                            "Élevée (trottoirs très fréquentés toute la journée)"
+                          )}
+                        </option>
+                        <option value="moderate">
+                          {t(
+                            "Moderate (regular pedestrian use)",
+                            "Modérée (utilisation piétonne régulière)"
+                          )}
+                        </option>
+                        <option value="low">
+                          {t(
+                            "Low (minimal foot traffic)",
+                            "Faible (très peu de circulation piétonne)"
+                          )}
+                        </option>
+                      </select>
                     </div>
+                    <div />
                   </div>
                 </div>
               )}
@@ -1719,26 +1746,11 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </h4>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={airQualityDetails.proximityToRoads}
-                          onChange={e =>
-                            setAirQualityDetails(prev => ({
-                              ...prev,
-                              proximityToRoads: e.target.checked
-                            }))
-                          }
-                          className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
-                        />
-                        <span className="text-xs font-medium text-slate-700">
-                          {t("Proximity to major roads", "Proximité des routes principales")}
-                        </span>
-                      </label>
-                    </div>
-                    <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-700">
-                        {t("Traffic volume", "Volume de trafic")}
+                        {t(
+                          "Traffic – Does this street experience high traffic volumes?",
+                          "Trafic – Cette rue connaît-elle un trafic important?"
+                        )}
                       </label>
                       <select
                         value={airQualityDetails.trafficVolume}
@@ -1750,9 +1762,61 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         }
                         className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                       >
-                        <option value="low">{t("Low", "Faible")}</option>
-                        <option value="medium">{t("Medium", "Moyen")}</option>
-                        <option value="high">{t("High", "Élevé")}</option>
+                        <option value="high">
+                          {t(
+                            "Yes – high traffic (busy arterial or collector road)",
+                            "Oui – trafic élevé (artère ou collectrice achalandée)"
+                          )}
+                        </option>
+                        <option value="medium">
+                          {t(
+                            "Moderate traffic (neighbourhood connector)",
+                            "Trafic modéré (rue de liaison de quartier)"
+                          )}
+                        </option>
+                        <option value="low">
+                          {t(
+                            "Low traffic (local / residential street)",
+                            "Faible trafic (rue locale / résidentielle)"
+                          )}
+                        </option>
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t(
+                          "Air pollution – Does this street experience high levels of noise pollution?",
+                          "Pollution atmosphérique – Cette rue présente-t-elle des niveaux élevés de pollution sonore?"
+                        )}
+                      </label>
+                      <select
+                        value={airQualityDetails.noiseLevel}
+                        onChange={e =>
+                          setAirQualityDetails(prev => ({
+                            ...prev,
+                            noiseLevel: e.target.value as "low" | "moderate" | "high"
+                          }))
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="high">
+                          {t(
+                            "Yes – significant noise issues",
+                            "Oui – problèmes sonores importants"
+                          )}
+                        </option>
+                        <option value="moderate">
+                          {t(
+                            "Moderate noise levels",
+                            "Niveaux sonores modérés"
+                          )}
+                        </option>
+                        <option value="low">
+                          {t(
+                            "No – relatively quiet",
+                            "Non – relativement calme"
+                          )}
+                        </option>
                       </select>
                     </div>
                   </div>

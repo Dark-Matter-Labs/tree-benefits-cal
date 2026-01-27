@@ -31,9 +31,6 @@ export function WorkshopHeader({
                   ? "Calculatrice canadienne des bénéfices des arbres"
                   : "Canadian Tree Benefits Calculator"}
               </h1>
-              <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
-                {language === "fr" ? "Prototype atelier" : "Workshop prototype"}
-              </span>
             </div>
             <p className="text-xs text-slate-600 mt-0.5">
               {language === "fr"
