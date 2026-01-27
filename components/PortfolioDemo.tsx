@@ -32,6 +32,7 @@ interface MockProject {
   stage: Stage;
   year: number;
   trees: number;
+  areaHa: number;
   carbonTonnes: number;
   stormwaterLitres: number;
   lat: number;
@@ -50,6 +51,7 @@ const mockProjects: MockProject[] = [
     stage: "planting",
     year: 2025,
     trees: 750,
+    areaHa: 12,
     carbonTonnes: 15,
     stormwaterLitres: 2200000,
     lat: 44.6488,
@@ -66,6 +68,7 @@ const mockProjects: MockProject[] = [
     stage: "approved",
     year: 2025,
     trees: 1200,
+    areaHa: 18,
     carbonTonnes: 24,
     stormwaterLitres: 3800000,
     lat: 45.5017,
@@ -82,6 +85,7 @@ const mockProjects: MockProject[] = [
     stage: "monitoring",
     year: 2024,
     trees: 600,
+    areaHa: 20,
     carbonTonnes: 12,
     stormwaterLitres: 1900000,
     lat: 52.1332,
@@ -98,6 +102,7 @@ const mockProjects: MockProject[] = [
     stage: "completed",
     year: 2025,
     trees: 1500,
+    areaHa: 16,
     carbonTonnes: 30,
     stormwaterLitres: 4500000,
     lat: 49.2827,
@@ -114,6 +119,7 @@ const mockProjects: MockProject[] = [
     stage: "planting",
     year: 2024,
     trees: 120,
+    areaHa: 3,
     carbonTonnes: 3,
     stormwaterLitres: 450000,
     lat: 46.2382,
@@ -130,6 +136,7 @@ const mockProjects: MockProject[] = [
     stage: "approved",
     year: 2025,
     trees: 2000,
+    areaHa: 25,
     carbonTonnes: 40,
     stormwaterLitres: 6000000,
     lat: 43.6532,
@@ -146,6 +153,7 @@ const mockProjects: MockProject[] = [
     stage: "planning",
     year: 2025,
     trees: 850,
+    areaHa: 14,
     carbonTonnes: 17,
     stormwaterLitres: 2500000,
     lat: 51.0447,
@@ -162,6 +170,7 @@ const mockProjects: MockProject[] = [
     stage: "monitoring",
     year: 2024,
     trees: 450,
+    areaHa: 10,
     carbonTonnes: 9,
     stormwaterLitres: 1400000,
     lat: 49.8951,
@@ -178,6 +187,7 @@ const mockProjects: MockProject[] = [
     stage: "planting",
     year: 2025,
     trees: 200,
+    areaHa: 8,
     carbonTonnes: 4,
     stormwaterLitres: 600000,
     lat: 60.7212,
@@ -194,6 +204,7 @@ const mockProjects: MockProject[] = [
     stage: "completed",
     year: 2024,
     trees: 1800,
+    areaHa: 22,
     carbonTonnes: 36,
     stormwaterLitres: 5400000,
     lat: 45.4215,
@@ -210,6 +221,7 @@ const mockProjects: MockProject[] = [
     stage: "approved",
     year: 2025,
     trees: 180,
+    areaHa: 6,
     carbonTonnes: 4,
     stormwaterLitres: 550000,
     lat: 47.5615,
@@ -226,6 +238,7 @@ const mockProjects: MockProject[] = [
     stage: "planning",
     year: 2025,
     trees: 1600,
+    areaHa: 21,
     carbonTonnes: 32,
     stormwaterLitres: 4800000,
     lat: 53.5461,
@@ -324,6 +337,9 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
     zoom: 3.5
   });
 
+  const [stakeholderNames, setStakeholderNames] = useState<string[]>([]);
+  const [newStakeholderName, setNewStakeholderName] = useState("");
+
   const filteredProjects = useMemo(() => {
     return mockProjects.filter(p => {
       if (selectedRegion !== "all" && p.region !== selectedRegion) return false;
@@ -341,6 +357,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
     (sum, p) => sum + p.stormwaterLitres,
     0
   );
+  const totalAreaHa = filteredProjects.reduce((sum, p) => sum + (p.areaHa || 0), 0);
 
   const averageTreesPerProject =
     totalProjects === 0 ? 0 : Math.round(totalTrees / totalProjects);
@@ -355,6 +372,48 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
       : averageTreesPerProject > 300
       ? t("moderate", "modéré")
       : t("emerging", "émergent");
+
+  const downloadPortfolioCsv = () => {
+    if (filteredProjects.length === 0) return;
+    const header = [
+      "id",
+      "name",
+      "municipality",
+      "province",
+      "region",
+      "size",
+      "typology",
+      "stage",
+      "year",
+      "trees",
+      "carbonTonnes",
+      "stormwaterLitres"
+    ];
+    const rows = filteredProjects.map(p => [
+      p.id,
+      p.name,
+      p.municipality,
+      p.province,
+      p.region,
+      p.size,
+      p.typology,
+      p.stage,
+      String(p.year),
+      String(p.trees),
+      String(p.carbonTonnes),
+      String(p.stormwaterLitres)
+    ]);
+    const csv = [header.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "portfolio-projects.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   // Manage map layers
   useEffect(() => {
@@ -947,16 +1006,34 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
         </button>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md space-y-4">
-          <header className="space-y-1">
-            <h1 className="text-base md:text-lg font-semibold text-slate-900">
-              {t("Portfolio benefits", "Bénéfices du portefeuille")}
-            </h1>
-            <p className="text-xs text-slate-600">
-              {t(
-                "Using the current filters, this view summarizes climate, water and health benefits across the portfolio.",
-                "Avec les filtres actuels, cette vue résume les bénéfices climatiques, hydriques et de santé pour l’ensemble du portefeuille."
-              )}
-            </p>
+          <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div className="space-y-1">
+              <h1 className="text-base md:text-lg font-semibold text-slate-900">
+                {t("Portfolio benefits", "Bénéfices du portefeuille")}
+              </h1>
+              <p className="text-xs text-slate-600">
+                {t(
+                  "Using the current filters, this view summarizes climate, water and health benefits across the portfolio.",
+                  "Avec les filtres actuels, cette vue résume les bénéfices climatiques, hydriques et de santé pour l’ensemble du portefeuille."
+                )}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={downloadPortfolioCsv}
+                className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-50 transition"
+              >
+                📊 {t("Export portfolio (CSV)", "Exporter le portefeuille (CSV)")}
+              </button>
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-50 transition"
+              >
+                🧾 {t("Export as PDF", "Exporter en PDF")}
+              </button>
+            </div>
           </header>
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -1014,7 +1091,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm space-y-3">
+          <section className="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm space-y-3">
             <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
               {t("Using this in reports", "Utilisation dans les rapports")}
             </h3>
@@ -1031,20 +1108,199 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             >
               {t("Read more about portfolio methodology", "En savoir plus sur la méthodologie du portefeuille")}
             </button>
-          </div>
+          </section>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          {/* Portfolio inputs summary & charts */}
+          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3">
+            <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+              {t("Portfolio inputs summary", "Résumé des intrants du portefeuille")}
+            </h3>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+                <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+                  {t("Total trees", "Total des arbres")}
+                </div>
+                <div className="mt-1 text-lg font-bold text-slate-900">
+                  {totalTrees.toLocaleString()}
+                </div>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+                <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+                  {t("Total project area (Ha)", "Superficie totale des projets (Ha)")}
+                </div>
+                <div className="mt-1 text-lg font-bold text-slate-900">
+                  {totalAreaHa.toLocaleString(undefined, { maximumFractionDigits: 1 })}
+                </div>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+                <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+                  {t("Average trees per project", "Nombre moyen d’arbres par projet")}
+                </div>
+                <div className="mt-1 text-lg font-bold text-slate-900">
+                  {totalProjects === 0 ? 0 : Math.round(totalTrees / totalProjects)}
+                </div>
+              </div>
+            </div>
+
+            {/* Simple charts: trees by typology & by region */}
+            <div className="grid gap-4 md:grid-cols-2 text-[11px]">
+              <div>
+                <h4 className="mb-2 font-semibold text-slate-800">
+                  {t("Trees by typology", "Arbres par typologie")}
+                </h4>
+                <div className="space-y-1.5">
+                  {Object.entries(typologyMeta).map(([key, meta]) => {
+                    const totalForTypology = filteredProjects
+                      .filter(p => p.typology === key)
+                      .reduce((sum, p) => sum + p.trees, 0);
+                    if (totalForTypology === 0) return null;
+                    const share = totalTrees === 0 ? 0 : (totalForTypology / totalTrees) * 100;
+                    return (
+                      <div key={key}>
+                        <div className="flex justify-between mb-0.5">
+                          <span className="flex items-center gap-1 text-slate-700">
+                            <span>{meta.icon}</span>
+                            <span>{language === "fr" ? meta.fr : meta.en}</span>
+                          </span>
+                          <span className="text-slate-500">
+                            {totalForTypology.toLocaleString()} ({share.toFixed(0)}%)
+                          </span>
+                        </div>
+                        <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                          <div
+                            className="h-2 rounded-full bg-primary-500"
+                            style={{ width: `${Math.max(8, share)}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {filteredProjects.length === 0 && (
+                    <p className="text-slate-500">
+                      {t("No projects in this portfolio view.", "Aucun projet dans cette vue de portefeuille.")}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div>
+                <h4 className="mb-2 font-semibold text-slate-800">
+                  {t("Trees by region", "Arbres par région")}
+                </h4>
+                <div className="space-y-1.5">
+                  {Object.entries(regionLabels).map(([key, label]) => {
+                    const totalForRegion = filteredProjects
+                      .filter(p => p.region === key)
+                      .reduce((sum, p) => sum + p.trees, 0);
+                    if (totalForRegion === 0) return null;
+                    const share = totalTrees === 0 ? 0 : (totalForRegion / totalTrees) * 100;
+                    return (
+                      <div key={key}>
+                        <div className="flex justify-between mb-0.5">
+                          <span className="text-slate-700">
+                            {language === "fr" ? label.fr : label.en}
+                          </span>
+                          <span className="text-slate-500">
+                            {totalForRegion.toLocaleString()} ({share.toFixed(0)}%)
+                          </span>
+                        </div>
+                        <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                          <div
+                            className="h-2 rounded-full bg-secondary-500"
+                            style={{ width: `${Math.max(8, share)}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {filteredProjects.length === 0 && (
+                    <p className="text-slate-500">
+                      {t("No projects in this portfolio view.", "Aucun projet dans cette vue de portefeuille.")}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Project list & comparative data */}
+          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3">
+            <header className="flex items-center justify-between gap-2">
+              <div>
+                <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+                  {t("Projects in this portfolio view", "Projets dans cette vue de portefeuille")}
+                </h2>
+                <p className="text-[11px] text-slate-600">
+                  {t(
+                    "Ranked by number of trees to help compare relative contribution.",
+                    "Classés par nombre d’arbres pour comparer la contribution relative."
+                  )}
+                </p>
+              </div>
+              <div className="text-[11px] text-slate-500">
+                {totalProjects} {t("projects", "projets")}
+              </div>
+            </header>
+            <div className="max-h-64 overflow-auto pr-1 text-[11px]">
+              {filteredProjects.length === 0 ? (
+                <p className="text-slate-500">
+                  {t("No projects in this portfolio view.", "Aucun projet dans cette vue de portefeuille.")}
+                </p>
+              ) : (
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="text-left text-[10px] text-slate-500 border-b border-slate-200">
+                      <th className="py-1 pr-2 font-medium">{t("Project", "Projet")}</th>
+                      <th className="py-1 pr-2 font-medium">{t("Location", "Localisation")}</th>
+                      <th className="py-1 pr-2 font-medium text-right">{t("Trees", "Arbres")}</th>
+                      <th className="py-1 pr-2 font-medium text-right">{t("Area (Ha)", "Superficie (Ha)")}</th>
+                      <th className="py-1 pr-2 font-medium text-right">{t("Share of trees", "Part des arbres")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredProjects
+                      .slice()
+                      .sort((a, b) => b.trees - a.trees)
+                      .map(p => {
+                        const share = totalTrees === 0 ? 0 : (p.trees / totalTrees) * 100;
+                        return (
+                          <tr key={p.id} className="border-b border-slate-100 last:border-0">
+                            <td className="py-1 pr-2 text-slate-900">
+                              {p.name}
+                            </td>
+                            <td className="py-1 pr-2 text-slate-600">
+                              {p.municipality}, {p.province}
+                            </td>
+                            <td className="py-1 pr-2 text-right text-slate-900">
+                              {p.trees.toLocaleString()}
+                            </td>
+                            <td className="py-1 pr-2 text-right text-slate-900">
+                              {p.areaHa.toLocaleString(undefined, { maximumFractionDigits: 1 })}
+                            </td>
+                            <td className="py-1 pr-2 text-right text-slate-900">
+                              {share.toFixed(1)}%
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </section>
+
+          {/* Stakeholder benefits "map" */}
+          <section className="grid gap-4 md:grid-cols-2">
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
                 {t("Stakeholders benefiting", "Parties prenantes bénéficiaires")}
               </h3>
               <p className="text-[11px] text-slate-700 mb-2">
                 {t(
-                  "Use this as a starting point when describing who benefits across the current portfolio filters.",
-                  "Utilisez cette vue comme point de départ pour décrire qui bénéficie des projets dans le périmètre de filtres actuel."
+                  "Use this as a stakeholder map for the current portfolio filters, and add specific groups where relevant.",
+                  "Utilisez cette vue comme carte des parties prenantes pour les filtres de portefeuille actuels et ajoutez des groupes spécifiques au besoin."
                 )}
               </p>
-              <div className="flex flex-wrap gap-1.5 text-[11px]">
+              <div className="flex flex-wrap gap-1.5 text-[11px] mb-3">
                 <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
                   {t("Residents near project sites", "Résident·es près des sites de projet")}
                 </span>
@@ -1057,6 +1313,58 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                 <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
                   {t("Equity-deserving communities (where targeted)", "Communautés en quête d’équité (lorsqu’elles sont ciblées)")}
                 </span>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[11px] font-medium text-slate-700">
+                  {t(
+                    "Add specific stakeholder groups for this portfolio view (optional)",
+                    "Ajoutez des groupes de parties prenantes spécifiques pour cette vue de portefeuille (optionnel)"
+                  )}
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newStakeholderName}
+                    onChange={e => setNewStakeholderName(e.target.value)}
+                    className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-[11px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                    placeholder={t("e.g. Local school board", "p. ex. Commission scolaire locale")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const value = newStakeholderName.trim();
+                      if (!value) return;
+                      setStakeholderNames(prev =>
+                        prev.includes(value) ? prev : [...prev, value]
+                      );
+                      setNewStakeholderName("");
+                    }}
+                    className="rounded-md bg-primary-600 px-3 py-1.5 text-[11px] font-medium text-white hover:bg-primary-700 transition"
+                  >
+                    {t("Add", "Ajouter")}
+                  </button>
+                </div>
+                {stakeholderNames.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {stakeholderNames.map(name => (
+                      <button
+                        key={name}
+                        type="button"
+                        onClick={() =>
+                          setStakeholderNames(prev =>
+                            prev.filter(n => n !== name)
+                          )
+                        }
+                        className="group rounded-full bg-primary-50 border border-primary-200 px-2 py-1 text-[11px] text-primary-800 hover:bg-primary-100"
+                      >
+                        {name}
+                        <span className="ml-1 text-[10px] text-primary-500 group-hover:text-primary-800">
+                          ×
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -1076,7 +1384,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                 )}
               </p>
             </div>
-          </div>
+          </section>
         </section>
       </main>
     );
@@ -1086,18 +1394,38 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
     <main className="mx-auto max-w-[1600px] px-4 py-6 space-y-5">
       {/* Summary Stats */}
       <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 shadow-md">
-        <h2 className="text-sm font-semibold text-slate-900 mb-1">
-          {t(
-            "National portfolio snapshot",
-            "Aperçu national du portefeuille"
-          )}
-        </h2>
-        <p className="text-xs text-slate-600 mb-4">
-          {t(
-            "Indicative view of how funders and partners could see aggregated benefits across funded projects.",
-            "Vue indicative de la façon dont les bailleurs de fonds et partenaires peuvent voir les bénéfices agrégés des projets financés."
-          )}
-        </p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900 mb-1">
+              {t(
+                "National portfolio snapshot",
+                "Aperçu national du portefeuille"
+              )}
+            </h2>
+            <p className="text-xs text-slate-600">
+              {t(
+                "Indicative view of how funders and partners could see aggregated benefits across funded projects.",
+                "Vue indicative de la façon dont les bailleurs de fonds et partenaires peuvent voir les bénéfices agrégés des projets financés."
+              )}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={downloadPortfolioCsv}
+              className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-50 transition"
+            >
+              📊 {t("Export portfolio (CSV)", "Exporter le portefeuille (CSV)")}
+            </button>
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-50 transition"
+            >
+              🧾 {t("Export as PDF", "Exporter en PDF")}
+            </button>
+          </div>
+        </div>
 
         <div className="grid gap-3 sm:grid-cols-4">
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
@@ -1181,9 +1509,9 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
               className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
             >
               <option value="all">{t("All types", "Tous les types")}</option>
-              {Object.entries(typologyLabels).map(([key, label]) => (
+              {Object.entries(typologyMeta).map(([key, meta]) => (
                 <option key={key} value={key}>
-                  {language === "fr" ? label.fr : label.en}
+                  {language === "fr" ? meta.fr : meta.en}
                 </option>
               ))}
             </select>
