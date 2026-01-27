@@ -9,12 +9,23 @@ export type Region =
 
 export type BenefitCategory =
   | "carbon"
-  | "stormwater"
   | "airQuality"
   | "heat"
+  | "floodManagement"
+  | "waterQuality"
   | "biodiversity"
+  | "soilHealth"
   | "health"
-  | "propertyValue";
+  | "recreation"
+  | "aesthetics"
+  | "noiseReduction"
+  | "culturalValues"
+  | "propertyValue"
+  | "energySavings"
+  | "labourProductivity"
+  | "tourism"
+  | "foodProduction"
+  | "stormwater"; // Keep for backward compatibility
 
 export interface ProjectInput {
   region: Region;

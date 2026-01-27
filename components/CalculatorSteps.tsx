@@ -78,20 +78,47 @@ function inferRegionFromMunicipality(name: string): Region | null {
   return match ? match.region : null;
 }
 
-const allBenefitCategories: { id: BenefitCategory; labelEn: string; labelFr: string }[] =
-  [
-    { id: "carbon", labelEn: "Carbon", labelFr: "Carbone" },
-    { id: "stormwater", labelEn: "Stormwater", labelFr: "Eaux pluviales" },
-    { id: "airQuality", labelEn: "Air quality", labelFr: "Qualité de l’air" },
-    { id: "heat", labelEn: "Heat mitigation", labelFr: "Îlot de chaleur" },
-    { id: "biodiversity", labelEn: "Biodiversity", labelFr: "Biodiversité" },
-    { id: "health", labelEn: "Health", labelFr: "Santé" },
-    {
-      id: "propertyValue",
-      labelEn: "Property value",
-      labelFr: "Valeur foncière"
-    }
-  ];
+const benefitCategoriesByGroup: {
+  groupEn: string;
+  groupFr: string;
+  benefits: { id: BenefitCategory; labelEn: string; labelFr: string }[];
+}[] = [
+  {
+    groupEn: "ENVIRONMENTAL BENEFITS",
+    groupFr: "BÉNÉFICES ENVIRONNEMENTAUX",
+    benefits: [
+      { id: "carbon", labelEn: "Carbon Sequestration", labelFr: "Séquestration du carbone" },
+      { id: "airQuality", labelEn: "Air Quality Improvement", labelFr: "Amélioration de la qualité de l'air" },
+      { id: "heat", labelEn: "Heat Mitigation", labelFr: "Atténuation de la chaleur" },
+      { id: "floodManagement", labelEn: "Flood Management", labelFr: "Gestion des inondations" },
+      { id: "waterQuality", labelEn: "Water Quality Improvement", labelFr: "Amélioration de la qualité de l'eau" },
+      { id: "biodiversity", labelEn: "Biodiversity & Habitat", labelFr: "Biodiversité et habitat" },
+      { id: "soilHealth", labelEn: "Soil Health & Erosion Control", labelFr: "Santé des sols et contrôle de l'érosion" }
+    ]
+  },
+  {
+    groupEn: "SOCIAL & COMMUNITY BENEFITS",
+    groupFr: "BÉNÉFICES SOCIAUX ET COMMUNAUTAIRES",
+    benefits: [
+      { id: "health", labelEn: "Health & Wellbeing", labelFr: "Santé et bien-être" },
+      { id: "recreation", labelEn: "Recreation & Community Connection", labelFr: "Loisirs et liens communautaires" },
+      { id: "aesthetics", labelEn: "Aesthetics & Visual Amenity", labelFr: "Esthétique et aménité visuelle" },
+      { id: "noiseReduction", labelEn: "Noise Reduction", labelFr: "Réduction du bruit" },
+      { id: "culturalValues", labelEn: "Cultural & Indigenous Values", labelFr: "Valeurs culturelles et autochtones" }
+    ]
+  },
+  {
+    groupEn: "ECONOMIC BENEFITS",
+    groupFr: "BÉNÉFICES ÉCONOMIQUES",
+    benefits: [
+      { id: "propertyValue", labelEn: "Property Value Enhancement", labelFr: "Amélioration de la valeur foncière" },
+      { id: "energySavings", labelEn: "Energy Savings", labelFr: "Économies d'énergie" },
+      { id: "labourProductivity", labelEn: "Labour Productivity", labelFr: "Productivité du travail" },
+      { id: "tourism", labelEn: "Tourism & Destination Appeal", labelFr: "Tourisme et attrait de destination" },
+      { id: "foodProduction", labelEn: "Food Production", labelFr: "Production alimentaire" }
+    ]
+  }
+];
 
 export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
@@ -133,7 +160,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
   const [selectedBenefits, setSelectedBenefits] = useState<BenefitCategory[]>([
     "carbon",
-    "stormwater",
+    "floodManagement",
     "health",
     "heat"
   ]);
@@ -2660,26 +2687,35 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 "Sélectionnez les catégories de bénéfices les plus pertinentes pour votre bailleur de fonds, votre conseil ou votre communauté."
               )}
             </p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {allBenefitCategories.map(cat => {
-                const selected = selectedBenefits.includes(cat.id);
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => handleToggleBenefit(cat.id)}
-                    className={`rounded-xl border px-3 py-2 text-left text-xs transition-all ${
-                      selected
-                        ? "border-primary-500 bg-primary-50 text-primary-900 font-medium shadow-sm"
-                        : "border-slate-300 bg-slate-50 text-slate-700 hover:border-primary-400 hover:bg-primary-50/50"
-                    }`}
-                  >
-                    <div className="font-medium">
-                      {language === "fr" ? cat.labelFr : cat.labelEn}
-                    </div>
-                  </button>
-                );
-              })}
+            <div className="space-y-6">
+              {benefitCategoriesByGroup.map((group, groupIdx) => (
+                <div key={groupIdx} className="space-y-3">
+                  <h5 className="text-[10px] font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1.5">
+                    {language === "fr" ? group.groupFr : group.groupEn}
+                  </h5>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {group.benefits.map(cat => {
+                      const selected = selectedBenefits.includes(cat.id);
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => handleToggleBenefit(cat.id)}
+                          className={`rounded-xl border px-3 py-2 text-left text-xs transition-all ${
+                            selected
+                              ? "border-primary-500 bg-primary-50 text-primary-900 font-medium shadow-sm"
+                              : "border-slate-300 bg-slate-50 text-slate-700 hover:border-primary-400 hover:bg-primary-50/50"
+                          }`}
+                        >
+                          <div className="font-medium">
+                            {language === "fr" ? cat.labelFr : cat.labelEn}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
             <div className="flex justify-between">
               <button
