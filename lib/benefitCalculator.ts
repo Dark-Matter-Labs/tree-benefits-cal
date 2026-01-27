@@ -1,11 +1,4 @@
 export type MunicipalitySize = "small" | "medium" | "large";
-export type MunicipalityType =
-  | "urban"
-  | "rural"
-  | "northern"
-  | "remote"
-  | "indigenous";
-
 export type Region =
   | "atlantic"
   | "quebec"
@@ -26,7 +19,6 @@ export type BenefitCategory =
 export interface ProjectInput {
   region: Region;
   municipalitySize: MunicipalitySize;
-  municipalityType: MunicipalityType;
   populationServed: number;
   householdsServed: number;
   numberOfTrees: number;
