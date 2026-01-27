@@ -198,6 +198,70 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [riparianLengthKm, setRiparianLengthKm] = useState<number | null>(null);
   const [parkCount, setParkCount] = useState<number | null>(null);
 
+  // Street Tree Planting questions
+  const [streetTreeSize, setStreetTreeSize] = useState<string>("");
+  const [streetAddresses, setStreetAddresses] = useState<string[]>([""]);
+  const [streetLengthM, setStreetLengthM] = useState<number | null>(null);
+  const [streetPlantingDensity, setStreetPlantingDensity] = useState<number | null>(null);
+  const [streetLandUse, setStreetLandUse] = useState<string>("");
+  const [streetCanopyCover, setStreetCanopyCover] = useState<string>("");
+  const [streetCombinedInterventions, setStreetCombinedInterventions] = useState<string[]>([]);
+  const [streetHardscapeReductionArea, setStreetHardscapeReductionArea] = useState<number | null>(null);
+  const [streetHardscapeReductionPercent, setStreetHardscapeReductionPercent] = useState<string>("");
+  const [streetOtherGI, setStreetOtherGI] = useState<string>("");
+
+  // Park Tree Planting questions
+  const [parkNativeSpeciesPercent, setParkNativeSpeciesPercent] = useState<string>("");
+  const [parkTreeSize, setParkTreeSize] = useState<string>("");
+  const [parkName, setParkName] = useState<string>("");
+  const [parkLocation, setParkLocation] = useState<string>("");
+  const [parkSizeHa, setParkSizeHa] = useState<number | null>(null);
+  const [parkType, setParkType] = useState<string>("");
+  const [parkPurpose, setParkPurpose] = useState<string[]>([]);
+  const [parkVisitation, setParkVisitation] = useState<string>("");
+  const [parkEcologicalConnectivity, setParkEcologicalConnectivity] = useState<string>("");
+  const [parkCombinedInterventions, setParkCombinedInterventions] = useState<string[]>([]);
+
+  // Riparian Planting questions
+  const [riparianLengthM, setRiparianLengthM] = useState<number | null>(null);
+  const [riparianNativeSpeciesPercent, setRiparianNativeSpeciesPercent] = useState<string>("");
+  const [riparianTreeSize, setRiparianTreeSize] = useState<string>("");
+  const [riparianBufferWidth, setRiparianBufferWidth] = useState<string>("");
+  const [riparianDensityPerM, setRiparianDensityPerM] = useState<number | null>(null);
+  const [riparianDensityPerHa, setRiparianDensityPerHa] = useState<number | null>(null);
+  const [riparianWatercourseType, setRiparianWatercourseType] = useState<string>("");
+  const [riparianFloodHistory, setRiparianFloodHistory] = useState<string>("");
+  const [riparianRiskProperties, setRiparianRiskProperties] = useState<string[]>([]);
+  const [riparianSoilType, setRiparianSoilType] = useState<string>("");
+  const [riparianErosion, setRiparianErosion] = useState<string>("");
+  const [riparianCombinedInterventions, setRiparianCombinedInterventions] = useState<string[]>([]);
+
+  // Forest Restoration questions
+  const [forestRestorationAreaHa2, setForestRestorationAreaHa2] = useState<number | null>(null);
+  const [forestNaturalRegeneration, setForestNaturalRegeneration] = useState<boolean>(false);
+  const [forestPlantingDensity, setForestPlantingDensity] = useState<number | null>(null);
+  const [forestVariableDensity, setForestVariableDensity] = useState<boolean>(false);
+  const [forestNativeMatchPercent, setForestNativeMatchPercent] = useState<string>("");
+  const [forestTreeSize, setForestTreeSize] = useState<string>("");
+  const [forestRestorationApproach, setForestRestorationApproach] = useState<string[]>([]);
+  const [forestDisturbanceType, setForestDisturbanceType] = useState<string[]>([]);
+  const [forestDisturbanceSeverity, setForestDisturbanceSeverity] = useState<string>("");
+  const [forestDisturbanceTime, setForestDisturbanceTime] = useState<string>("");
+  const [forestSeedSources, setForestSeedSources] = useState<string>("");
+  const [forestNaturalRegenCondition, setForestNaturalRegenCondition] = useState<string>("");
+  const [forestSoilCondition, setForestSoilCondition] = useState<string>("");
+  const [forestInvasiveSpecies, setForestInvasiveSpecies] = useState<string>("");
+  const [forestVegetationCover, setForestVegetationCover] = useState<string>("");
+  const [forestProximityToForest, setForestProximityToForest] = useState<string>("");
+  const [forestNearbyForestSize, setForestNearbyForestSize] = useState<string>("");
+  const [forestAccessibility, setForestAccessibility] = useState<string>("");
+  const [forestEcosystemType, setForestEcosystemType] = useState<string>("");
+  const [forestCarbonCredits, setForestCarbonCredits] = useState<string>("");
+  const [forestBaselineCarbon, setForestBaselineCarbon] = useState<string>("");
+  const [forestCombinedInterventions, setForestCombinedInterventions] = useState<string[]>([]);
+  const [forestObjectives, setForestObjectives] = useState<string[]>([]);
+  const [forestTimeline, setForestTimeline] = useState<string>("");
+
   // Turf vs tree comparison modal
   const [showTurfComparison, setShowTurfComparison] = useState(false);
   const [treeSharePercent, setTreeSharePercent] = useState(100);
@@ -1054,7 +1118,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
             </div>
 
             {/* Typology-specific contextual questions */}
-            <div className="mt-4 space-y-3 rounded-xl border border-dashed border-slate-200 bg-slate-50/70 p-4">
+            <div className="mt-4 space-y-6 rounded-xl border border-dashed border-slate-200 bg-slate-50/70 p-4">
               <p className="text-[11px] text-slate-600">
                 {t(
                   "These optional questions help describe project context in a way that aligns with funder language. They do not change the calculations yet.",
@@ -1062,106 +1126,454 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 )}
               </p>
 
-              {projectTypology === "communityWideUrbanPlanting" && (
-                <div className="grid gap-3 md:grid-cols-2">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700">
-                      {t(
-                        "Approximate number of neighbourhoods included",
-                        "Nombre approximatif de quartiers inclus"
+              {/* Street Tree Planting Questions */}
+              {supportedActivities.includes("streetTrees") && (
+                <div className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
+                  <h4 className="text-sm font-semibold text-slate-900">
+                    {t("Street Tree Planting", "Plantation d'arbres de rue")}
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Size of tree - What is the typical size of trees at planting?", "Taille des arbres - Quelle est la taille typique des arbres à la plantation?")}
+                      </label>
+                      <select
+                        value={streetTreeSize}
+                        onChange={e => setStreetTreeSize(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="whips">{t("Whips/saplings (less than 1.5m height)", "Baguettes/jeunes plants (moins de 1,5 m de hauteur)")}</option>
+                        <option value="small">{t("Small caliper (25-50mm diameter / 1.5-2.5m height)", "Petit calibre (25-50 mm de diamètre / 1,5-2,5 m de hauteur)")}</option>
+                        <option value="medium">{t("Medium caliper (50-75mm diameter / 2.5-4m height)", "Calibre moyen (50-75 mm de diamètre / 2,5-4 m de hauteur)")}</option>
+                        <option value="large">{t("Large caliper (75mm+ diameter / 4m+ height)", "Grand calibre (75 mm+ de diamètre / 4 m+ de hauteur)")}</option>
+                        <option value="mixed">{t("Mixed sizes", "Tailles mixtes")}</option>
+                        <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Planting locations - Enter street address(es), one per line:", "Emplacements de plantation - Entrez l'adresse des rues, une par ligne:")}
+                      </label>
+                      {streetAddresses.map((addr, idx) => (
+                        <div key={idx} className="flex gap-2">
+                          <input
+                            type="text"
+                            value={addr}
+                            onChange={e => {
+                              const newAddrs = [...streetAddresses];
+                              newAddrs[idx] = e.target.value;
+                              setStreetAddresses(newAddrs);
+                            }}
+                            placeholder={t("Street address", "Adresse de la rue")}
+                            className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                          />
+                          {idx === streetAddresses.length - 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setStreetAddresses([...streetAddresses, ""])}
+                              className="px-3 py-2 text-xs text-primary-600 hover:text-primary-700 border border-primary-300 rounded-md hover:bg-primary-50 transition"
+                            >
+                              {t("+ Add more", "+ Ajouter")}
+                            </button>
+                          )}
+                          {streetAddresses.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setStreetAddresses(streetAddresses.filter((_, i) => i !== idx))}
+                              className="px-3 py-2 text-xs text-slate-600 hover:text-slate-700 border border-slate-300 rounded-md hover:bg-slate-50 transition"
+                            >
+                              {t("Remove", "Retirer")}
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Expected length of street(s) being planted (m):", "Longueur prévue de(s) rue(s) plantée(s) (m):")}
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={streetLengthM ?? ""}
+                          onChange={e =>
+                            setStreetLengthM(
+                              e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                            )
+                          }
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        />
+                        <p className="text-[10px] text-slate-500">
+                          {t("(If multiple streets, provide combined total length)", "(Si plusieurs rues, fournir la longueur totale combinée)")}
+                        </p>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Expected planting density (trees/km):", "Densité de plantation prévue (arbres/km):")}
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={streetPlantingDensity ?? ""}
+                          onChange={e =>
+                            setStreetPlantingDensity(
+                              e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                            )
+                          }
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        />
+                        <p className="text-[10px] text-slate-500">
+                          {t("(Auto-calculated based on trees and length, or manually entered)", "(Calculé automatiquement selon les arbres et la longueur, ou saisi manuellement)")}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Land-use - What is the primary land use along these streets?", "Utilisation du sol - Quelle est l'utilisation principale du sol le long de ces rues?")}
+                      </label>
+                      <select
+                        value={streetLandUse}
+                        onChange={e => setStreetLandUse(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="residential">{t("Residential", "Résidentiel")}</option>
+                        <option value="commercial">{t("Commercial", "Commercial")}</option>
+                        <option value="industrial">{t("Industrial", "Industriel")}</option>
+                        <option value="institutional">{t("Institutional (schools, hospitals, government)", "Institutionnel (écoles, hôpitaux, gouvernement)")}</option>
+                        <option value="mixed">{t("Mixed-use", "Usage mixte")}</option>
+                        <option value="other">{t("Other", "Autre")}</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Canopy cover - What is the current tree canopy cover on these streets?", "Couverture de canopée - Quelle est la couverture actuelle de la canopée d'arbres sur ces rues?")}
+                      </label>
+                      <select
+                        value={streetCanopyCover}
+                        onChange={e => setStreetCanopyCover(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="none">{t("None (0%)", "Aucune (0%)")}</option>
+                        <option value="low">{t("Low (1-10%)", "Faible (1-10%)")}</option>
+                        <option value="moderate">{t("Moderate (11-25%)", "Modérée (11-25%)")}</option>
+                        <option value="high">{t("High (more than 25%)", "Élevée (plus de 25%)")}</option>
+                        <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Combined interventions - Is this tree planting project combined with other green infrastructure improvements? (Check all that apply)", "Interventions combinées - Ce projet de plantation d'arbres est-il combiné à d'autres améliorations d'infrastructure verte? (Cochez tout ce qui s'applique)")}
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { id: "none", labelEn: "No additional measures - trees only", labelFr: "Aucune mesure supplémentaire - arbres seulement" },
+                          { id: "hardscape", labelEn: "Yes - reducing hardscape/impervious surfaces (e.g., depaving, removing concrete)", labelFr: "Oui - réduction des surfaces dures/imperméables (p. ex., dépaver, enlever le béton)" },
+                          { id: "raingardens", labelEn: "Yes - installing rain gardens or bioswales", labelFr: "Oui - installation de jardins pluviaux ou de bioswales" },
+                          { id: "shrubs", labelEn: "Yes - adding shrub plantings", labelFr: "Oui - ajout de plantations d'arbustes" },
+                          { id: "groundcover", labelEn: "Yes - adding groundcover/perennial plantings", labelFr: "Oui - ajout de couvre-sol/plantations vivaces" },
+                          { id: "permeable", labelEn: "Yes - installing permeable paving", labelFr: "Oui - installation de pavage perméable" },
+                          { id: "trenches", labelEn: "Yes - creating tree trenches or continuous soil cells", labelFr: "Oui - création de tranchées d'arbres ou de cellules de sol continues" },
+                          { id: "other", labelEn: "Other green infrastructure", labelFr: "Autre infrastructure verte" }
+                        ].map(opt => (
+                          <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={streetCombinedInterventions.includes(opt.id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setStreetCombinedInterventions([...streetCombinedInterventions, opt.id]);
+                                } else {
+                                  setStreetCombinedInterventions(streetCombinedInterventions.filter(x => x !== opt.id));
+                                }
+                              }}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {language === "fr" ? opt.labelFr : opt.labelEn}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                      {streetCombinedInterventions.includes("hardscape") && (
+                        <div className="ml-6 space-y-2">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-medium text-slate-700">
+                              {t("If yes, approximate area being converted (m²):", "Si oui, superficie approximative convertie (m²):")}
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              value={streetHardscapeReductionArea ?? ""}
+                              onChange={e =>
+                                setStreetHardscapeReductionArea(
+                                  e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                                )
+                              }
+                              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-medium text-slate-700">
+                              {t("What percentage of the street corridor will be converted from hard to permeable/vegetated surfaces?", "Quel pourcentage du corridor de rue sera converti de surfaces dures à perméables/végétalisées?")}
+                            </label>
+                            <select
+                              value={streetHardscapeReductionPercent}
+                              onChange={e => setStreetHardscapeReductionPercent(e.target.value)}
+                              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                            >
+                              <option value="">{t("Select...", "Sélectionner...")}</option>
+                              <option value="na">{t("Not applicable", "Non applicable")}</option>
+                              <option value="less10">{t("Less than 10%", "Moins de 10%")}</option>
+                              <option value="10-25">{t("10-25%", "10-25%")}</option>
+                              <option value="25-50">{t("25-50%", "25-50%")}</option>
+                              <option value="more50">{t("More than 50%", "Plus de 50%")}</option>
+                            </select>
+                          </div>
+                        </div>
                       )}
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={communitySitesCount ?? ""}
-                      onChange={e =>
-                        setCommunitySitesCount(
-                          e.target.value === ""
-                            ? null
-                            : Math.max(1, Number(e.target.value) || 1)
-                        )
-                      }
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700">
-                      {t(
-                        "Does the project connect multiple corridors or centres?",
-                        "Le projet relie-t-il plusieurs corridors ou pôles?"
+                      {streetCombinedInterventions.includes("other") && (
+                        <div className="ml-6 space-y-1.5">
+                          <label className="text-xs font-medium text-slate-700">
+                            {t("Please specify:", "Veuillez préciser:")}
+                          </label>
+                          <input
+                            type="text"
+                            value={streetOtherGI}
+                            onChange={e => setStreetOtherGI(e.target.value)}
+                            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                          />
+                        </div>
                       )}
-                    </label>
-                    <select
-                      value={
-                        localizedSiteContext ||
-                        t("Not specified", "Non précisé")
-                      }
-                      onChange={e => setLocalizedSiteContext(e.target.value)}
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                    >
-                      <option value="">
-                        {t("Not specified", "Non précisé")}
-                      </option>
-                      <option value="corridors">
-                        {t(
-                          "Yes – multiple corridors or centres",
-                          "Oui – plusieurs corridors ou pôles"
-                        )}
-                      </option>
-                      <option value="singleArea">
-                        {t("Mostly one area", "Essentiellement une seule zone")}
-                      </option>
-                    </select>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {projectTypology === "forestRestoration" && (
-                <div className="grid gap-3 md:grid-cols-2">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700">
-                      {t(
-                        "Area of degraded or disturbed forest (Ha)",
-                        "Superficie de forêt dégradée ou perturbée (Ha)"
-                      )}
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={forestRestorationAreaHa ?? ""}
-                      onChange={e =>
-                        setForestRestorationAreaHa(
-                          e.target.value === ""
-                            ? null
-                            : Math.max(0, Number(e.target.value) || 0)
-                        )
-                      }
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700">
-                      {t("Main disturbance type", "Type principal de perturbation")}
-                    </label>
-                    <select
-                      value={localizedSiteContext}
-                      onChange={e => setLocalizedSiteContext(e.target.value)}
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                    >
-                      <option value="">
-                        {t("Not specified", "Non précisé")}
-                      </option>
-                      <option value="pests">
-                        {t("Pests / disease", "Ravageurs / maladies")}
-                      </option>
-                      <option value="wildfire">
-                        {t("Wildfire", "Feu de forêt")}
-                      </option>
-                      <option value="clearing">
-                        {t("Clearing / historical land use", "Défrichement / usages antérieurs")}
-                      </option>
-                    </select>
+              {/* Park Tree Planting Questions */}
+              {supportedActivities.includes("parkTrees") && (
+                <div className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
+                  <h4 className="text-sm font-semibold text-slate-900">
+                    {t("Park Tree Planting", "Plantation d'arbres dans les parcs")}
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Native species - What percentage of the species are native to your region?", "Espèces indigènes - Quel pourcentage des espèces sont indigènes à votre région?")}
+                      </label>
+                      <select
+                        value={parkNativeSpeciesPercent}
+                        onChange={e => setParkNativeSpeciesPercent(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="100">{t("All native species (100%)", "Toutes les espèces indigènes (100%)")}</option>
+                        <option value="75-99">{t("Mostly native (75-99%)", "Principalement indigènes (75-99%)")}</option>
+                        <option value="25-74">{t("Mix of native and non-native (25-74%)", "Mélange d'indigènes et non-indigènes (25-74%)")}</option>
+                        <option value="less25">{t("Mostly non-native (less than 25%)", "Principalement non-indigènes (moins de 25%)")}</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Size of trees - What is the typical size of trees at planting?", "Taille des arbres - Quelle est la taille typique des arbres à la plantation?")}
+                      </label>
+                      <select
+                        value={parkTreeSize}
+                        onChange={e => setParkTreeSize(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="seeds">{t("Seeds or acorns (natural regeneration)", "Graines ou glands (régénération naturelle)")}</option>
+                        <option value="seedlings">{t("Seedlings (less than 30cm height)", "Semis (moins de 30 cm de hauteur)")}</option>
+                        <option value="whips">{t("Whips/saplings (30cm-1.5m height)", "Baguettes/jeunes plants (30 cm-1,5 m de hauteur)")}</option>
+                        <option value="small">{t("Small stock (1.5-2.5m height)", "Petit stock (1,5-2,5 m de hauteur)")}</option>
+                        <option value="medium">{t("Medium stock (2.5-4m height)", "Stock moyen (2,5-4 m de hauteur)")}</option>
+                        <option value="large">{t("Larger transplants (4m+ height)", "Transplants plus grands (4 m+ de hauteur)")}</option>
+                        <option value="mixed">{t("Mixed sizes", "Tailles mixtes")}</option>
+                        <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                      </select>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Park name:", "Nom du parc:")}
+                        </label>
+                        <input
+                          type="text"
+                          value={parkName}
+                          onChange={e => setParkName(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Park address or location:", "Adresse ou emplacement du parc:")}
+                        </label>
+                        <input
+                          type="text"
+                          value={parkLocation}
+                          onChange={e => setParkLocation(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Size of park (hectares):", "Taille du parc (hectares):")}
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={parkSizeHa ?? ""}
+                          onChange={e =>
+                            setParkSizeHa(
+                              e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                            )
+                          }
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Park type - What type of park is this?", "Type de parc - Quel type de parc s'agit-il?")}
+                        </label>
+                        <select
+                          value={parkType}
+                          onChange={e => setParkType(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="neighbourhood">{t("Neighbourhood park (local/small scale)", "Parc de quartier (échelle locale/petite)")}</option>
+                          <option value="community">{t("Community park (medium scale)", "Parc communautaire (échelle moyenne)")}</option>
+                          <option value="regional">{t("Regional park (large scale)", "Parc régional (grande échelle)")}</option>
+                          <option value="natural">{t("Natural area or conservation park", "Zone naturelle ou parc de conservation")}</option>
+                          <option value="sports">{t("Sports/recreation focused park", "Parc axé sur les sports/loisirs")}</option>
+                          <option value="other">{t("Other", "Autre")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Purpose of planting - What is the primary purpose of this park tree planting project? (Check all that apply)", "Objectif de la plantation - Quel est l'objectif principal de ce projet de plantation d'arbres dans le parc? (Cochez tout ce qui s'applique)")}
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { id: "newGroves", labelEn: "Establishing new groves or woodland areas", labelFr: "Établir de nouveaux bosquets ou zones boisées" },
+                          { id: "revitalizing", labelEn: "Revitalizing/restoring existing tree stands", labelFr: "Revitaliser/restaurer les peuplements d'arbres existants" },
+                          { id: "replacing", labelEn: "Replacing dying or dead trees", labelFr: "Remplacer les arbres mourants ou morts" },
+                          { id: "biodiversity", labelEn: "Increasing biodiversity", labelFr: "Augmenter la biodiversité" },
+                          { id: "wildlife", labelEn: "Enhancing wildlife habitat", labelFr: "Améliorer l'habitat faunique" },
+                          { id: "cooling", labelEn: "Cooling and shade provision", labelFr: "Refroidissement et fourniture d'ombre" },
+                          { id: "stormwater", labelEn: "Stormwater management", labelFr: "Gestion des eaux pluviales" },
+                          { id: "aesthetic", labelEn: "Creating visual/aesthetic improvements", labelFr: "Créer des améliorations visuelles/esthétiques" }
+                        ].map(opt => (
+                          <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={parkPurpose.includes(opt.id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setParkPurpose([...parkPurpose, opt.id]);
+                                } else {
+                                  setParkPurpose(parkPurpose.filter(x => x !== opt.id));
+                                }
+                              }}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {language === "fr" ? opt.labelFr : opt.labelEn}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Health, community - What is the estimated level of park visitation?", "Santé, communauté - Quel est le niveau estimé de fréquentation du parc?")}
+                      </label>
+                      <select
+                        value={parkVisitation}
+                        onChange={e => setParkVisitation(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="high">{t("High use (busy throughout the day/week)", "Utilisation élevée (occupé tout au long de la journée/semaine)")}</option>
+                        <option value="moderate">{t("Moderate use (regular visitors)", "Utilisation modérée (visiteurs réguliers)")}</option>
+                        <option value="low">{t("Low use (occasional visitors)", "Utilisation faible (visiteurs occasionnels)")}</option>
+                        <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Ecological connectivity - Is the planting area connected to other natural habitats or green spaces?", "Connectivité écologique - La zone de plantation est-elle connectée à d'autres habitats naturels ou espaces verts?")}
+                      </label>
+                      <select
+                        value={parkEcologicalConnectivity}
+                        onChange={e => setParkEcologicalConnectivity(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="adjacent">{t("Yes - directly adjacent to forest, ravine, or natural area", "Oui - directement adjacent à une forêt, un ravin ou une zone naturelle")}</option>
+                        <option value="within100m">{t("Yes - within 100m of other green spaces", "Oui - dans un rayon de 100 m d'autres espaces verts")}</option>
+                        <option value="somewhat">{t("Somewhat - isolated but part of broader green network", "Quelque peu - isolé mais faisant partie d'un réseau vert plus large")}</option>
+                        <option value="no">{t("No - surrounded by urban development", "Non - entouré de développement urbain")}</option>
+                        <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Combined interventions - Is this tree planting project combined with other habitat or ecological improvements? (Check all that apply)", "Interventions combinées - Ce projet de plantation d'arbres est-il combiné à d'autres améliorations d'habitat ou écologiques? (Cochez tout ce qui s'applique)")}
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { id: "none", labelEn: "No additional measures - trees only", labelFr: "Aucune mesure supplémentaire - arbres seulement" },
+                          { id: "shrubs", labelEn: "Yes - adding shrub layer plantings", labelFr: "Oui - ajout de plantations de couche arbustive" },
+                          { id: "groundcover", labelEn: "Yes - establishing native groundcover or wildflowers", labelFr: "Oui - établissement de couvre-sol indigène ou de fleurs sauvages" },
+                          { id: "wildlife", labelEn: "Yes - creating wildlife habitat features (snags, brush piles, nest boxes)", labelFr: "Oui - création de caractéristiques d'habitat faunique (chicots, tas de broussailles, nichoirs)" },
+                          { id: "invasive", labelEn: "Yes - removing invasive species", labelFr: "Oui - élimination des espèces envahissantes" },
+                          { id: "soil", labelEn: "Yes - improving soil conditions", labelFr: "Oui - amélioration des conditions du sol" },
+                          { id: "water", labelEn: "Yes - enhancing water features (ponds, streams, wetlands)", labelFr: "Oui - amélioration des caractéristiques de l'eau (étangs, ruisseaux, zones humides)" },
+                          { id: "pollinator", labelEn: "Yes - installing pollinator gardens", labelFr: "Oui - installation de jardins pour pollinisateurs" }
+                        ].map(opt => (
+                          <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={parkCombinedInterventions.includes(opt.id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setParkCombinedInterventions([...parkCombinedInterventions, opt.id]);
+                                } else {
+                                  setParkCombinedInterventions(parkCombinedInterventions.filter(x => x !== opt.id));
+                                }
+                              }}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {language === "fr" ? opt.labelFr : opt.labelEn}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1212,80 +1624,799 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 </div>
               )}
 
-              {/* Activity-specific context */}
-              <div className="grid gap-3 md:grid-cols-3">
-                {supportedActivities.includes("streetTrees") && (
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700">
-                      {t(
-                        "Approximate length of streets treated (km)",
-                        "Longueur approximative des rues concernées (km)"
-                      )}
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={streetLengthKm ?? ""}
-                      onChange={e =>
-                        setStreetLengthKm(
-                          e.target.value === ""
-                            ? null
-                            : Math.max(0, Number(e.target.value) || 0)
-                        )
-                      }
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                    />
-                  </div>
-                )}
+              {/* Riparian Planting Questions */}
+              {supportedActivities.includes("riparian") && (
+                <div className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
+                  <h4 className="text-sm font-semibold text-slate-900">
+                    {t("Riparian Planting in Flood-Prone Areas", "Plantation riveraine en zones inondables")}
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Length of riparian corridor - What is the total length of riparian corridor being planted? (m or km)", "Longueur du corridor riverain - Quelle est la longueur totale du corridor riverain planté? (m ou km)")}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={riparianLengthM ?? ""}
+                        onChange={e =>
+                          setRiparianLengthM(
+                            e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                          )
+                        }
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      />
+                    </div>
 
-                {supportedActivities.includes("riparian") && (
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700">
-                      {t(
-                        "Riparian edge treated (km)",
-                        "Longueur de rive traitée (km)"
-                      )}
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={riparianLengthKm ?? ""}
-                      onChange={e =>
-                        setRiparianLengthKm(
-                          e.target.value === ""
-                            ? null
-                            : Math.max(0, Number(e.target.value) || 0)
-                        )
-                      }
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                    />
-                  </div>
-                )}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Native species - What percentage of the species are native riparian species?", "Espèces indigènes - Quel pourcentage des espèces sont des espèces riveraines indigènes?")}
+                      </label>
+                      <select
+                        value={riparianNativeSpeciesPercent}
+                        onChange={e => setRiparianNativeSpeciesPercent(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="100">{t("All native riparian species (100%)", "Toutes les espèces riveraines indigènes (100%)")}</option>
+                        <option value="75-99">{t("Mostly native riparian (75-99%)", "Principalement riveraines indigènes (75-99%)")}</option>
+                        <option value="25-74">{t("Mix of riparian and upland native (25-74%)", "Mélange de riveraines et d'indigènes des hautes terres (25-74%)")}</option>
+                        <option value="less25">{t("Some non-native species included (less than 25% native)", "Quelques espèces non-indigènes incluses (moins de 25% indigènes)")}</option>
+                      </select>
+                    </div>
 
-                {supportedActivities.includes("parkTrees") && (
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700">
-                      {t(
-                        "Number of parks or green spaces",
-                        "Nombre de parcs ou d’espaces verts"
-                      )}
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={parkCount ?? ""}
-                      onChange={e =>
-                        setParkCount(
-                          e.target.value === ""
-                            ? null
-                            : Math.max(0, Number(e.target.value) || 0)
-                        )
-                      }
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                    />
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Tree size - What is the typical size of trees at planting?", "Taille des arbres - Quelle est la taille typique des arbres à la plantation?")}
+                      </label>
+                      <select
+                        value={riparianTreeSize}
+                        onChange={e => setRiparianTreeSize(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="stakes">{t("Live stakes or cuttings (willows, dogwoods)", "Tuteurs vivants ou boutures (saules, cornouillers)")}</option>
+                        <option value="seedlings">{t("Seedlings (less than 30cm height)", "Semis (moins de 30 cm de hauteur)")}</option>
+                        <option value="whips">{t("Whips/saplings (30cm-1.5m height)", "Baguettes/jeunes plants (30 cm-1,5 m de hauteur)")}</option>
+                        <option value="small">{t("Small stock (1.5-2.5m height)", "Petit stock (1,5-2,5 m de hauteur)")}</option>
+                        <option value="medium">{t("Medium stock (2.5-4m height)", "Stock moyen (2,5-4 m de hauteur)")}</option>
+                        <option value="mixed">{t("Mixed sizes", "Tailles mixtes")}</option>
+                      </select>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Buffer - What is the buffer width from the watercourse?", "Zone tampon - Quelle est la largeur de la zone tampon depuis le cours d'eau?")}
+                        </label>
+                        <select
+                          value={riparianBufferWidth}
+                          onChange={e => setRiparianBufferWidth(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="narrow">{t("Narrow (less than 10m from water's edge)", "Étroite (moins de 10 m du bord de l'eau)")}</option>
+                          <option value="moderate">{t("Moderate (10-30m from water's edge)", "Modérée (10-30 m du bord de l'eau)")}</option>
+                          <option value="wide">{t("Wide (more than 30m from water's edge)", "Large (plus de 30 m du bord de l'eau)")}</option>
+                          <option value="variable">{t("Variable width along corridor", "Largeur variable le long du corridor")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Density - What is the planting density?", "Densité - Quelle est la densité de plantation?")}
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="number"
+                            min="0"
+                            placeholder={t("trees/m", "arbres/m")}
+                            value={riparianDensityPerM ?? ""}
+                            onChange={e =>
+                              setRiparianDensityPerM(
+                                e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                              )
+                            }
+                            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                          />
+                          <input
+                            type="number"
+                            min="0"
+                            placeholder={t("trees/ha", "arbres/ha")}
+                            value={riparianDensityPerHa ?? ""}
+                            onChange={e =>
+                              setRiparianDensityPerHa(
+                                e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                              )
+                            }
+                            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Type of water stream - What type of watercourse is being planted?", "Type de cours d'eau - Quel type de cours d'eau est planté?")}
+                      </label>
+                      <select
+                        value={riparianWatercourseType}
+                        onChange={e => setRiparianWatercourseType(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="river">{t("River (large, permanent flow)", "Rivière (grande, débit permanent)")}</option>
+                        <option value="stream">{t("Stream (medium, permanent or seasonal flow)", "Ruisseau (moyen, débit permanent ou saisonnier)")}</option>
+                        <option value="creek">{t("Creek (small, may be intermittent)", "Cours d'eau (petit, peut être intermittent)")}</option>
+                        <option value="drainage">{t("Drainage channel or ditch", "Canal de drainage ou fossé")}</option>
+                        <option value="lakeshore">{t("Lakeshore or pond edge", "Rive de lac ou bord d'étang")}</option>
+                        <option value="wetland">{t("Wetland edge", "Bord de zone humide")}</option>
+                        <option value="other">{t("Other", "Autre")}</option>
+                      </select>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Flood - Does this area have a history of flooding?", "Inondation - Cette zone a-t-elle des antécédents d'inondation?")}
+                        </label>
+                        <select
+                          value={riparianFloodHistory}
+                          onChange={e => setRiparianFloodHistory(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="frequent">{t("Yes - frequent flooding (annually or more)", "Oui - inondations fréquentes (annuellement ou plus)")}</option>
+                          <option value="occasional">{t("Yes - occasional flooding (every few years)", "Oui - inondations occasionnelles (tous les quelques années)")}</option>
+                          <option value="rare">{t("Yes - rare but significant flood events", "Oui - événements d'inondation rares mais importants")}</option>
+                          <option value="no">{t("No significant flooding history", "Aucun antécédent d'inondation significatif")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Risk properties - Are there properties or infrastructure at risk from flooding in this area?", "Propriétés à risque - Y a-t-il des propriétés ou des infrastructures à risque d'inondation dans cette zone?")}
+                        </label>
+                        <div className="space-y-1.5">
+                          {[
+                            { id: "residential", labelEn: "Yes - residential properties", labelFr: "Oui - propriétés résidentielles" },
+                            { id: "commercial", labelEn: "Yes - commercial/industrial properties", labelFr: "Oui - propriétés commerciales/industrielles" },
+                            { id: "infrastructure", labelEn: "Yes - critical infrastructure (roads, bridges, utilities)", labelFr: "Oui - infrastructure critique (routes, ponts, services publics)" },
+                            { id: "agricultural", labelEn: "Yes - agricultural land", labelFr: "Oui - terres agricoles" },
+                            { id: "natural", labelEn: "No - primarily natural areas", labelFr: "Non - principalement des zones naturelles" },
+                            { id: "unknown", labelEn: "Don't know", labelFr: "Je ne sais pas" }
+                          ].map(opt => (
+                            <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={riparianRiskProperties.includes(opt.id)}
+                                onChange={e => {
+                                  if (e.target.checked) {
+                                    setRiparianRiskProperties([...riparianRiskProperties, opt.id]);
+                                  } else {
+                                    setRiparianRiskProperties(riparianRiskProperties.filter(x => x !== opt.id));
+                                  }
+                                }}
+                                className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                              />
+                              <span className="text-[11px] text-slate-700">
+                                {language === "fr" ? opt.labelFr : opt.labelEn}
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Soil type - What is the primary soil type in the planting area?", "Type de sol - Quel est le type de sol principal dans la zone de plantation?")}
+                        </label>
+                        <select
+                          value={riparianSoilType}
+                          onChange={e => setRiparianSoilType(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="sandy">{t("Sandy (well-drained, prone to erosion)", "Sableux (bien drainé, sujet à l'érosion)")}</option>
+                          <option value="loam">{t("Loam (balanced texture)", "Limon (texture équilibrée)")}</option>
+                          <option value="clay">{t("Clay (poorly drained, stable when vegetated)", "Argileux (mal drainé, stable lorsqu'il est végétalisé)")}</option>
+                          <option value="organic">{t("Organic/mucky (wetland soils)", "Organique/boueux (sols de zone humide)")}</option>
+                          <option value="rocky">{t("Rocky or gravelly", "Rocailleux ou graveleux")}</option>
+                          <option value="mixed">{t("Mix of soil types", "Mélange de types de sol")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Erosion - What is the current level of erosion in the planting area?", "Érosion - Quel est le niveau actuel d'érosion dans la zone de plantation?")}
+                        </label>
+                        <select
+                          value={riparianErosion}
+                          onChange={e => setRiparianErosion(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="severe">{t("Severe erosion - active bank failure or gullying", "Érosion sévère - échec actif des berges ou ravinement")}</option>
+                          <option value="moderate">{t("Moderate erosion - visible but stable", "Érosion modérée - visible mais stable")}</option>
+                          <option value="minor">{t("Minor erosion - some evidence of soil loss", "Érosion mineure - quelques preuves de perte de sol")}</option>
+                          <option value="stable">{t("Stable - no significant erosion", "Stable - aucune érosion significative")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Combined interventions - Is this riparian planting project combined with other restoration or flood management measures? (Check all that apply)", "Interventions combinées - Ce projet de plantation riveraine est-il combiné à d'autres mesures de restauration ou de gestion des inondations? (Cochez tout ce qui s'applique)")}
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { id: "none", labelEn: "No additional measures - trees only", labelFr: "Aucune mesure supplémentaire - arbres seulement" },
+                          { id: "stabilization", labelEn: "Yes - stream bank stabilization (bioengineering, rock, etc.)", labelFr: "Oui - stabilisation des berges (génie biologique, roche, etc.)" },
+                          { id: "invasive", labelEn: "Yes - removing invasive species", labelFr: "Oui - élimination des espèces envahissantes" },
+                          { id: "shrubs", labelEn: "Yes - adding shrub and groundcover layers", labelFr: "Oui - ajout de couches d'arbustes et de couvre-sol" },
+                          { id: "floodplain", labelEn: "Yes - floodplain restoration or reconnection", labelFr: "Oui - restauration ou reconnexion de la plaine inondable" },
+                          { id: "instream", labelEn: "Yes - in-stream habitat improvements (large woody debris, pools)", labelFr: "Oui - améliorations de l'habitat en cours d'eau (gros débris ligneux, bassins)" },
+                          { id: "stormwater", labelEn: "Yes - stormwater management upstream", labelFr: "Oui - gestion des eaux pluviales en amont" },
+                          { id: "fencing", labelEn: "Yes - livestock exclusion fencing", labelFr: "Oui - clôture d'exclusion du bétail" },
+                          { id: "wetland", labelEn: "Yes - wetland creation or enhancement", labelFr: "Oui - création ou amélioration de zones humides" }
+                        ].map(opt => (
+                          <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={riparianCombinedInterventions.includes(opt.id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setRiparianCombinedInterventions([...riparianCombinedInterventions, opt.id]);
+                                } else {
+                                  setRiparianCombinedInterventions(riparianCombinedInterventions.filter(x => x !== opt.id));
+                                }
+                              }}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {language === "fr" ? opt.labelFr : opt.labelEn}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+
+              {/* Forest Restoration Questions */}
+              {supportedActivities.includes("forestRestorationActivity") && (
+                <div className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
+                  <h4 className="text-sm font-semibold text-slate-900">
+                    {t("Forest Restoration and Reforestation", "Restauration forestière et reboisement")}
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What is the total area being restored or reforested? (hectares)", "Quelle est la superficie totale restaurée ou reboisée? (hectares)")}
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={forestRestorationAreaHa2 ?? ""}
+                          onChange={e =>
+                            setForestRestorationAreaHa2(
+                              e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                            )
+                          }
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("How many trees will be planted in total?", "Combien d'arbres seront plantés au total?")}
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min="0"
+                            value={numberOfTrees}
+                            onChange={e =>
+                              setNumberOfTrees(Math.max(0, Number(e.target.value) || 0))
+                            }
+                            className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                          />
+                          <label className="flex items-center gap-2 cursor-pointer whitespace-nowrap">
+                            <input
+                              type="checkbox"
+                              checked={forestNaturalRegeneration}
+                              onChange={e => setForestNaturalRegeneration(e.target.checked)}
+                              className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {t("Natural regeneration", "Régénération naturelle")}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What is the planting density? (trees/ha)", "Quelle est la densité de plantation? (arbres/ha)")}
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min="0"
+                            value={forestPlantingDensity ?? ""}
+                            onChange={e =>
+                              setForestPlantingDensity(
+                                e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0)
+                              )
+                            }
+                            className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                          />
+                          <label className="flex items-center gap-2 cursor-pointer whitespace-nowrap">
+                            <input
+                              type="checkbox"
+                              checked={forestVariableDensity}
+                              onChange={e => setForestVariableDensity(e.target.checked)}
+                              className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {t("Variable", "Variable")}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What percentage of species match the local native forest type?", "Quel pourcentage des espèces correspondent au type de forêt indigène local?")}
+                        </label>
+                        <select
+                          value={forestNativeMatchPercent}
+                          onChange={e => setForestNativeMatchPercent(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="100">{t("All native to local forest type (100%)", "Toutes indigènes au type de forêt local (100%)")}</option>
+                          <option value="75-99">{t("Mostly native (75-99%)", "Principalement indigènes (75-99%)")}</option>
+                          <option value="25-74">{t("Mix of native and other adapted species (25-74%)", "Mélange d'indigènes et d'autres espèces adaptées (25-74%)")}</option>
+                          <option value="less25">{t("Some non-native species included (less than 25% native)", "Quelques espèces non-indigènes incluses (moins de 25% indigènes)")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("What is the typical size of trees at planting?", "Quelle est la taille typique des arbres à la plantation?")}
+                      </label>
+                      <select
+                        value={forestTreeSize}
+                        onChange={e => setForestTreeSize(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="seeds">{t("Seeds (direct seeding)", "Graines (ensemencement direct)")}</option>
+                        <option value="seedlings">{t("Seedlings (less than 30cm height)", "Semis (moins de 30 cm de hauteur)")}</option>
+                        <option value="bareRoot">{t("Bare root transplants (30cm-1m height)", "Transplants à racines nues (30 cm-1 m de hauteur)")}</option>
+                        <option value="container">{t("Container stock (various sizes)", "Stock en conteneur (diverses tailles)")}</option>
+                        <option value="large">{t("Larger transplants (more than 1m height)", "Transplants plus grands (plus de 1 m de hauteur)")}</option>
+                        <option value="mixed">{t("Mixed sizes", "Tailles mixtes")}</option>
+                        <option value="natural">{t("Natural regeneration only", "Régénération naturelle uniquement")}</option>
+                        <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("What is the primary restoration approach? (Check all that apply)", "Quelle est l'approche principale de restauration? (Cochez tout ce qui s'applique)")}
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { id: "active", labelEn: "Active tree planting", labelFr: "Plantation active d'arbres" },
+                          { id: "seeding", labelEn: "Direct seeding", labelFr: "Ensemencement direct" },
+                          { id: "natural", labelEn: "Supporting natural regeneration (no planting)", labelFr: "Soutenir la régénération naturelle (pas de plantation)" },
+                          { id: "assisted", labelEn: "Assisted natural regeneration (removing barriers + some planting)", labelFr: "Régénération naturelle assistée (élimination des obstacles + quelques plantations)" },
+                          { id: "mixed", labelEn: "Mix of approaches across site", labelFr: "Mélange d'approches sur le site" }
+                        ].map(opt => (
+                          <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={forestRestorationApproach.includes(opt.id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setForestRestorationApproach([...forestRestorationApproach, opt.id]);
+                                } else {
+                                  setForestRestorationApproach(forestRestorationApproach.filter(x => x !== opt.id));
+                                }
+                              }}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {language === "fr" ? opt.labelFr : opt.labelEn}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("What type of disturbance affected this forest area? (Check all that apply)", "Quel type de perturbation a affecté cette zone forestière? (Cochez tout ce qui s'applique)")}
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { id: "pests", labelEn: "Insect pest outbreak (e.g., mountain pine beetle, emerald ash borer)", labelFr: "Épidémie de ravageurs (p. ex., dendroctone du pin ponderosa, agrile du frêne)" },
+                          { id: "disease", labelEn: "Disease (e.g., Dutch elm, sudden oak death)", labelFr: "Maladie (p. ex., maladie hollandaise de l'orme, mort subite du chêne)" },
+                          { id: "wildfire", labelEn: "Wildfire", labelFr: "Feu de forêt" },
+                          { id: "logging", labelEn: "Timber harvest/logging", labelFr: "Récolte de bois/exploitation forestière" },
+                          { id: "clearing", labelEn: "Land clearing for agriculture or development", labelFr: "Défrichement pour l'agriculture ou le développement" },
+                          { id: "storm", labelEn: "Storm damage (wind, ice)", labelFr: "Dommages causés par les tempêtes (vent, glace)" },
+                          { id: "multiple", labelEn: "Multiple disturbances", labelFr: "Perturbations multiples" },
+                          { id: "other", labelEn: "Other", labelFr: "Autre" }
+                        ].map(opt => (
+                          <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={forestDisturbanceType.includes(opt.id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setForestDisturbanceType([...forestDisturbanceType, opt.id]);
+                                } else {
+                                  setForestDisturbanceType(forestDisturbanceType.filter(x => x !== opt.id));
+                                }
+                              }}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {language === "fr" ? opt.labelFr : opt.labelEn}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What was the severity of the disturbance?", "Quelle était la gravité de la perturbation?")}
+                        </label>
+                        <select
+                          value={forestDisturbanceSeverity}
+                          onChange={e => setForestDisturbanceSeverity(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="complete">{t("Complete loss - no trees remaining", "Perte complète - aucun arbre restant")}</option>
+                          <option value="severe">{t("Severe - more than 75% tree mortality", "Sévère - plus de 75% de mortalité des arbres")}</option>
+                          <option value="moderate">{t("Moderate - 25-75% tree mortality", "Modérée - 25-75% de mortalité des arbres")}</option>
+                          <option value="light">{t("Light - less than 25% tree mortality", "Légère - moins de 25% de mortalité des arbres")}</option>
+                          <option value="variable">{t("Variable across site", "Variable sur le site")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("How long ago did the disturbance occur?", "Il y a combien de temps la perturbation s'est-elle produite?")}
+                        </label>
+                        <select
+                          value={forestDisturbanceTime}
+                          onChange={e => setForestDisturbanceTime(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="withinYear">{t("Within the past year", "Au cours de la dernière année")}</option>
+                          <option value="1-5">{t("1-5 years ago", "Il y a 1-5 ans")}</option>
+                          <option value="5-10">{t("5-10 years ago", "Il y a 5-10 ans")}</option>
+                          <option value="10-20">{t("10-20 years ago", "Il y a 10-20 ans")}</option>
+                          <option value="more20">{t("More than 20 years ago", "Il y a plus de 20 ans")}</option>
+                          <option value="multiple">{t("Multiple disturbances at different times", "Perturbations multiples à des moments différents")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Are there remaining seed sources near or within the restoration area?", "Y a-t-il des sources de graines restantes près ou dans la zone de restauration?")}
+                        </label>
+                        <select
+                          value={forestSeedSources}
+                          onChange={e => setForestSeedSources(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="abundant">{t("Yes - abundant mature trees nearby (within 100m)", "Oui - nombreux arbres matures à proximité (dans un rayon de 100 m)")}</option>
+                          <option value="some">{t("Yes - some seed sources present (100-500m away)", "Oui - quelques sources de graines présentes (100-500 m)")}</option>
+                          <option value="limited">{t("Limited - distant seed sources (more than 500m)", "Limité - sources de graines distantes (plus de 500 m)")}</option>
+                          <option value="no">{t("No - isolated from seed sources", "Non - isolé des sources de graines")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What is the current condition of natural regeneration on site?", "Quelle est l'état actuel de la régénération naturelle sur le site?")}
+                        </label>
+                        <select
+                          value={forestNaturalRegenCondition}
+                          onChange={e => setForestNaturalRegenCondition(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="good">{t("Good natural regeneration occurring", "Bonne régénération naturelle en cours")}</option>
+                          <option value="some">{t("Some natural regeneration but insufficient", "Quelque régénération naturelle mais insuffisante")}</option>
+                          <option value="limited">{t("Very limited natural regeneration", "Régénération naturelle très limitée")}</option>
+                          <option value="no">{t("No natural regeneration observed", "Aucune régénération naturelle observée")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What is the soil condition in the restoration area?", "Quelle est l'état du sol dans la zone de restauration?")}
+                        </label>
+                        <select
+                          value={forestSoilCondition}
+                          onChange={e => setForestSoilCondition(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="good">{t("Good quality - intact organic layer and structure", "Bonne qualité - couche organique et structure intactes")}</option>
+                          <option value="moderate">{t("Moderately degraded - some loss of organic matter", "Modérément dégradé - perte de matière organique")}</option>
+                          <option value="severe">{t("Severely degraded - compacted or eroded", "Sévèrement dégradé - compacté ou érodé")}</option>
+                          <option value="contaminated">{t("Contaminated or disturbed by development", "Contaminé ou perturbé par le développement")}</option>
+                          <option value="variable">{t("Variable across site", "Variable sur le site")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What is the level of invasive species presence?", "Quel est le niveau de présence d'espèces envahissantes?")}
+                        </label>
+                        <select
+                          value={forestInvasiveSpecies}
+                          onChange={e => setForestInvasiveSpecies(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="severe">{t("Severe - invasive species dominating site", "Sévère - espèces envahissantes dominant le site")}</option>
+                          <option value="moderate">{t("Moderate - invasive species present and spreading", "Modérée - espèces envahissantes présentes et en expansion")}</option>
+                          <option value="low">{t("Low - some invasive species but manageable", "Faible - quelques espèces envahissantes mais gérables")}</option>
+                          <option value="none">{t("None - no significant invasive species", "Aucune - aucune espèce envahissante significative")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("What is the current vegetation cover on the site?", "Quelle est la couverture végétale actuelle sur le site?")}
+                      </label>
+                      <select
+                        value={forestVegetationCover}
+                        onChange={e => setForestVegetationCover(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="bare">{t("Bare or mostly bare ground", "Sol nu ou principalement nu")}</option>
+                        <option value="grasses">{t("Grasses and herbs dominating", "Herbes et plantes herbacées dominantes")}</option>
+                        <option value="shrubs">{t("Shrubs and early successional species", "Arbustes et espèces de succession précoce")}</option>
+                        <option value="mixed">{t("Mix of vegetation types", "Mélange de types de végétation")}</option>
+                        <option value="invasive">{t("Invasive species dominating", "Espèces envahissantes dominantes")}</option>
+                        <option value="remnants">{t("Some surviving forest remnants", "Quelques vestiges de forêt survivants")}</option>
+                      </select>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("How close is the restoration area to intact forest patches?", "À quelle distance la zone de restauration se trouve-t-elle des parcelles de forêt intactes?")}
+                        </label>
+                        <select
+                          value={forestProximityToForest}
+                          onChange={e => setForestProximityToForest(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="adjacent">{t("Directly adjacent to intact forest", "Directement adjacent à une forêt intacte")}</option>
+                          <option value="within100m">{t("Within 100m of intact forest", "Dans un rayon de 100 m d'une forêt intacte")}</option>
+                          <option value="within500m">{t("Within 500m of intact forest", "Dans un rayon de 500 m d'une forêt intacte")}</option>
+                          <option value="within1-5km">{t("Within 1-5 km of intact forest", "Dans un rayon de 1-5 km d'une forêt intacte")}</option>
+                          <option value="more5km">{t("More than 5 km from intact forest", "Plus de 5 km d'une forêt intacte")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What is the size of nearby intact forest patches?", "Quelle est la taille des parcelles de forêt intactes à proximité?")}
+                        </label>
+                        <select
+                          value={forestNearbyForestSize}
+                          onChange={e => setForestNearbyForestSize(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="large">{t("Large intact forest (more than 100 hectares)", "Grande forêt intacte (plus de 100 hectares)")}</option>
+                          <option value="medium">{t("Medium forest patches (10-100 hectares)", "Parcelles de forêt moyennes (10-100 hectares)")}</option>
+                          <option value="small">{t("Small forest patches (less than 10 hectares)", "Petites parcelles de forêt (moins de 10 hectares)")}</option>
+                          <option value="scattered">{t("Only scattered trees, no forest patches", "Seulement des arbres dispersés, pas de parcelles de forêt")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What is the accessibility of the site for maintenance and monitoring?", "Quelle est l'accessibilité du site pour l'entretien et le suivi?")}
+                        </label>
+                        <select
+                          value={forestAccessibility}
+                          onChange={e => setForestAccessibility(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="easy">{t("Easy access - near roads, flat terrain", "Accès facile - près des routes, terrain plat")}</option>
+                          <option value="moderate">{t("Moderate access - some distance or rough terrain", "Accès modéré - quelque distance ou terrain accidenté")}</option>
+                          <option value="difficult">{t("Difficult access - remote or steep terrain", "Accès difficile - terrain éloigné ou escarpé")}</option>
+                          <option value="veryDifficult">{t("Very difficult access - requires special equipment", "Accès très difficile - nécessite un équipement spécial")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("What type of forest ecosystem are you restoring?", "Quel type d'écosystème forestier restaurez-vous?")}
+                        </label>
+                        <select
+                          value={forestEcosystemType}
+                          onChange={e => setForestEcosystemType(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="boreal">{t("Boreal forest (northern coniferous)", "Forêt boréale (conifères du nord)")}</option>
+                          <option value="temperateDeciduous">{t("Temperate deciduous forest", "Forêt décidue tempérée")}</option>
+                          <option value="mixedTemperate">{t("Mixed temperate forest", "Forêt tempérée mixte")}</option>
+                          <option value="coastal">{t("Coastal rainforest", "Forêt pluviale côtière")}</option>
+                          <option value="mountain">{t("Mountain/montane forest", "Forêt de montagne/montagnarde")}</option>
+                          <option value="other">{t("Other", "Autre")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("Are you pursuing or planning to pursue carbon credits for this project?", "Poursuivez-vous ou prévoyez-vous de poursuivre des crédits carbone pour ce projet?")}
+                        </label>
+                        <select
+                          value={forestCarbonCredits}
+                          onChange={e => setForestCarbonCredits(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="yes">{t("Yes - carbon credits are a primary objective", "Oui - les crédits carbone sont un objectif principal")}</option>
+                          <option value="considering">{t("Considering it - may pursue in the future", "Envisageant - peut poursuivre à l'avenir")}</option>
+                          <option value="no">{t("No - not pursuing carbon credits", "Non - ne poursuit pas de crédits carbone")}</option>
+                          <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-slate-700">
+                          {t("If pursuing carbon credits, do you have baseline carbon measurements?", "Si vous poursuivez des crédits carbone, avez-vous des mesures de carbone de référence?")}
+                        </label>
+                        <select
+                          value={forestBaselineCarbon}
+                          onChange={e => setForestBaselineCarbon(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">{t("Select...", "Sélectionner...")}</option>
+                          <option value="na">{t("Not applicable - not pursuing carbon credits", "Non applicable - ne poursuit pas de crédits carbone")}</option>
+                          <option value="yes">{t("Yes - baseline assessment completed", "Oui - évaluation de référence terminée")}</option>
+                          <option value="planning">{t("No - but planning to establish baseline", "Non - mais prévoit d'établir une référence")}</option>
+                          <option value="no">{t("No - and not planning baseline assessment", "Non - et ne prévoit pas d'évaluation de référence")}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("Is this forest restoration project combined with other ecological improvements? (Check all that apply)", "Ce projet de restauration forestière est-il combiné à d'autres améliorations écologiques? (Cochez tout ce qui s'applique)")}
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { id: "none", labelEn: "No additional measures - trees only", labelFr: "Aucune mesure supplémentaire - arbres seulement" },
+                          { id: "invasive", labelEn: "Yes - removing invasive species", labelFr: "Oui - élimination des espèces envahissantes" },
+                          { id: "soil", labelEn: "Yes - soil amendments or improvements", labelFr: "Oui - amendements ou améliorations du sol" },
+                          { id: "wildlife", labelEn: "Yes - wildlife habitat features (snags, coarse woody debris)", labelFr: "Oui - caractéristiques d'habitat faunique (chicots, gros débris ligneux)" },
+                          { id: "water", labelEn: "Yes - restoring water features (streams, wetlands)", labelFr: "Oui - restauration des caractéristiques de l'eau (ruisseaux, zones humides)" },
+                          { id: "corridors", labelEn: "Yes - creating wildlife corridors", labelFr: "Oui - création de corridors fauniques" },
+                          { id: "fire", labelEn: "Yes - prescribed burning or fire management", labelFr: "Oui - brûlage dirigé ou gestion des incendies" },
+                          { id: "protecting", labelEn: "Yes - protecting remaining mature trees", labelFr: "Oui - protection des arbres matures restants" },
+                          { id: "herbivory", labelEn: "Yes - controlling herbivory (fencing, tree shelters)", labelFr: "Oui - contrôle de l'herbivorie (clôtures, abris d'arbres)" },
+                          { id: "other", labelEn: "Other restoration measures", labelFr: "Autres mesures de restauration" }
+                        ].map(opt => (
+                          <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={forestCombinedInterventions.includes(opt.id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setForestCombinedInterventions([...forestCombinedInterventions, opt.id]);
+                                } else {
+                                  setForestCombinedInterventions(forestCombinedInterventions.filter(x => x !== opt.id));
+                                }
+                              }}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {language === "fr" ? opt.labelFr : opt.labelEn}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("What are the primary objectives of this restoration project? (Check all that apply)", "Quels sont les objectifs principaux de ce projet de restauration? (Cochez tout ce qui s'applique)")}
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { id: "biodiversity", labelEn: "Biodiversity and habitat restoration", labelFr: "Restauration de la biodiversité et de l'habitat" },
+                          { id: "carbon", labelEn: "Carbon sequestration and climate mitigation", labelFr: "Séquestration du carbone et atténuation du climat" },
+                          { id: "timber", labelEn: "Timber production (future harvest)", labelFr: "Production de bois (récolte future)" },
+                          { id: "watershed", labelEn: "Watershed protection and water quality", labelFr: "Protection du bassin versant et qualité de l'eau" },
+                          { id: "erosion", labelEn: "Erosion control and soil stabilization", labelFr: "Contrôle de l'érosion et stabilisation du sol" },
+                          { id: "recreation", labelEn: "Recreation and education opportunities", labelFr: "Opportunités de loisirs et d'éducation" },
+                          { id: "cultural", labelEn: "Cultural or spiritual significance", labelFr: "Signification culturelle ou spirituelle" },
+                          { id: "wildfire", labelEn: "Wildfire fuel management", labelFr: "Gestion du combustible d'incendie" },
+                          { id: "economic", labelEn: "Economic benefits (jobs, wood products)", labelFr: "Avantages économiques (emplois, produits du bois)" },
+                          { id: "other", labelEn: "Other", labelFr: "Autre" }
+                        ].map(opt => (
+                          <label key={opt.id} className="flex items-start gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={forestObjectives.includes(opt.id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setForestObjectives([...forestObjectives, opt.id]);
+                                } else {
+                                  setForestObjectives(forestObjectives.filter(x => x !== opt.id));
+                                }
+                              }}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                            />
+                            <span className="text-[11px] text-slate-700">
+                              {language === "fr" ? opt.labelFr : opt.labelEn}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">
+                        {t("What is the expected timeline for forest establishment?", "Quel est le calendrier prévu pour l'établissement de la forêt?")}
+                      </label>
+                      <select
+                        value={forestTimeline}
+                        onChange={e => setForestTimeline(e.target.value)}
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                      >
+                        <option value="">{t("Select...", "Sélectionner...")}</option>
+                        <option value="short">{t("Short-term (5-10 years to establishment)", "Court terme (5-10 ans jusqu'à l'établissement)")}</option>
+                        <option value="medium">{t("Medium-term (10-20 years to establishment)", "Moyen terme (10-20 ans jusqu'à l'établissement)")}</option>
+                        <option value="long">{t("Long-term (20+ years to establishment)", "Long terme (20+ ans jusqu'à l'établissement)")}</option>
+                        <option value="multigenerational">{t("Multi-generational timeline", "Calendrier multi-générationnel")}</option>
+                        <option value="unknown">{t("Don't know", "Je ne sais pas")}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex justify-between">
