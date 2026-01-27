@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   BenefitResults,
   BenefitCategory,
@@ -8,6 +9,14 @@ import {
   Region,
   calculateBenefits
 } from "@/lib/benefitCalculator";
+import woodlandIllustration from "../assets/Woodland_Woodland.png";
+import pocketParkIllustration from "../assets/Pocket Park.png";
+import restorationIllustration from "../assets/Vacant and Derelict.png";
+import streetTreesIllustration from "../assets/Street Trees.png";
+import parkTreesIllustration from "../assets/Park Trees .png";
+import wetlandIllustration from "../assets/ wetland.png";
+import tinyForestIllustration from "../assets/Tiny forest_Tiny Forest.png";
+import greenWallIllustration from "../assets/Green Wall-34.png";
 
 type Language = "en" | "fr";
 
@@ -676,6 +685,16 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     "Projets couvrant plusieurs quartiers ou une municipalité entière, combinant généralement plusieurs sites."
                   )}
                 </p>
+                <div className="mt-2 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                  <Image
+                    src={woodlandIllustration}
+                    alt={t(
+                      "Illustration of community-wide urban planting",
+                      "Illustration d’une plantation urbaine à l’échelle de la collectivité"
+                    )}
+                    className="w-full h-auto"
+                  />
+                </div>
               </button>
 
               <button
@@ -704,6 +723,16 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     "Réhabilitation de zones naturalisées ou semi-naturelles, souvent après une perturbation, des ravageurs ou un incendie de forêt."
                   )}
                 </p>
+                <div className="mt-2 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                  <Image
+                    src={restorationIllustration}
+                    alt={t(
+                      "Illustration of forest restoration in naturalized areas",
+                      "Illustration de restauration forestière dans des secteurs naturalisés"
+                    )}
+                    className="w-full h-auto"
+                  />
+                </div>
               </button>
 
               <button
@@ -732,6 +761,16 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     "Projets ciblant un site précis comme un corridor, un parc, une cour d’école ou une rue principale."
                   )}
                 </p>
+                <div className="mt-2 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                  <Image
+                    src={pocketParkIllustration}
+                    alt={t(
+                      "Illustration of a localized planting project",
+                      "Illustration d’un projet de plantation localisé"
+                    )}
+                    className="w-full h-auto"
+                  />
+                </div>
               </button>
             </div>
 
@@ -749,7 +788,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     descEn:
                       "Thoughtful placement of trees along public streets, improving shade, aesthetics and air quality.",
                     descFr:
-                      "Implantation réfléchie d’arbres le long des rues publiques pour améliorer l’ombre, l’esthétique et la qualité de l’air."
+                      "Implantation réfléchie d’arbres le long des rues publiques pour améliorer l’ombre, l’esthétique et la qualité de l’air.",
+                    illustration: streetTreesIllustration
                   },
                   {
                     id: "urbanLowCanopy",
@@ -758,7 +798,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     descEn:
                       "New planting in heat-vulnerable or asphalt-dominated areas to reduce urban heat island effects.",
                     descFr:
-                      "Nouvelles plantations dans des zones vulnérables à la chaleur ou dominées par l’asphalte pour réduire les îlots de chaleur."
+                      "Nouvelles plantations dans des zones vulnérables à la chaleur ou dominées par l’asphalte pour réduire les îlots de chaleur.",
+                    illustration: greenWallIllustration
                   },
                   {
                     id: "parkTrees",
@@ -767,7 +808,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     descEn:
                       "Establishing new groves and revitalizing existing stands in parks and green spaces.",
                     descFr:
-                      "Création de nouveaux bosquets et revitalisation de peuplements existants dans les parcs et espaces verts."
+                      "Création de nouveaux bosquets et revitalisation de peuplements existants dans les parcs et espaces verts.",
+                    illustration: parkTreesIllustration
                   },
                   {
                     id: "riparian",
@@ -776,7 +818,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     descEn:
                       "Stabilizing banks and increasing infiltration along rivers, streams or shorelines.",
                     descFr:
-                      "Stabilisation des berges et augmentation de l’infiltration le long des rivières, cours d’eau ou rives."
+                      "Stabilisation des berges et augmentation de l’infiltration le long des rivières, cours d’eau ou rives.",
+                    illustration: wetlandIllustration
                   },
                   {
                     id: "forestRestorationActivity",
@@ -785,7 +828,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     descEn:
                       "Rebuilding canopy in areas affected by pests, disease or wildfire.",
                     descFr:
-                      "Reconstitution de la canopée dans des zones touchées par des ravageurs, des maladies ou des feux de forêt."
+                      "Reconstitution de la canopée dans des zones touchées par des ravageurs, des maladies ou des feux de forêt.",
+                    illustration: tinyForestIllustration
                   }
                 ] as const).map(activity => {
                   const selected = supportedActivities.includes(
@@ -814,6 +858,15 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       <p className="text-slate-600">
                         {language === "fr" ? activity.descFr : activity.descEn}
                       </p>
+                      {activity.illustration && (
+                        <div className="mt-1.5 w-full overflow-hidden rounded-md border border-slate-200 bg-slate-50">
+                          <Image
+                            src={activity.illustration}
+                            alt={language === "fr" ? activity.labelFr : activity.labelEn}
+                            className="w-full h-auto"
+                          />
+                        </div>
+                      )}
                     </button>
                   );
                 })}
