@@ -223,6 +223,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
   // Optional contextual parameters (lower priority / advanced)
   const [showAdvancedContext, setShowAdvancedContext] = useState(false);
+  const [showBenefitContext, setShowBenefitContext] = useState(false);
   const [populationDensity, setPopulationDensity] = useState(3200); // people / km²
   const [baselineCanopy, setBaselineCanopy] = useState(18); // %
   const [heatVulnerability, setHeatVulnerability] = useState<"low" | "medium" | "high">(
@@ -1138,127 +1139,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </div>
                   </div>
 
-                  {/* Category 3: Economic parameters */}
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-slate-800">
-                      {t("Economic parameters", "Paramètres économiques")}
-                    </h4>
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Average residential property price (CAD)",
-                            "Prix moyen des propriétés résidentielles (CAD)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.avgResidentialPrice}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              avgResidentialPrice: Number(e.target.value) || 0
-                            }))
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Average commercial property price (CAD/property)",
-                            "Prix moyen des propriétés commerciales (CAD/propriété)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.avgCommercialPrice}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              avgCommercialPrice: Number(e.target.value) || 0
-                            }))
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Domestic electricity price (CAD/kWh)",
-                            "Prix de l’électricité domestique (CAD/kWh)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.electricityPrice}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              electricityPrice: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.001"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t("Natural gas price (CAD/m³)", "Prix du gaz naturel (CAD/m³)")}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.gasPrice}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              gasPrice: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.001"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Water/stormwater utility rate (CAD/m³)",
-                            "Tarif de service eau/eaux pluviales (CAD/m³)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.waterRate}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              waterRate: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.01"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t("Average hourly wage (CAD/hour)", "Salaire horaire moyen (CAD/h)")}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.avgHourlyWage}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              avgHourlyWage: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.01"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Category 4: Infrastructure & urban form */}
                   <div className="space-y-2">
                     <h4 className="font-semibold text-slate-800">
@@ -1340,264 +1220,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </div>
                   </div>
 
-                  {/* Category 5: Environmental baseline */}
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-slate-800">
-                      {t("Environmental baseline", "Situation environnementale de référence")}
-                    </h4>
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Municipal CO₂ emissions (tCO₂e/year)",
-                            "Émissions municipales de CO₂ (tCO₂e/an)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.municipalEmissionsTonnes}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              municipalEmissionsTonnes: Number(e.target.value) || 0
-                            }))
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "PM2.5 concentration (µg/m³)",
-                            "Concentration de PM2.5 (µg/m³)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.pm25UgM3}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              pm25UgM3: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.1"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Stormwater runoff (million m³/year)",
-                            "Ruissellement des eaux pluviales (millions m³/an)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.stormwaterRunoffMillionM3}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              stormwaterRunoffMillionM3: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.1"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Urban heat island intensity (°C)",
-                            "Intensité des îlots de chaleur urbains (°C)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.heatIslandIntensityC}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              heatIslandIntensityC: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.1"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Flood events per decade",
-                            "Événements d’inondation par décennie"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.floodEventsPerDecade}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              floodEventsPerDecade: Number(e.target.value) || 0
-                            }))
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t("Heat vulnerability", "Vulnérabilité à la chaleur")}
-                        </label>
-                        <select
-                          value={heatVulnerability}
-                          onChange={e =>
-                            setHeatVulnerability(
-                              e.target.value as "low" | "medium" | "high"
-                            )
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        >
-                          <option value="low">{t("Low", "Faible")}</option>
-                          <option value="medium">{t("Medium", "Moyenne")}</option>
-                          <option value="high">{t("High", "Élevée")}</option>
-                        </select>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Flood / stormwater risk",
-                            "Risque d’inondation / eaux pluviales"
-                          )}
-                        </label>
-                        <select
-                          value={floodRisk}
-                          onChange={e =>
-                            setFloodRisk(e.target.value as "low" | "medium" | "high")
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        >
-                          <option value="low">{t("Low", "Faible")}</option>
-                          <option value="medium">{t("Medium", "Moyenne")}</option>
-                          <option value="high">{t("High", "Élevé")}</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Category 6: Recreation & tourism */}
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-slate-800">
-                      {t("Recreation & tourism", "Loisirs et tourisme")}
-                    </h4>
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Annual park visitors (visits/year)",
-                            "Visiteurs de parcs annuels (visites/an)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.annualParkVisitors}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              annualParkVisitors: Number(e.target.value) || 0
-                            }))
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Tourism spending (million CAD/year)",
-                            "Dépenses touristiques (millions CAD/an)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.tourismSpendingMillion}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              tourismSpendingMillion: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.1"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Recreation value per visit (CAD/visit)",
-                            "Valeur récréative par visite (CAD/visite)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.recreationValuePerVisit}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              recreationValuePerVisit: Number(e.target.value) || 0
-                            }))
-                          }
-                          step="0.01"
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Category 7: Carbon market parameters */}
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-slate-800">
-                      {t("Carbon market parameters", "Paramètres du marché du carbone")}
-                    </h4>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Carbon credit price (CAD/tCO₂e)",
-                            "Prix du crédit carbone (CAD/tCO₂e)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.carbonCreditPrice}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              carbonCreditPrice: Number(e.target.value) || 0
-                            }))
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Social cost of carbon (CAD/tCO₂e)",
-                            "Coût social du carbone (CAD/tCO₂e)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.socialCostOfCarbon}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              socialCostOfCarbon: Number(e.target.value) || 0
-                            }))
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
@@ -3625,6 +3247,149 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 "Fournissez des détails supplémentaires pour les catégories de bénéfices sélectionnées afin d'affiner les calculs."
               )}
             </p>
+
+            {/* Benefit context assumptions – optional, above benefit inputs */}
+            <div className="rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3">
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-xs font-semibold text-slate-700">
+                    {t(
+                      "Context assumptions for benefits (optional)",
+                      "Hypothèses de contexte pour les bénéfices (optionnel)"
+                    )}
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    {t(
+                      "Local data that refines carbon, stormwater, heat, air quality and economic benefit estimates.",
+                      "Données locales qui affinent les estimations de bénéfices carbone, eaux pluviales, chaleur, qualité de l'air et économiques."
+                    )}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowBenefitContext(prev => !prev)}
+                  className="shrink-0 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100 transition"
+                >
+                  {showBenefitContext
+                    ? t("Hide", "Masquer")
+                    : t("Show", "Afficher")}
+                </button>
+              </div>
+              {showBenefitContext && (
+                <div className="mt-4 space-y-4 border-t border-slate-200 pt-4 text-[11px]">
+                  <div>
+                    <h4 className="mb-2 font-semibold text-slate-800">
+                      {t("Economic parameters", "Paramètres économiques")}
+                    </h4>
+                    <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-6">
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Residential price (CAD)", "Prix résidentiel (CAD)")}</label>
+                        <input type="number" value={contextParams.avgResidentialPrice} onChange={e => setContextParams(prev => ({ ...prev, avgResidentialPrice: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Commercial price (CAD)", "Prix commercial (CAD)")}</label>
+                        <input type="number" value={contextParams.avgCommercialPrice} onChange={e => setContextParams(prev => ({ ...prev, avgCommercialPrice: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Electricity (CAD/kWh)", "Électricité (CAD/kWh)")}</label>
+                        <input type="number" step="0.001" value={contextParams.electricityPrice} onChange={e => setContextParams(prev => ({ ...prev, electricityPrice: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Gas (CAD/m³)", "Gaz (CAD/m³)")}</label>
+                        <input type="number" step="0.001" value={contextParams.gasPrice} onChange={e => setContextParams(prev => ({ ...prev, gasPrice: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Water rate (CAD/m³)", "Tarif eau (CAD/m³)")}</label>
+                        <input type="number" step="0.01" value={contextParams.waterRate} onChange={e => setContextParams(prev => ({ ...prev, waterRate: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Hourly wage (CAD)", "Salaire horaire (CAD)")}</label>
+                        <input type="number" step="0.01" value={contextParams.avgHourlyWage} onChange={e => setContextParams(prev => ({ ...prev, avgHourlyWage: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="mb-2 font-semibold text-slate-800">
+                      {t("Environmental baseline", "Situation environnementale de référence")}
+                    </h4>
+                    <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Municipal CO₂ (t/year)", "CO₂ municipal (t/an)")}</label>
+                        <input type="number" value={contextParams.municipalEmissionsTonnes} onChange={e => setContextParams(prev => ({ ...prev, municipalEmissionsTonnes: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("PM2.5 (µg/m³)", "PM2.5 (µg/m³)")}</label>
+                        <input type="number" step="0.1" value={contextParams.pm25UgM3} onChange={e => setContextParams(prev => ({ ...prev, pm25UgM3: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Stormwater runoff (M m³/yr)", "Ruissellement (M m³/an)")}</label>
+                        <input type="number" step="0.1" value={contextParams.stormwaterRunoffMillionM3} onChange={e => setContextParams(prev => ({ ...prev, stormwaterRunoffMillionM3: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Heat island (°C)", "Îlot de chaleur (°C)")}</label>
+                        <input type="number" step="0.1" value={contextParams.heatIslandIntensityC} onChange={e => setContextParams(prev => ({ ...prev, heatIslandIntensityC: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Flood events/decade", "Inondations/décennie")}</label>
+                        <input type="number" value={contextParams.floodEventsPerDecade} onChange={e => setContextParams(prev => ({ ...prev, floodEventsPerDecade: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                    </div>
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Heat vulnerability", "Vulnérabilité à la chaleur")}</label>
+                        <select value={heatVulnerability} onChange={e => setHeatVulnerability(e.target.value as "low" | "medium" | "high")} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500">
+                          <option value="low">{t("Low", "Faible")}</option>
+                          <option value="medium">{t("Medium", "Moyenne")}</option>
+                          <option value="high">{t("High", "Élevée")}</option>
+                        </select>
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Flood / stormwater risk", "Risque inondation / eaux pluviales")}</label>
+                        <select value={floodRisk} onChange={e => setFloodRisk(e.target.value as "low" | "medium" | "high")} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500">
+                          <option value="low">{t("Low", "Faible")}</option>
+                          <option value="medium">{t("Medium", "Moyenne")}</option>
+                          <option value="high">{t("High", "Élevé")}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="mb-2 font-semibold text-slate-800">
+                      {t("Carbon market", "Marché du carbone")}
+                    </h4>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Carbon credit price (CAD/tCO₂e)", "Prix crédit carbone (CAD/tCO₂e)")}</label>
+                        <input type="number" value={contextParams.carbonCreditPrice} onChange={e => setContextParams(prev => ({ ...prev, carbonCreditPrice: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Social cost of carbon (CAD/tCO₂e)", "Coût social du carbone (CAD/tCO₂e)")}</label>
+                        <input type="number" value={contextParams.socialCostOfCarbon} onChange={e => setContextParams(prev => ({ ...prev, socialCostOfCarbon: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="mb-2 font-semibold text-slate-800">
+                      {t("Recreation & tourism", "Loisirs et tourisme")}
+                    </h4>
+                    <div className="grid gap-2 sm:grid-cols-3">
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Park visitors/year", "Visiteurs parcs/an")}</label>
+                        <input type="number" value={contextParams.annualParkVisitors} onChange={e => setContextParams(prev => ({ ...prev, annualParkVisitors: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Tourism spending (M CAD/yr)", "Dépenses tourisme (M CAD/an)")}</label>
+                        <input type="number" step="0.1" value={contextParams.tourismSpendingMillion} onChange={e => setContextParams(prev => ({ ...prev, tourismSpendingMillion: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="font-medium text-slate-700">{t("Value per visit (CAD)", "Valeur par visite (CAD)")}</label>
+                        <input type="number" step="0.01" value={contextParams.recreationValuePerVisit} onChange={e => setContextParams(prev => ({ ...prev, recreationValuePerVisit: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="space-y-6">
               {selectedBenefits.includes("carbon") && (
