@@ -152,7 +152,6 @@ interface ContextParams {
   heatDaysPerYear: number;
   growingSeasonDays: number;
   baselineAqi: number;
-  avgWindSpeedKmh: number;
 
   // Category 2: Demographics & Social
   municipalPopulation: number;
@@ -215,6 +214,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [improvedGreenSpaceHa, setImprovedGreenSpaceHa] = useState(0);
   const [newTreesInFootpath, setNewTreesInFootpath] = useState(0);
   const [hasSustainableWaterSystems, setHasSustainableWaterSystems] = useState(false);
+  const [sustainableWaterSystemType, setSustainableWaterSystemType] = useState("");
 
   // Project typology & activities
   const [projectTypology, setProjectTypology] =
@@ -239,7 +239,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
     heatDaysPerYear: 12,
     growingSeasonDays: 180,
     baselineAqi: 42,
-    avgWindSpeedKmh: 15,
 
     // Category 2: Demographics & Social
     municipalPopulation: 85000,
@@ -303,8 +302,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
     pedestrianActivity: "moderate" as "low" | "moderate" | "high"
   });
   const [heatDetails, setHeatDetails] = useState({
-    currentMaxTemp: 35, // °C
-    targetTempReduction: 2 // °C
+    heatDaysPerYear: 15, // days >30°C
+    typicalMaxSummerTempC: 35 // °C
   });
   const [airQualityDetails, setAirQualityDetails] = useState({
     trafficVolume: "medium" as "low" | "medium" | "high",
@@ -565,9 +564,18 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
       idx + 1 <= currentStep ? "●" : "○"
     ).join(" ");
     return (
-      <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
-        <span className="tracking-[0.2em]">{dots}</span>
-        <span>
+      <div
+        className="mt-3 flex items-center justify-between rounded-md border border-slate-200 bg-slate-50/80 px-3 py-2 text-slate-600 select-none cursor-default"
+        role="status"
+        aria-label={language === "fr" ? `Étape ${currentStep} sur ${total}` : `Step ${currentStep} of ${total}`}
+      >
+        <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+          {language === "fr" ? "Progression" : "Progress"}
+        </span>
+        <span className="text-base tracking-[0.25em] font-medium text-slate-600" aria-hidden>
+          {dots}
+        </span>
+        <span className="text-sm font-medium text-slate-700">
           {language === "fr"
             ? `Étape ${currentStep} sur ${total}`
             : `Step ${currentStep} of ${total}`}
@@ -877,6 +885,13 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     }
                   ].map(option => {
                     const selected = projectAreaContext === option.id;
+                    const label =
+                      language === "fr" ? option.labelFr : option.labelEn;
+                    const bracketIdx = label.indexOf(" (");
+                    const primary =
+                      bracketIdx >= 0 ? label.slice(0, bracketIdx) : label;
+                    const rest =
+                      bracketIdx >= 0 ? label.slice(bracketIdx) : null;
                     return (
                       <button
                         key={option.id}
@@ -892,7 +907,14 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                             : "border-slate-300 bg-white text-slate-700 hover:border-primary-400 hover:bg-primary-50/40"
                         }`}
                       >
-                        {language === "fr" ? option.labelFr : option.labelEn}
+                        {rest ? (
+                          <>
+                            <span className="font-semibold">{primary}</span>
+                            {rest}
+                          </>
+                        ) : (
+                          label
+                        )}
                       </button>
                     );
                   })}
@@ -1107,25 +1129,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                             setContextParams(prev => ({
                               ...prev,
                               baselineAqi: Number(e.target.value) || 0
-                            }))
-                          }
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="font-medium text-slate-700">
-                          {t(
-                            "Average wind speed (km/h)",
-                            "Vitesse moyenne du vent (km/h)"
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={contextParams.avgWindSpeedKmh}
-                          onChange={e =>
-                            setContextParams(prev => ({
-                              ...prev,
-                              avgWindSpeedKmh: Number(e.target.value) || 0
                             }))
                           }
                           className="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition"
@@ -1691,29 +1694,63 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 </p>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-700">
+              <div className="space-y-3">
+                <p className="text-xs font-medium text-slate-700">
                   {t(
-                    "Sustainable water systems",
-                    "Systèmes d'eau durables"
+                    "Does your project include sustainable water systems for irrigation or drainage?",
+                    "Votre projet comprend-il des systèmes d'eau durables pour l'irrigation ou le drainage?"
                   )}
-                </label>
-                <div className="flex items-center gap-3 pt-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
+                </p>
+                <div className="space-y-2">
+                  <label className="flex items-start gap-2 cursor-pointer">
                     <input
-                      type="checkbox"
+                      type="radio"
+                      name="sustainable-water"
+                      checked={!hasSustainableWaterSystems}
+                      onChange={() => {
+                        setHasSustainableWaterSystems(false);
+                        setSustainableWaterSystemType("");
+                      }}
+                      className="mt-0.5 h-4 w-4 border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                    />
+                    <span className="text-sm text-slate-700">
+                      {t("No", "Non")}
+                    </span>
+                  </label>
+                  <label className="flex items-start gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="sustainable-water"
                       checked={hasSustainableWaterSystems}
-                      onChange={e => setHasSustainableWaterSystems(e.target.checked)}
-                      className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
+                      onChange={() => setHasSustainableWaterSystems(true)}
+                      className="mt-0.5 h-4 w-4 border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
                     />
                     <span className="text-sm text-slate-700">
                       {t(
-                        "Project combined with sustainable water systems for irrigation or drainage",
-                        "Projet combiné avec des systèmes d'eau durables pour l'irrigation ou le drainage"
+                        "Yes, the project includes rainwater harvesting, bioswales, or other sustainable water management.",
+                        "Oui, le projet comprend la récupération des eaux pluviales, des bioswales ou une autre gestion durable de l'eau."
                       )}
                     </span>
                   </label>
                 </div>
+                {hasSustainableWaterSystems && (
+                  <div className="ml-6 mt-3 space-y-1.5">
+                    <label className="text-xs font-medium text-slate-700">
+                      {t("Water management system type:", "Type de système de gestion de l'eau :")}
+                    </label>
+                    <select
+                      value={sustainableWaterSystemType}
+                      onChange={e => setSustainableWaterSystemType(e.target.value)}
+                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                    >
+                      <option value="">{t("Select types", "Sélectionner les types")}</option>
+                      <option value="bioswales">{t("Bioswales/vegetated swales", "Bioswales / fossés végétalisés")}</option>
+                      <option value="rainGardens">{t("Rain gardens", "Jardins pluviaux")}</option>
+                      <option value="filterStrips">{t("Filter strips", "Bandes filtrantes")}</option>
+                      <option value="retentionDetention">{t("Retention or detention ponds", "Bassins de rétention ou de détention")}</option>
+                    </select>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -3049,13 +3086,22 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
             </h3>
             <p className="text-xs text-slate-600">
               {t(
-                "Optionally capture a short narrative and costs, then describe who is most affected and which benefit story you need to emphasize.",
-                "Saisissez de façon optionnelle un court récit et les coûts, puis décrivez qui est le plus touché et quels bénéfices vous devez mettre de l’avant."
+                "Add optional project details for the report, then describe who is most affected and which benefit story you want to emphasize.",
+                "Ajoutez des détails de projet optionnels pour le rapport, puis décrivez qui est le plus touché et quels bénéfices mettre de l’avant."
               )}
             </p>
 
-            {/* Project story & costs (optional) */}
+            {/* Project narrative & costs (optional) */}
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">
+                {t("Project narrative & costs (optional)", "Récit du projet et coûts (optionnel)")}
+              </h4>
+              <p className="text-xs text-slate-600">
+                {t(
+                  "Add project details to be included in the final report. These details strengthen the narrative but aren't required for benefit calculations.",
+                  "Ajoutez des détails du projet à inclure dans le rapport final. Ces détails renforcent le récit mais ne sont pas requis pour les calculs de bénéfices."
+                )}
+              </p>
               <div className="space-y-2">
                 <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">
                   {t("Short project description (optional)", "Brève description du projet (optionnel)")}
@@ -3119,13 +3165,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </div>
                 </div>
               </div>
-
-              <p className="text-[11px] text-slate-500">
-                {t(
-                  "These fields are optional and meant to support narrative and budget sections in applications.",
-                  "Ces champs sont optionnels et visent à alimenter les sections de récit et de budget dans vos demandes."
-                )}
-              </p>
             </div>
 
             {/* Community impact & equity */}
@@ -3641,15 +3680,16 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-700">
-                        {t("Current max temperature (°C)", "Température maximale actuelle (°C)")}
+                        {t("Average number of heat days per year (>30°C):", "Nombre moyen de jours de chaleur par an (>30 °C) :")}
                       </label>
                       <input
                         type="number"
-                        value={heatDetails.currentMaxTemp}
+                        min="0"
+                        value={heatDetails.heatDaysPerYear}
                         onChange={e =>
                           setHeatDetails(prev => ({
                             ...prev,
-                            currentMaxTemp: Number(e.target.value) || 0
+                            heatDaysPerYear: Math.max(0, Number(e.target.value) || 0)
                           }))
                         }
                         className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
@@ -3657,16 +3697,15 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-700">
-                        {t("Target temperature reduction (°C)", "Réduction cible de la température (°C)")}
+                        {t("Typical maximum summer temperature (°C):", "Température maximale estivale typique (°C) :")}
                       </label>
                       <input
                         type="number"
-                        min="0"
-                        value={heatDetails.targetTempReduction}
+                        value={heatDetails.typicalMaxSummerTempC}
                         onChange={e =>
                           setHeatDetails(prev => ({
                             ...prev,
-                            targetTempReduction: Math.max(0, Number(e.target.value) || 0)
+                            typicalMaxSummerTempC: Number(e.target.value) || 0
                           }))
                         }
                         className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
