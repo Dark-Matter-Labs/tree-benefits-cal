@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   BenefitResults,
@@ -193,6 +193,12 @@ interface ContextParams {
 
 export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
+
+  // Scroll to top when step changes (e.g. after pressing Next)
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [step]);
+
   const [projectName, setProjectName] = useState("");
   const [municipality, setMunicipality] = useState("");
   const [municipalityQuery, setMunicipalityQuery] = useState("");
