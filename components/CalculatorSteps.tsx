@@ -206,7 +206,9 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [numberOfTrees, setNumberOfTrees] = useState(500);
   const [projectAreaHa, setProjectAreaHa] = useState(2);
   const [year, setYear] = useState(new Date().getFullYear());
-  
+  const [projectIncludesShrubs, setProjectIncludesShrubs] = useState(false);
+  const [numberOfShrubs, setNumberOfShrubs] = useState<number | null>(null);
+
   // Tree planting details
   const [deciduousPercent, setDeciduousPercent] = useState(60);
   const [evergreenPercent, setEvergreenPercent] = useState(40);
@@ -501,6 +503,79 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
   const t = (en: string, fr: string) => (language === "fr" ? fr : en);
 
+  const estimatePopulationServedFromContext = () => {
+    // Base population by affected community size
+    let base =
+      municipalitySize === "small"
+        ? 8000
+        : municipalitySize === "medium"
+        ? 25000
+        : 60000;
+
+    // Adjust for local context type
+    let contextFactor = 1;
+    switch (projectAreaContext) {
+      case "urbanCore":
+        contextFactor = 1.3;
+        break;
+      case "urbanNeighbourhood":
+        contextFactor = 1.1;
+        break;
+      case "suburban":
+        contextFactor = 0.9;
+        break;
+      case "peripheral":
+        contextFactor = 0.7;
+        break;
+      case "rural":
+        contextFactor = 0.5;
+        break;
+      case "industrial":
+        contextFactor = 0.6;
+        break;
+      default:
+        contextFactor = 1;
+    }
+
+    // Light regional tweak based on typical Canadian densities
+    const regionFactor =
+      region === "ontario"
+        ? 1.1
+        : region === "quebec"
+        ? 1.05
+        : region === "bc"
+        ? 1.0
+        : region === "prairies"
+        ? 0.9
+        : region === "atlantic"
+        ? 0.95
+        : 0.7; // territories
+
+    const estimateRaw = base * contextFactor * regionFactor;
+    const estimate = Math.max(100, Math.min(Math.round(estimateRaw), 250000));
+
+    setPopulationServed(estimate);
+    // Back-of-envelope household estimate for downstream per-household metrics
+    setHouseholdsServed(Math.max(10, Math.round(estimate / 2.6)));
+  };
+
+  const renderStepProgress = (currentStep: number) => {
+    const total = 5;
+    const dots = Array.from({ length: total }, (_, idx) =>
+      idx + 1 <= currentStep ? "●" : "○"
+    ).join(" ");
+    return (
+      <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+        <span className="tracking-[0.2em]">{dots}</span>
+        <span>
+          {language === "fr"
+            ? `Étape ${currentStep} sur ${total}`
+            : `Step ${currentStep} of ${total}`}
+        </span>
+      </div>
+    );
+  };
+
   const matchedMunicipality = municipality
     ? canadianMunicipalities.find(
         m => normalizeMunicipalityName(m.name) === normalizeMunicipalityName(municipality)
@@ -599,8 +674,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
             </h3>
             <p className="text-xs text-slate-600">
               {t(
-                "Tell us where and for whom this project is happening. This helps the tool scale impacts to the right community context.",
-                "Indiquez où le projet a lieu et qui il touche. Cela aide l’outil à adapter les impacts au bon contexte communautaire."
+                "Start by providing basic project details and location. This allows the calculator to use region-specific data for more accurate benefit estimates.",
+                "Commencez par fournir les détails de base du projet et le lieu. Le calculateur pourra ainsi utiliser des données propres à la région pour des estimations de bénéfices plus précises."
               )}
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -836,13 +911,13 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                 >
                   <option value="small">
-                    {t("Smaller catchment (up to ~10k people)", "Petite zone de desserte (jusqu’à ~10k personnes)")}
+                    {t("Small", "Petit")}
                   </option>
                   <option value="medium">
-                    {t("Neighbourhood scale (~10k–100k)", "Échelle de quartier (~10k–100k)")}
+                    {t("Medium", "Moyen")}
                   </option>
                   <option value="large">
-                    {t("City-wide / multi-neighbourhood (>100k)", "Échelle municipale / multi-quartiers (>100k)")}
+                    {t("Large", "Grand")}
                   </option>
                 </select>
               </div>
@@ -865,39 +940,35 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-slate-700">
                   {t(
-                    "Population served (approx pop living <500m)",
-                    "Population desservie (population vivant à <500 m, approx.)"
+                    "Population served (approx. pop living within 500m buffer)",
+                    "Population desservie (population vivant dans un rayon de 500 m, approx.)"
                   )}
                 </label>
-                <input
-                  type="number"
-                  value={populationServed}
-                  onChange={e =>
-                    setPopulationServed(
-                      Math.max(0, Number(e.target.value) || 0)
-                    )
-                  }
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-700">
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={populationServed}
+                    onChange={e =>
+                      setPopulationServed(
+                        Math.max(0, Number(e.target.value) || 0)
+                      )
+                    }
+                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={estimatePopulationServedFromContext}
+                    className="whitespace-nowrap rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-100 transition"
+                  >
+                    {t("Auto-calculate", "Calculer automatiquement")}
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500">
                   {t(
-                    "Households served (approx pop living <500m)",
-                    "Ménages desservis (population vivant à <500 m, approx.)"
+                    "Estimate the number of people living within 500m of your project area. If you're unsure, click “Auto-calculate” to generate an estimate based on your community size, context and region.",
+                    "Estimez le nombre de personnes vivant à moins de 500 m de votre zone de projet. Si vous n’êtes pas certain·e, cliquez sur « Calculer automatiquement » pour générer une estimation basée sur la taille de la communauté, le contexte du site et la région."
                   )}
-                </label>
-                <input
-                  type="number"
-                  value={householdsServed}
-                  onChange={e =>
-                    setHouseholdsServed(
-                      Math.max(0, Number(e.target.value) || 0)
-                    )
-                  }
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                />
+                </p>
               </div>
             </div>
 
@@ -1269,6 +1340,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 {t("Next: Trees", "Suivant : Arbres")}
               </button>
             </div>
+            {renderStepProgress(1)}
           </div>
         )}
 
@@ -1284,128 +1356,69 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               )}
             </p>
 
-            {/* Project typology */}
-            <div className="grid gap-3 md:grid-cols-3">
-              <button
-                type="button"
-                onClick={() => setProjectTypology("communityWideUrbanPlanting")}
-                className={`flex flex-col items-start gap-2 rounded-xl border px-3 py-3 text-left text-xs transition ${
-                  projectTypology === "communityWideUrbanPlanting"
-                    ? "border-primary-500 bg-primary-50 shadow-sm"
-                    : "border-slate-300 bg-slate-50 hover:border-primary-400 hover:bg-primary-50/40"
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-[11px] font-semibold text-primary-800">
-                    {t("CW", "CG")}
-                  </div>
-                  <span className="font-semibold text-slate-900">
-                    {t(
-                      "Community-wide urban planting",
-                      "Plantation urbaine à l’échelle de la collectivité"
-                    )}
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-600">
-                  {t(
-                    "Projects that span multiple neighbourhoods or a full municipality, usually combining several sites.",
-                    "Projets couvrant plusieurs quartiers ou une municipalité entière, combinant généralement plusieurs sites."
-                  )}
-                </p>
-                <div className="mt-2 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-                  <Image
-                    src={woodlandIllustration}
-                    alt={t(
-                      "Illustration of community-wide urban planting",
-                      "Illustration d’une plantation urbaine à l’échelle de la collectivité"
-                    )}
-                    className="w-full h-auto"
+            {/* Section 1: Project type (Select one) */}
+            <div className="space-y-2">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">
+                {t("Project type (Select one)", "Type de projet (Choisir un)")}
+              </h4>
+              <div className="space-y-1">
+                <label className="flex items-start gap-2 text-sm text-slate-800">
+                  <input
+                    type="radio"
+                    name="project-type"
+                    value="communityWideUrbanPlanting"
+                    checked={projectTypology === "communityWideUrbanPlanting"}
+                    onChange={() => setProjectTypology("communityWideUrbanPlanting")}
+                    className="mt-1 h-4 w-4 border-slate-400 text-primary-600 focus:ring-primary-500"
                   />
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setProjectTypology("forestRestoration")}
-                className={`flex flex-col items-start gap-2 rounded-xl border px-3 py-3 text-left text-xs transition ${
-                  projectTypology === "forestRestoration"
-                    ? "border-primary-500 bg-primary-50 shadow-sm"
-                    : "border-slate-300 bg-slate-50 hover:border-primary-400 hover:bg-primary-50/40"
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-[11px] font-semibold text-emerald-800">
-                    {t("FR", "FR")}
-                  </div>
-                  <span className="font-semibold text-slate-900">
-                    {t(
-                      "Forest restoration in naturalized areas",
-                      "Restauration forestière dans des secteurs naturalisés"
-                    )}
+                  <span>
+                    <span className="font-medium">{t("Community-wide urban planting", "Plantation urbaine à l'échelle de la collectivité")}</span>
+                    <span className="block text-[11px] text-slate-600 italic">{t("Projects spanning multiple neighborhoods or full municipality", "Projets couvrant plusieurs quartiers ou une municipalité entière")}</span>
                   </span>
-                </div>
-                <p className="text-[11px] text-slate-600">
-                  {t(
-                    "Rehabilitation of naturalized or semi-natural areas, often following disturbance, pests or wildfire.",
-                    "Réhabilitation de zones naturalisées ou semi-naturelles, souvent après une perturbation, des ravageurs ou un incendie de forêt."
-                  )}
-                </p>
-                <div className="mt-2 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-                  <Image
-                    src={restorationIllustration}
-                    alt={t(
-                      "Illustration of forest restoration in naturalized areas",
-                      "Illustration de restauration forestière dans des secteurs naturalisés"
-                    )}
-                    className="w-full h-auto"
+                </label>
+                <label className="flex items-start gap-2 text-sm text-slate-800">
+                  <input
+                    type="radio"
+                    name="project-type"
+                    value="forestRestoration"
+                    checked={projectTypology === "forestRestoration"}
+                    onChange={() => setProjectTypology("forestRestoration")}
+                    className="mt-1 h-4 w-4 border-slate-400 text-primary-600 focus:ring-primary-500"
                   />
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setProjectTypology("localizedPlanting")}
-                className={`flex flex-col items-start gap-2 rounded-xl border px-3 py-3 text-left text-xs transition ${
-                  projectTypology === "localizedPlanting"
-                    ? "border-primary-500 bg-primary-50 shadow-sm"
-                    : "border-slate-300 bg-slate-50 hover:border-primary-400 hover:bg-primary-50/40"
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 text-[11px] font-semibold text-amber-800">
-                    {t("LP", "PL")}
-                  </div>
-                  <span className="font-semibold text-slate-900">
-                    {t(
-                      "Localized planting projects",
-                      "Projets de plantation localisés"
-                    )}
+                  <span>
+                    <span className="font-medium">{t("Forest restoration in naturalized areas", "Restauration forestière dans des secteurs naturalisés")}</span>
+                    <span className="block text-[11px] text-slate-600 italic">{t("Rehabilitation of naturalized or semi-natural areas", "Réhabilitation de zones naturalisées ou semi-naturelles")}</span>
                   </span>
-                </div>
-                <p className="text-[11px] text-slate-600">
-                  {t(
-                    "Site-specific projects such as a corridor, park, school yard or main street.",
-                    "Projets ciblant un site précis comme un corridor, un parc, une cour d’école ou une rue principale."
-                  )}
-                </p>
-                <div className="mt-2 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-                  <Image
-                    src={pocketParkIllustration}
-                    alt={t(
-                      "Illustration of a localized planting project",
-                      "Illustration d’un projet de plantation localisé"
-                    )}
-                    className="w-full h-auto"
+                </label>
+                <label className="flex items-start gap-2 text-sm text-slate-800">
+                  <input
+                    type="radio"
+                    name="project-type"
+                    value="localizedPlanting"
+                    checked={projectTypology === "localizedPlanting"}
+                    onChange={() => setProjectTypology("localizedPlanting")}
+                    className="mt-1 h-4 w-4 border-slate-400 text-primary-600 focus:ring-primary-500"
                   />
-                </div>
-              </button>
+                  <span>
+                    <span className="font-medium">{t("Localized planting projects", "Projets de plantation localisés")}</span>
+                    <span className="block text-[11px] text-slate-600 italic">{t("Site-specific projects such as a corridor, park, or street", "Projets ciblant un site précis comme un corridor, un parc ou une rue")}</span>
+                  </span>
+                </label>
+              </div>
             </div>
 
+            {/* Section 2: Specific planting activities (Select all that apply) */}
             {/* Supported activities */}
             <div className="space-y-2">
               <h4 className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">
-                {t("Supported activities", "Activités soutenues")}
+                {t("Specific planting activities (Select all that apply)", "Activités de plantation (Sélectionner tout ce qui s'applique)")}
               </h4>
+              <p className="text-[11px] text-slate-600">
+                {t(
+                  "Select all activities that apply to your project. If your project includes multiple types of planting, you can select more than one.",
+                  "Sélectionnez toutes les activités qui s'appliquent à votre projet. Si votre projet comprend plusieurs types de plantation, vous pouvez en choisir plusieurs."
+                )}
+              </p>
               <div className="grid gap-3 md:grid-cols-2">
                 {([
                   {
@@ -1417,16 +1430,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     descFr:
                       "Implantation réfléchie d’arbres le long des rues publiques pour améliorer l’ombre, l’esthétique et la qualité de l’air.",
                     illustration: streetTreesIllustration
-                  },
-                  {
-                    id: "urbanLowCanopy",
-                    labelEn: "Urban planting in low-canopy areas",
-                    labelFr: "Plantation urbaine en zones à faible canopée",
-                    descEn:
-                      "New planting in heat-vulnerable or asphalt-dominated areas to reduce urban heat island effects.",
-                    descFr:
-                      "Nouvelles plantations dans des zones vulnérables à la chaleur ou dominées par l’asphalte pour réduire les îlots de chaleur.",
-                    illustration: greenWallIllustration
                   },
                   {
                     id: "parkTrees",
@@ -1456,7 +1459,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       "Rebuilding canopy in areas affected by pests, disease or wildfire.",
                     descFr:
                       "Reconstitution de la canopée dans des zones touchées par des ravageurs, des maladies ou des feux de forêt.",
-                    illustration: tinyForestIllustration
+                    illustration: woodlandIllustration
                   }
                 ] as const).map(activity => {
                   const selected = supportedActivities.includes(
@@ -1504,12 +1507,13 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               <div className="space-y-1.5 sm:col-span-2">
                 <label className="text-xs font-medium text-slate-700">
                   {t(
-                    "Number of trees and woody shrubs",
-                    "Nombre d’arbres et d’arbustes ligneux"
+                    "Number of trees planted",
+                    "Nombre d'arbres plantés"
                   )}
                 </label>
                 <input
                   type="number"
+                  min={0}
                   value={numberOfTrees}
                   onChange={e =>
                     setNumberOfTrees(Math.max(0, Number(e.target.value) || 0))
@@ -1522,6 +1526,39 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     "Utilisez votre meilleure estimation – l’outil ajustera les résultats."
                   )}
                 </p>
+                <label className="flex items-center gap-2 text-xs font-medium text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={projectIncludesShrubs}
+                    onChange={e => setProjectIncludesShrubs(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-slate-400 text-primary-600 focus:ring-primary-500"
+                  />
+                  {t(
+                    "The project includes planting of shrubs?",
+                    "Le projet inclut-il la plantation d'arbustes?"
+                  )}
+                </label>
+                {projectIncludesShrubs && (
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-slate-700">
+                      {t("Number of woody shrubs", "Nombre d'arbustes ligneux")}
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={numberOfShrubs ?? ""}
+                      onChange={e =>
+                        setNumberOfShrubs(
+                          e.target.value === ""
+                            ? null
+                            : Math.max(0, Number(e.target.value) || 0)
+                        )
+                      }
+                      placeholder={t("Enter count", "Entrez le nombre")}
+                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="space-y-1.5">
@@ -3001,6 +3038,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 )}
               </button>
             </div>
+            {renderStepProgress(2)}
           </div>
         )}
 
@@ -3269,6 +3307,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 {t("Next: Benefit details", "Suivant : Détails des bénéfices")}
               </button>
             </div>
+            {renderStepProgress(3)}
           </div>
         )}
 
@@ -3828,6 +3867,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 {t("Calculate benefits", "Calculer les bénéfices")}
               </button>
             </div>
+            {renderStepProgress(4)}
           </div>
         )}
 

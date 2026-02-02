@@ -27,8 +27,8 @@ export default function HomePage() {
           <section className="mb-4">
             <p className="text-sm text-slate-600 max-w-3xl">
               {language === "fr"
-                ? "Cet outil aide les municipalités à transformer un projet de verdissement en un argumentaire clair pour les demandes de financement : saisir le projet, cadrer la typologie et l’équité, puis générer un résumé d’impacts prêt à intégrer dans un dossier de subvention ou une note au conseil."
-                : "This calculator is an MVP of the funding tool: it helps municipalities turn a planting or restoration project into a clear, grant-ready story by capturing core inputs, equity and community impact, then surfacing a concise impact snapshot for applications and council briefs."}
+                ? "Transformez votre projet de plantation ou de restauration d’arbres en impacts mesurables. Que ce soit pour des demandes de subvention, des rapports aux parties prenantes, la planification d’investissements futurs ou la communication avec le public, cet outil vous aide à générer des estimations crédibles des bénéfices environnementaux, sanitaires et économiques."
+                : "Turn your tree planting or restoration project into measurable impact. Whether you're applying for grants, reporting to stakeholders, planning future investments, or communicating with the public, this tool helps you generate credible estimates of environmental, health, and economic benefits."}
             </p>
           </section>
           <CalculatorSteps language={language} />
