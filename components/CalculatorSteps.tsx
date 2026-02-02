@@ -4350,14 +4350,14 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </button>
             </div>
 
-            {/* Project benefits summary – table + charts */}
-            <div className="mt-4 grid gap-6 md:grid-cols-[1.2fr,1.5fr] items-start">
-              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
+            {/* Project benefits summary – table + charts (full width) */}
+            <div className="mt-4 grid gap-6 grid-cols-1 w-full">
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm w-full">
+                <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
                   {t("Project benefits summary", "Résumé des bénéfices du projet")}
                 </h4>
                 {valueMix ? (
-                  <div className="space-y-3 text-[11px]">
+                  <div className="space-y-5 text-sm">
                     {(() => {
                       const vm = valueMix!;
                       const rows = [
@@ -4427,20 +4427,20 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       return (
                         <>
                           {/* Table view (inspired by external methodology dashboards) */}
-                          <div className="overflow-x-auto">
-                            <table className="min-w-full border border-slate-100 text-[10px]">
+                          <div className="overflow-x-auto w-full">
+                            <table className="min-w-full border border-slate-200 text-sm">
                               <thead className="bg-slate-50">
                                 <tr>
-                                  <th className="px-2 py-1 text-left font-semibold text-slate-700">
+                                  <th className="px-4 py-3 text-left font-semibold text-slate-700">
                                     {t("Benefit group", "Groupe de bénéfices")}
                                   </th>
-                                  <th className="px-2 py-1 text-left font-semibold text-slate-700">
+                                  <th className="px-4 py-3 text-left font-semibold text-slate-700">
                                     {t("Tree function", "Fonction des arbres")}
                                   </th>
-                                  <th className="px-2 py-1 text-right font-semibold text-slate-700">
+                                  <th className="px-4 py-3 text-right font-semibold text-slate-700">
                                     {t("Annual value (CAD/yr)", "Valeur annuelle (CAD/an)")}
                                   </th>
-                                  <th className="px-2 py-1 text-right font-semibold text-slate-700">
+                                  <th className="px-4 py-3 text-right font-semibold text-slate-700">
                                     {t("Share of total", "Part du total")}
                                   </th>
                                 </tr>
@@ -4449,42 +4449,42 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                                 {rows.map(row => {
                                   const pct = (row.value / total) * 100;
                                   return (
-                                    <tr key={row.key} className="border-t border-slate-100">
-                                      <td className="px-2 py-1 align-top text-slate-800">
+                                    <tr key={row.key} className="border-t border-slate-200">
+                                      <td className="px-4 py-2.5 align-top text-slate-800">
                                         {row.group}
                                       </td>
-                                      <td className="px-2 py-1 align-top text-slate-600">
+                                      <td className="px-4 py-2.5 align-top text-slate-600">
                                         {row.functionLabel}
                                       </td>
-                                      <td className="px-2 py-1 align-top text-slate-900 text-right">
+                                      <td className="px-4 py-2.5 align-top text-slate-900 text-right font-medium">
                                         $
                                         {row.value.toLocaleString(undefined, {
                                           maximumFractionDigits: 0
                                         })}
                                       </td>
-                                      <td className="px-2 py-1 align-top text-slate-600 text-right">
+                                      <td className="px-4 py-2.5 align-top text-slate-600 text-right">
                                         {Math.round(pct)}%
                                       </td>
                                     </tr>
                                   );
                                 })}
-                                <tr className="border-t border-slate-200 bg-slate-50/80">
-                                  <td className="px-2 py-1 text-slate-900 font-semibold">
+                                <tr className="border-t-2 border-slate-300 bg-slate-50/80">
+                                  <td className="px-4 py-2.5 text-slate-900 font-semibold">
                                     {t("Total", "Total")}
                                   </td>
-                                  <td className="px-2 py-1 text-slate-600">
+                                  <td className="px-4 py-2.5 text-slate-600">
                                     {t(
                                       "All quantified ecosystem services",
                                       "Tous les services écosystémiques quantifiés"
                                     )}
                                   </td>
-                                  <td className="px-2 py-1 text-slate-900 font-semibold text-right">
+                                  <td className="px-4 py-2.5 text-slate-900 font-semibold text-right">
                                     $
                                     {total.toLocaleString(undefined, {
                                       maximumFractionDigits: 0
                                     })}
                                   </td>
-                                  <td className="px-2 py-1 text-slate-600 text-right">
+                                  <td className="px-4 py-2.5 text-slate-600 text-right">
                                     100%
                                   </td>
                                 </tr>
@@ -4492,28 +4492,28 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                             </table>
                           </div>
 
-                          {/* Bar + pie visualisation of tree functions' contribution */}
-                          <div className="mt-3 grid gap-4 md:grid-cols-[1.4fr,1fr] items-center">
-                            <div className="space-y-1.5">
-                              <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+                          {/* Bar + pie visualisation of tree functions' contribution – full width, larger */}
+                          <div className="mt-6 grid gap-8 md:grid-cols-[1.4fr,1fr] items-start w-full">
+                            <div className="space-y-3 w-full">
+                              <div className="text-sm font-semibold uppercase tracking-wide text-slate-600">
                                 {t(
                                   "Bar chart – contribution by function",
                                   "Diagramme à barres – contribution par fonction"
                                 )}
                               </div>
-                              <div className="space-y-1.5">
+                              <div className="space-y-3">
                                 {rows.map(row => {
                                   const pct = Math.round((row.value / total) * 100);
                                   const barWidth = Math.max(pct, 4);
                                   return (
-                                    <div key={row.key} className="space-y-0.5">
-                                      <div className="flex justify-between">
-                                        <span className="text-slate-700">{row.group}</span>
+                                    <div key={row.key} className="space-y-1">
+                                      <div className="flex justify-between text-sm">
+                                        <span className="text-slate-700 font-medium">{row.group}</span>
                                         <span className="text-slate-500">{pct}%</span>
                                       </div>
-                                      <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                                      <div className="h-5 rounded-full bg-slate-100 overflow-hidden">
                                         <div
-                                          className="h-2 rounded-full"
+                                          className="h-5 rounded-full"
                                           style={{
                                             width: `${barWidth}%`,
                                             backgroundColor: row.color
@@ -4525,28 +4525,28 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                                 })}
                               </div>
                             </div>
-                            <div className="space-y-2 flex flex-col items-center">
-                              <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-600 self-start">
+                            <div className="space-y-4 flex flex-col items-center w-full">
+                              <div className="text-sm font-semibold uppercase tracking-wide text-slate-600 self-start">
                                 {t(
                                   "Pie chart – share of total value",
                                   "Diagramme circulaire – part du total"
                                 )}
                               </div>
                               <div
-                                className="h-24 w-24 md:h-28 md:w-28 rounded-full border border-slate-200 shadow-inner"
+                                className="h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 rounded-full border-2 border-slate-200 shadow-inner flex-shrink-0"
                                 style={{
                                   backgroundImage: `conic-gradient(${pieGradient})`
                                 }}
                                 aria-hidden="true"
                               />
-                              <div className="grid grid-cols-2 gap-1 w-full">
+                              <div className="grid grid-cols-2 gap-2 w-full text-sm">
                                 {rows.map(row => (
-                                  <div key={row.key} className="flex items-center gap-1">
+                                  <div key={row.key} className="flex items-center gap-2">
                                     <span
-                                      className="inline-block h-2 w-2 rounded-full border border-slate-300"
+                                      className="inline-block h-3 w-3 rounded-full border border-slate-300 flex-shrink-0"
                                       style={{ backgroundColor: row.color }}
                                     />
-                                    <span className="text-[10px] text-slate-600">
+                                    <span className="text-slate-600">
                                       {row.group}
                                     </span>
                                   </div>
@@ -4555,7 +4555,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                             </div>
                           </div>
 
-                          <p className="mt-1 text-[10px] text-slate-500">
+                          <p className="mt-3 text-xs text-slate-500">
                             {t(
                               "Tree functions and proxies are grouped into climate/carbon, water & flood management, health & community and property & economic uplift, following international ecosystem‑service valuation dashboards.",
                               "Les fonctions des arbres et leurs proxys sont regroupées en climat/carbone, gestion de l’eau et des inondations, santé et communauté, et hausse foncière et économique, en s’inspirant des tableaux de bord internationaux de valorisation des services écosystémiques."
@@ -4566,7 +4566,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     })()}
                   </div>
                 ) : (
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-sm text-slate-500">
                     {t(
                       "Run a calculation to see how benefits are distributed across categories.",
                       "Lancez un calcul pour voir comment les bénéfices se répartissent entre les catégories."
@@ -4575,12 +4575,12 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 )}
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm w-full">
+                <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
                   {t("Benefit groups comparison", "Comparaison des groupes de bénéfices")}
                 </h4>
                 {groupScores ? (
-                  <div className="space-y-2 text-[11px]">
+                  <div className="space-y-4 text-sm">
                     {(() => {
                       const gs = groupScores!;
                       return [
@@ -4621,15 +4621,15 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                             : t("emerging", "émergent");
                         return (
                           <div key={group.key}>
-                            <div className="flex justify-between mb-1">
-                              <span className="text-slate-700">
+                            <div className="flex justify-between mb-1.5 text-sm">
+                              <span className="text-slate-700 font-medium">
                                 {group.label}
                               </span>
                               <span className="text-slate-500">{strength}</span>
                             </div>
-                            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                            <div className="h-5 rounded-full bg-slate-100 overflow-hidden">
                               <div
-                                className={`h-2 rounded-full ${group.color}`}
+                                className={`h-5 rounded-full ${group.color}`}
                                 style={{ width: `${widthPct}%` }}
                               />
                             </div>
@@ -4637,7 +4637,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         );
                       });
                     })()}
-                    <p className="mt-1 text-[10px] text-slate-500">
+                    <p className="mt-3 text-xs text-slate-500">
                       {t(
                         "Relative strength of each group is scaled to the strongest impact in your project.",
                         "L’intensité relative de chaque groupe est mise à l’échelle par rapport à l’impact le plus fort de votre projet."
@@ -4645,7 +4645,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </p>
                   </div>
                 ) : (
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-sm text-slate-500">
                     {t(
                       "Run a calculation to compare climate, water, health and biodiversity contributions.",
                       "Lancez un calcul pour comparer les contributions climat, eau, santé et biodiversité."
