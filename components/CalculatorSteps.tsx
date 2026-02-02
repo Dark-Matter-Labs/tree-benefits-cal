@@ -318,13 +318,11 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   });
 
   // Community impact & equity
-  const [communityImpactScope, setCommunityImpactScope] = useState<
-    "site" | "neighbourhood" | "multiNeighbourhood" | "cityWide"
-  >("neighbourhood");
   const [equityFocusLevel, setEquityFocusLevel] = useState<
-    "none" | "emerging" | "strong"
-  >("emerging");
+    "none" | "consideration" | "primary"
+  >("none");
   const [priorityGroups, setPriorityGroups] = useState<string[]>([]);
+  const [priorityOther, setPriorityOther] = useState("");
 
   // Project story & costs (optional)
   const [projectDescription, setProjectDescription] = useState("");
@@ -410,6 +408,13 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [forestCombinedInterventions, setForestCombinedInterventions] = useState<string[]>([]);
   const [forestObjectives, setForestObjectives] = useState<string[]>([]);
   const [forestTimeline, setForestTimeline] = useState<string>("");
+
+  // Stakeholder panels on results view
+  const [stakeholderType, setStakeholderType] = useState<string>("");
+  const [stakeholderTitle, setStakeholderTitle] = useState<string>("");
+  const [stakeholderEntries, setStakeholderEntries] = useState<
+    { type: string; title: string }[]
+  >([]);
 
   // Turf vs tree comparison modal
   const [showTurfComparison, setShowTurfComparison] = useState(false);
@@ -502,6 +507,34 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
       )
     : null;
 
+  const projectLocationLabel =
+    municipality && matchedMunicipality
+      ? `${municipality}, ${
+          (language === "fr"
+            ? provinceLabels[matchedMunicipality.province]?.fr
+            : provinceLabels[matchedMunicipality.province]?.en) ??
+          matchedMunicipality.province
+        }`
+      : municipality || (language === "fr" ? "votre collectivité" : "your community");
+
+  const headerTitle =
+    step === 5 && results
+      ? language === "fr"
+        ? "Rapport des bénéfices du projet"
+        : "Project Benefits Report"
+      : language === "fr"
+      ? "Configuration du projet"
+      : "Project setup";
+
+  const headerSubtitle =
+    step === 5 && results
+      ? language === "fr"
+        ? `Votre projet de plantation d’arbres à ${projectLocationLabel}`
+        : `Your tree planting project in ${projectLocationLabel}`
+      : language === "fr"
+      ? "5 étapes pour estimer les bénéfices de votre projet."
+      : "5 steps to estimate your project benefits.";
+
   const handleToggleBenefit = (id: BenefitCategory) => {
     setSelectedBenefits(prev =>
       prev.includes(id) ? prev.filter(b => b !== id) : [...prev, id]
@@ -527,32 +560,36 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
       <section className="rounded-2xl bg-white border border-slate-200 p-5 lg:p-6 shadow-md">
         <header className="flex items-center justify-between gap-4 pb-4 border-b border-slate-200 mb-4">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">
-              {t("Project setup", "Configuration du projet")}
-            </h2>
-            <p className="text-xs text-slate-600">
-              {t(
-                "5 steps to estimate your project benefits.",
-                "5 étapes pour estimer les bénéfices de votre projet."
-              )}
-            </p>
+            <h2 className="text-lg font-semibold text-slate-900">{headerTitle}</h2>
+            <p className="text-xs text-slate-600">{headerSubtitle}</p>
           </div>
-          <ol className="flex items-center gap-2 text-xs">
-            {[1, 2, 3, 4, 5].map(i => (
-              <li
-                key={i}
-                className={`flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium ${
-                  step === i
-                    ? "bg-gradient-to-r from-primary-500 to-primary-600 border-primary-500 text-white shadow-sm"
-                    : step > i
-                    ? "bg-primary-100 border-primary-300 text-primary-700"
-                    : "border-slate-300 text-slate-400 bg-slate-50"
-                }`}
+          <div className="flex items-center gap-3">
+            <ol className="flex items-center gap-2 text-xs">
+              {[1, 2, 3, 4, 5].map(i => (
+                <li
+                  key={i}
+                  className={`flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium ${
+                    step === i
+                      ? "bg-gradient-to-r from-primary-500 to-primary-600 border-primary-500 text-white shadow-sm"
+                      : step > i
+                      ? "bg-primary-100 border-primary-300 text-primary-700"
+                      : "border-slate-300 text-slate-400 bg-slate-50"
+                  }`}
+                >
+                  {i}
+                </li>
+              ))}
+            </ol>
+            {step === 5 && results && (
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="inline-flex items-center gap-1 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-slate-800 transition"
               >
-                {i}
-              </li>
-            ))}
-          </ol>
+                {t("Edit inputs", "Modifier les entrées")}
+              </button>
+            )}
+          </div>
         </header>
 
         {step === 1 && (
@@ -3054,125 +3091,124 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
             </div>
 
             {/* Community impact & equity */}
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <h4 className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">
-                  {t("Community impact", "Impact communautaire")}
-                </h4>
-                <label className="text-[11px] font-medium text-slate-700">
-                  {t("Scale of people directly affected", "Échelle des personnes directement touchées")}
-                </label>
-                <select
-                  value={communityImpactScope}
-                  onChange={e =>
-                    setCommunityImpactScope(
-                      e.target.value as
-                        | "site"
-                        | "neighbourhood"
-                        | "multiNeighbourhood"
-                        | "cityWide"
-                    )
-                  }
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                >
-                  <option value="site">
-                    {t(
-                      "Single site (e.g. park, school yard)",
-                      "Un seul site (p. ex. parc, cour d’école)"
-                    )}
-                  </option>
-                  <option value="neighbourhood">
-                    {t(
-                      "One neighbourhood or corridor",
-                      "Un quartier ou un corridor"
-                    )}
-                  </option>
-                  <option value="multiNeighbourhood">
-                    {t(
-                      "Several neighbourhoods",
-                      "Plusieurs quartiers"
-                    )}
-                  </option>
-                  <option value="cityWide">
-                    {t(
-                      "City-wide or multiple communities",
-                      "À l’échelle municipale ou de plusieurs collectivités"
-                    )}
-                  </option>
-                </select>
-              </div>
+            <div className="space-y-3">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">
+                {t(
+                  "Community impact & equity focus",
+                  "Impact communautaire et accent sur l’équité"
+                )}
+              </h4>
 
-              <div className="space-y-2">
-                <h4 className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">
-                  {t("Equity focus", "Accent sur l’équité")}
-                </h4>
-                <label className="text-[11px] font-medium text-slate-700">
-                  {t("How intentional is the equity focus?", "À quel point l’équité est-elle au cœur du projet?")}
-                </label>
-                <select
-                  value={equityFocusLevel}
-                  onChange={e =>
-                    setEquityFocusLevel(
-                      e.target.value as "none" | "emerging" | "strong"
-                    )
-                  }
-                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                >
-                  <option value="none">
-                    {t(
-                      "General benefits (no specific equity focus)",
-                      "Bénéfices généraux (sans accent explicite sur l’équité)"
-                    )}
-                  </option>
-                  <option value="emerging">
-                    {t(
-                      "Emerging equity focus (some priority groups)",
-                      "Accent émergent sur l’équité (quelques groupes prioritaires)"
-                    )}
-                  </option>
-                  <option value="strong">
-                    {t(
-                      "Strong equity focus (designed around priority groups)",
-                      "Fort accent sur l’équité (conçu autour de groupes prioritaires)"
-                    )}
-                  </option>
-                </select>
-
-                <p className="mt-2 text-[11px] font-medium text-slate-700">
-                  {t("Priority groups (optional)", "Groupes prioritaires (optionnel)")}
+              <div className="space-y-1.5">
+                <p className="text-[11px] font-medium text-slate-700">
+                  {t(
+                    "Does your project intentionally address barriers or inequities?",
+                    "Votre projet vise-t-il intentionnellement à réduire des obstacles ou des inégalités?"
+                  )}
                 </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {[
-                    t("Equity-deserving communities", "Communautés en quête d’équité"),
-                    t("Indigenous communities", "Communautés autochtones"),
-                    t("Children & youth", "Enfants et jeunes"),
-                    t("Older adults", "Personnes aînées"),
-                    t("Low-income households", "Ménages à faible revenu")
-                  ].map(label => {
-                    const selected = priorityGroups.includes(label);
-                    return (
-                      <button
-                        key={label}
-                        type="button"
-                        onClick={() =>
-                          setPriorityGroups(prev =>
-                            prev.includes(label)
-                              ? prev.filter(g => g !== label)
-                              : [...prev, label]
-                          )
-                        }
-                        className={`rounded-full border px-2 py-1 text-[10px] font-medium transition ${
-                          selected
-                            ? "border-primary-500 bg-primary-50 text-primary-800"
-                            : "border-slate-300 bg-slate-50 text-slate-700 hover:border-primary-400 hover:bg-primary-50/50"
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    );
-                  })}
+                <div className="space-y-1">
+                  <label className="flex items-start gap-2 text-[11px] text-slate-700">
+                    <input
+                      type="radio"
+                      name="equity-focus"
+                      value="none"
+                      checked={equityFocusLevel === "none"}
+                      onChange={() => setEquityFocusLevel("none")}
+                      className="mt-0.5 h-3 w-3 border-slate-400 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span>{t("No", "Non")}</span>
+                  </label>
+                  <label className="flex items-start gap-2 text-[11px] text-slate-700">
+                    <input
+                      type="radio"
+                      name="equity-focus"
+                      value="consideration"
+                      checked={equityFocusLevel === "consideration"}
+                      onChange={() => setEquityFocusLevel("consideration")}
+                      className="mt-0.5 h-3 w-3 border-slate-400 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span>
+                      {t(
+                        "Yes – equity is a consideration",
+                        "Oui – l’équité est une considération importante"
+                      )}
+                    </span>
+                  </label>
+                  <label className="flex items-start gap-2 text-[11px] text-slate-700">
+                    <input
+                      type="radio"
+                      name="equity-focus"
+                      value="primary"
+                      checked={equityFocusLevel === "primary"}
+                      onChange={() => setEquityFocusLevel("primary")}
+                      className="mt-0.5 h-3 w-3 border-slate-400 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span>
+                      {t(
+                        "Yes – equity is a primary project goal",
+                        "Oui – l’équité est un objectif principal du projet"
+                      )}
+                    </span>
+                  </label>
                 </div>
               </div>
+
+              {equityFocusLevel !== "none" && (
+                <div className="space-y-1.5">
+                  <p className="text-[11px] font-medium text-slate-700">
+                    {t(
+                      "Priority populations served (select all that apply)",
+                      "Populations prioritaires touchées (sélectionnez tout ce qui s’applique)"
+                    )}
+                  </p>
+                  <div className="grid gap-1.5 sm:grid-cols-2">
+                    {[
+                      t("Equity-deserving communities", "Communautés en quête d’équité"),
+                      t("Indigenous communities", "Communautés autochtones"),
+                      t("Children & youth", "Enfants et jeunes"),
+                      t("Older adults", "Personnes aînées"),
+                      t("Low-income households", "Ménages à faible revenu")
+                    ].map(label => {
+                      const selected = priorityGroups.includes(label);
+                      return (
+                        <label
+                          key={label}
+                          className="flex items-start gap-2 text-[11px] text-slate-700"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selected}
+                            onChange={() =>
+                              setPriorityGroups(prev =>
+                                prev.includes(label)
+                                  ? prev.filter(g => g !== label)
+                                  : [...prev, label]
+                              )
+                            }
+                            className="mt-0.5 h-3 w-3 border-slate-400 text-primary-600 focus:ring-primary-500"
+                          />
+                          <span>{label}</span>
+                        </label>
+                      );
+                    })}
+                    <div className="sm:col-span-2 flex items-center gap-2">
+                      <label className="text-[11px] font-medium text-slate-700 whitespace-nowrap">
+                        {t("Other:", "Autre :")}
+                      </label>
+                      <input
+                        type="text"
+                        value={priorityOther}
+                        onChange={e => setPriorityOther(e.target.value)}
+                        className="flex-1 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-[11px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        placeholder={t(
+                          "Describe another priority population (optional)",
+                          "Décrivez une autre population prioritaire (facultatif)"
+                        )}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="pt-1 border-t border-dashed border-slate-200" />
@@ -3807,10 +3843,10 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               )}
             </p>
 
-            {/* Key User Inputs */}
+            {/* Project overview */}
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
               <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-3">
-                {t("Project inputs", "Entrées du projet")}
+                {t("Project overview", "Aperçu du projet")}
               </h4>
               <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
                 {projectName && (
@@ -3825,29 +3861,15 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 )}
                 <div>
                   <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
-                    {t("Municipality / region", "Municipalité / région")}
+                    {t("📍 Location", "📍 Lieu")}
                   </div>
                   <div className="text-sm font-semibold text-slate-900">
-                    {municipality || t("Not specified", "Non précisée")}
-                    <span className="ml-1 text-[11px] text-slate-500">
-                      ·{" "}
-                      {region === "atlantic"
-                        ? t("Atlantic", "Atlantique")
-                        : region === "quebec"
-                        ? "Québec"
-                        : region === "ontario"
-                        ? "Ontario"
-                        : region === "prairies"
-                        ? t("Prairies", "Prairies")
-                        : region === "bc"
-                        ? t("British Columbia", "Colombie-Britannique")
-                        : t("Territories", "Territoires")}
-                    </span>
+                    {projectLocationLabel}
                   </div>
                 </div>
                 <div>
                   <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
-                    {t("Number of trees", "Nombre d'arbres")}
+                    {t("🌳 Trees planted", "🌳 Arbres plantés")}
                   </div>
                   <div className="text-sm font-semibold text-slate-900">
                     {numberOfTrees.toLocaleString()}
@@ -3855,7 +3877,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 </div>
                 <div>
                   <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
-                    {t("Area", "Superficie")}
+                    {t("📐 Project area", "📐 Superficie du projet")}
                   </div>
                   <div className="text-sm font-semibold text-slate-900">
                     {projectAreaHa.toFixed(1)} {t("Ha", "Ha")}
@@ -3863,7 +3885,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 </div>
                 <div>
                   <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
-                    {t("Year", "Année")}
+                    {t("📅 Completion year", "📅 Année d’achèvement")}
                   </div>
                   <div className="text-sm font-semibold text-slate-900">
                     {year}
@@ -3872,49 +3894,90 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
             </div>
 
-            {(projectDescription || projectCapitalCost || projectAnnualCost) && (
-              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-3">
-                  {t("Project story & costs", "Récit du projet et coûts")}
+            {/* Project map (placeholder visual) */}
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide">
+                  {t("Project map", "Carte du projet")}
                 </h4>
-                {projectDescription && (
-                  <div className="mb-3">
-                    <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
-                      {t("Short description", "Brève description")}
-                    </div>
-                    <p className="text-sm text-slate-800 whitespace-pre-line">
-                      {projectDescription}
-                    </p>
-                  </div>
+                <span className="text-[10px] text-slate-500">
+                  {t("Illustrative map preview", "Aperçu cartographique illustratif")}
+                </span>
+              </div>
+              <div className="relative h-40 w-full rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden border border-slate-200">
+                <div className="absolute inset-3 rounded-lg border-2 border-emerald-500/70 border-dashed" />
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                  <span className="text-2xl">📍</span>
+                  <span className="rounded-full bg-white/90 px-2 py-0.5 text-[11px] font-medium text-slate-800 shadow-sm">
+                    {projectLocationLabel}
+                  </span>
+                  <span className="text-[10px] text-slate-600">
+                    {projectAreaHa.toFixed(1)} {t("Ha project footprint (approx.)", "Ha d’emprise du projet (approx.)")}
+                  </span>
+                </div>
+              </div>
+              <p className="mt-2 text-[11px] text-slate-600">
+                {t(
+                  "Future versions will use an interactive map centred on your project location with the planting area highlighted.",
+                  "Les prochaines versions utiliseront une carte interactive centrée sur le lieu de votre projet avec la zone de plantation surlignée."
                 )}
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {projectCapitalCost !== null && (
-                    <div>
-                      <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
-                        {t("Estimated capital cost", "Coût d’investissement estimé")}
-                      </div>
-                      <div className="text-sm font-semibold text-slate-900">
-                        $
+              </p>
+            </div>
+
+            {(projectDescription || projectCapitalCost !== null || projectAnnualCost !== null) && (
+              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide">
+                    {t("Project description", "Description du projet")}
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => setStep(3)}
+                    className="inline-flex items-center gap-1 rounded-full border border-slate-300 px-2.5 py-1 text-[10px] font-medium text-slate-700 hover:bg-slate-50 transition"
+                  >
+                    {t("Edit story & costs", "Modifier le récit et les coûts")}
+                  </button>
+                </div>
+
+                {projectDescription ? (
+                  <p className="text-sm text-slate-800 whitespace-pre-line">
+                    {projectDescription}
+                  </p>
+                ) : (
+                  <p className="text-sm text-slate-500">
+                    {t(
+                      "No project description has been added yet.",
+                      "Aucune description de projet n’a encore été ajoutée."
+                    )}
+                  </p>
+                )}
+
+                {(projectCapitalCost !== null || projectAnnualCost !== null) && (
+                  <p className="mt-3 text-[11px] text-slate-700">
+                    💰{" "}
+                    <span className="font-semibold">
+                      {t("Estimated costs", "Coûts estimés")}
+                    </span>
+                    {": "}
+                    {projectCapitalCost !== null && (
+                      <>
+                        {t("Capital investment", "Investissement en capital")}: $
                         {projectCapitalCost.toLocaleString(undefined, {
                           maximumFractionDigits: 0
                         })}
-                      </div>
-                    </div>
-                  )}
-                  {projectAnnualCost !== null && (
-                    <div>
-                      <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium mb-1">
-                        {t("Estimated annual operating cost", "Coût annuel d’exploitation estimé")}
-                      </div>
-                      <div className="text-sm font-semibold text-slate-900">
-                        $
+                      </>
+                    )}
+                    {projectCapitalCost !== null && projectAnnualCost !== null && " | "}
+                    {projectAnnualCost !== null && (
+                      <>
+                        {t("Annual maintenance", "Entretien annuel")}: $
                         {projectAnnualCost.toLocaleString(undefined, {
                           maximumFractionDigits: 0
                         })}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                      </>
+                    )}
+                  </p>
+                )}
               </div>
             )}
 
@@ -3927,7 +3990,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </h4>
                     <button
                       type="button"
-                      className="text-[11px] text-primary-800 underline-offset-2 hover:underline"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-primary-200 bg-white text-[11px] text-primary-800 hover:bg-primary-50"
                       onClick={() =>
                         window.alert(
                           t(
@@ -3937,7 +4000,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         )
                       }
                     >
-                      {t("What does this mean?", "Que signifie cet indicateur?")}
+                      ℹ️
                     </button>
                   </div>
                   <p className="text-lg font-bold text-primary-900">
@@ -3976,8 +4039,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </div>
                   <p className="mt-2 text-[11px] text-slate-600">
                     {t(
-                      "Based on simplified Canadian carbon price assumptions; methodology note available via the link on the right.",
-                      "Basé sur des hypothèses simplifiées de tarification du carbone au Canada; une note méthodologique est accessible via le lien à droite."
+                      "Based on Canadian social carbon value assumptions used to provide an indicative order-of-magnitude impact.",
+                      "Basé sur une valeur sociale du carbone au Canada afin de fournir un ordre de grandeur indicatif de l’impact."
                     )}
                   </p>
                 </div>
@@ -3991,7 +4054,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </h4>
                     <button
                       type="button"
-                      className="text-[11px] text-secondary-800 underline-offset-2 hover:underline"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-secondary-200 bg-white text-[11px] text-secondary-800 hover:bg-secondary-50"
                       onClick={() =>
                         window.alert(
                           t(
@@ -4001,7 +4064,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         )
                       }
                     >
-                      {t("What does this mean?", "Que signifie cet indicateur?")}
+                      ℹ️
                     </button>
                   </div>
                   <p className="text-lg font-bold text-secondary-900">
@@ -4054,17 +4117,17 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </h4>
                     <button
                       type="button"
-                      className="text-[11px] text-accent-800 underline-offset-2 hover:underline"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-accent-200 bg-white text-[11px] text-accent-800 hover:bg-accent-50"
                       onClick={() =>
                         window.alert(
                           t(
-                            "Health benefits are a proxy based on international and Canadian literature linking urban trees to avoided health costs.",
-                            "Les bénéfices pour la santé sont un proxy basé sur la littérature internationale et canadienne reliant les arbres urbains aux coûts de santé évités."
+                            "This estimate is based on peer-reviewed research linking tree canopy to measurable health outcomes like reduced emergency room visits, fewer respiratory issues, and improved mental health. The dollar value represents avoided healthcare costs and productivity gains.",
+                            "Cette estimation repose sur des recherches évaluées par les pairs qui lient la canopée urbaine à des résultats de santé mesurables comme la réduction des visites à l’urgence, la diminution des problèmes respiratoires et l’amélioration du bien‑être mental. La valeur monétaire représente des coûts de santé évités et des gains de productivité."
                           )
                         )
                       }
                     >
-                      {t("What does this mean?", "Que signifie cet indicateur?")}
+                      ℹ️
                     </button>
                   </div>
                   <p className="text-lg font-bold text-accent-900">
@@ -4076,8 +4139,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </p>
                   <p className="text-[11px] text-slate-600 mt-1">
                     {t(
-                      "Order-of-magnitude proxy based on Canadian health literature.",
-                      "Proxy d’ordre de grandeur basé sur la littérature canadienne en santé."
+                      "Estimated value of reduced respiratory illness, heat-related health issues, and improved mental wellbeing based on Canadian research.",
+                      "Valeur estimée de la réduction des maladies respiratoires, des problèmes de santé liés à la chaleur et de l’amélioration du bien‑être mental, basée sur la recherche canadienne."
                     )}
                   </p>
                 </div>
@@ -4091,7 +4154,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </h4>
                     <button
                       type="button"
-                      className="text-[11px] text-amber-900 underline-offset-2 hover:underline"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-[11px] text-amber-900 hover:bg-amber-50"
                       onClick={() =>
                         window.alert(
                           t(
@@ -4101,7 +4164,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         )
                       }
                     >
-                      {t("What does this mean?", "Que signifie cet indicateur?")}
+                      ℹ️
                     </button>
                   </div>
                   <p className="text-lg font-bold text-amber-900">
@@ -4130,7 +4193,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </h4>
                     <button
                       type="button"
-                      className="text-[11px] text-orange-800 underline-offset-2 hover:underline"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-orange-200 bg-white text-[11px] text-orange-800 hover:bg-orange-50"
                       onClick={() =>
                         window.alert(
                           t(
@@ -4140,7 +4203,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         )
                       }
                     >
-                      {t("What does this mean?", "Que signifie cet indicateur?")}
+                      ℹ️
                     </button>
                   </div>
                   <p className="text-lg font-bold text-orange-900">
@@ -4149,51 +4212,37 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </p>
                   <p className="text-[11px] text-slate-600 mt-1">
                     {t(
-                      "Illustrative cooling effect over the project footprint.",
-                      "Effet rafraîchissant illustratif sur l’emprise du projet."
+                      "Cooling effect over the project footprint.",
+                      "Effet rafraîchissant sur l’emprise du projet."
                     )}
                   </p>
+                  <div className="mt-3">
+                    <p className="text-[11px] text-slate-700 mb-1">
+                      {t("Impact scale", "Échelle d’impact")}
+                    </p>
+                    <div className="relative h-2 rounded-full bg-orange-100 overflow-hidden">
+                      <div className="absolute inset-y-0 left-1/3 w-px bg-white/70" />
+                      <div className="absolute inset-y-0 left-2/3 w-px bg-white/70" />
+                      <div
+                        className="absolute top-1/2 h-3 w-3 -translate-y-1/2 -translate-x-1/2 rounded-full bg-orange-500 shadow"
+                        style={{
+                          left:
+                            Math.abs(results.total.heatIslandReductionDegC) < 0.2
+                              ? "16%"
+                              : Math.abs(results.total.heatIslandReductionDegC) < 0.6
+                              ? "50%"
+                              : "84%"
+                        }}
+                      />
+                    </div>
+                    <div className="mt-1 flex justify-between text-[10px] text-slate-500">
+                      <span>{t("Lower", "Plus faible")}</span>
+                      <span>{t("Typical", "Typique")}</span>
+                      <span>{t("High", "Élevé")}</span>
+                    </div>
+                  </div>
                 </div>
               )}
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-                <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                  {t("Per capita carbon", "Carbone par habitant")}
-                </div>
-                <div className="mt-1 text-base font-bold text-slate-900">
-                  {results.perCapita.carbonTonnes.toFixed(3)} tCO₂e
-                </div>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-                <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                  {t(
-                    "Per capita value (carbon)",
-                    "Valeur par habitant (carbone)"
-                  )}
-                </div>
-                <div className="mt-1 text-base font-bold text-slate-900">
-                  $
-                  {results.perCapita.value.toLocaleString(undefined, {
-                    maximumFractionDigits: 2
-                  })}
-                </div>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-                <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                  {t(
-                    "Per household value (carbon)",
-                    "Valeur par ménage (carbone)"
-                  )}
-                </div>
-                <div className="mt-1 text-base font-bold text-slate-900">
-                  $
-                  {results.perHousehold.value.toLocaleString(undefined, {
-                    maximumFractionDigits: 2
-                  })}
-                </div>
-              </div>
             </div>
 
             <div className="flex justify-between items-center pt-2 border-t border-slate-200 mt-2">
@@ -4216,69 +4265,220 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </button>
             </div>
 
-            {/* Simple benefit mix visualization (bars) */}
+            {/* Project benefits summary – table + charts */}
             <div className="mt-4 grid gap-6 md:grid-cols-[1.2fr,1.5fr] items-start">
               <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                 <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
-                  {t("Benefit mix (relative)", "Répartition des bénéfices (relative)")}
+                  {t("Project benefits summary", "Résumé des bénéfices du projet")}
                 </h4>
                 {valueMix ? (
-                  <div className="space-y-2 text-[11px]">
+                  <div className="space-y-3 text-[11px]">
                     {(() => {
                       const vm = valueMix!;
-                      return [
-                      {
-                        key: "carbon",
-                        label: t("Carbon value", "Valeur carbone"),
-                        color: "bg-primary-500"
-                      },
-                      {
-                        key: "stormwater",
-                        label: t("Stormwater value", "Valeur eaux pluviales"),
-                        color: "bg-secondary-500"
-                      },
-                      {
-                        key: "health",
-                        label: t("Health proxy", "Proxy santé"),
-                        color: "bg-accent-500"
-                      },
-                      {
-                        key: "property",
-                        label: t("Property value", "Valeur foncière"),
-                        color: "bg-amber-500"
-                      }
-                      ].map(cat => {
-                        const raw =
-                          cat.key === "carbon"
-                            ? vm.carbon
-                            : cat.key === "stormwater"
-                            ? vm.stormwater
-                            : cat.key === "health"
-                            ? vm.health
-                            : vm.property;
-                        const pct = Math.round((raw / vm.total) * 100);
-                        return (
-                          <div key={cat.key} className="space-y-1">
-                            <div className="flex justify-between">
-                              <span className="text-slate-700">{cat.label}</span>
-                              <span className="text-slate-500">{pct}%</span>
+                      const rows = [
+                        {
+                          key: "carbon",
+                          group: t("Climate / carbon", "Climat / carbone"),
+                          functionLabel: t(
+                            "Carbon storage & avoided emissions",
+                            "Stockage de carbone et émissions évitées"
+                          ),
+                          value: vm.carbon,
+                          color: "#0f766e"
+                        },
+                        {
+                          key: "stormwater",
+                          group: t(
+                            "Water & flood management",
+                            "Gestion de l’eau et des inondations"
+                          ),
+                          functionLabel: t(
+                            "Stormwater retention & flood alleviation",
+                            "Rétention des eaux pluviales et réduction des inondations"
+                          ),
+                          value: vm.stormwater,
+                          color: "#0369a1"
+                        },
+                        {
+                          key: "health",
+                          group: t(
+                            "Health & community",
+                            "Santé et communauté"
+                          ),
+                          functionLabel: t(
+                            "Health, well-being & exposure reduction",
+                            "Santé, bien‑être et réduction des expositions"
+                          ),
+                          value: vm.health,
+                          color: "#c026d3"
+                        },
+                        {
+                          key: "property",
+                          group: t(
+                            "Property & economic",
+                            "Foncière et économique"
+                          ),
+                          functionLabel: t(
+                            "Property value & local economic uplift",
+                            "Valeur foncière et retombées économiques locales"
+                          ),
+                          value: vm.property,
+                          color: "#d97706"
+                        }
+                      ];
+                      const total = vm.total || 1;
+
+                      // Build gradient for simple pie chart (conic)
+                      let acc = 0;
+                      const pieGradient = rows
+                        .map(row => {
+                          const start = (acc / total) * 360;
+                          acc += row.value;
+                          const end = (acc / total) * 360;
+                          return `${row.color} ${start}deg ${end}deg`;
+                        })
+                        .join(", ");
+
+                      return (
+                        <>
+                          {/* Table view (inspired by external methodology dashboards) */}
+                          <div className="overflow-x-auto">
+                            <table className="min-w-full border border-slate-100 text-[10px]">
+                              <thead className="bg-slate-50">
+                                <tr>
+                                  <th className="px-2 py-1 text-left font-semibold text-slate-700">
+                                    {t("Benefit group", "Groupe de bénéfices")}
+                                  </th>
+                                  <th className="px-2 py-1 text-left font-semibold text-slate-700">
+                                    {t("Tree function", "Fonction des arbres")}
+                                  </th>
+                                  <th className="px-2 py-1 text-right font-semibold text-slate-700">
+                                    {t("Annual value (CAD/yr)", "Valeur annuelle (CAD/an)")}
+                                  </th>
+                                  <th className="px-2 py-1 text-right font-semibold text-slate-700">
+                                    {t("Share of total", "Part du total")}
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {rows.map(row => {
+                                  const pct = (row.value / total) * 100;
+                                  return (
+                                    <tr key={row.key} className="border-t border-slate-100">
+                                      <td className="px-2 py-1 align-top text-slate-800">
+                                        {row.group}
+                                      </td>
+                                      <td className="px-2 py-1 align-top text-slate-600">
+                                        {row.functionLabel}
+                                      </td>
+                                      <td className="px-2 py-1 align-top text-slate-900 text-right">
+                                        $
+                                        {row.value.toLocaleString(undefined, {
+                                          maximumFractionDigits: 0
+                                        })}
+                                      </td>
+                                      <td className="px-2 py-1 align-top text-slate-600 text-right">
+                                        {Math.round(pct)}%
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                                <tr className="border-t border-slate-200 bg-slate-50/80">
+                                  <td className="px-2 py-1 text-slate-900 font-semibold">
+                                    {t("Total", "Total")}
+                                  </td>
+                                  <td className="px-2 py-1 text-slate-600">
+                                    {t(
+                                      "All quantified ecosystem services",
+                                      "Tous les services écosystémiques quantifiés"
+                                    )}
+                                  </td>
+                                  <td className="px-2 py-1 text-slate-900 font-semibold text-right">
+                                    $
+                                    {total.toLocaleString(undefined, {
+                                      maximumFractionDigits: 0
+                                    })}
+                                  </td>
+                                  <td className="px-2 py-1 text-slate-600 text-right">
+                                    100%
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* Bar + pie visualisation of tree functions' contribution */}
+                          <div className="mt-3 grid gap-4 md:grid-cols-[1.4fr,1fr] items-center">
+                            <div className="space-y-1.5">
+                              <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+                                {t(
+                                  "Bar chart – contribution by function",
+                                  "Diagramme à barres – contribution par fonction"
+                                )}
+                              </div>
+                              <div className="space-y-1.5">
+                                {rows.map(row => {
+                                  const pct = Math.round((row.value / total) * 100);
+                                  const barWidth = Math.max(pct, 4);
+                                  return (
+                                    <div key={row.key} className="space-y-0.5">
+                                      <div className="flex justify-between">
+                                        <span className="text-slate-700">{row.group}</span>
+                                        <span className="text-slate-500">{pct}%</span>
+                                      </div>
+                                      <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                                        <div
+                                          className="h-2 rounded-full"
+                                          style={{
+                                            width: `${barWidth}%`,
+                                            backgroundColor: row.color
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             </div>
-                            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                            <div className="space-y-2 flex flex-col items-center">
+                              <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-600 self-start">
+                                {t(
+                                  "Pie chart – share of total value",
+                                  "Diagramme circulaire – part du total"
+                                )}
+                              </div>
                               <div
-                                className={`h-2 rounded-full ${cat.color}`}
-                                style={{ width: `${Math.max(pct, 4)}%` }}
+                                className="h-24 w-24 md:h-28 md:w-28 rounded-full border border-slate-200 shadow-inner"
+                                style={{
+                                  backgroundImage: `conic-gradient(${pieGradient})`
+                                }}
+                                aria-hidden="true"
                               />
+                              <div className="grid grid-cols-2 gap-1 w-full">
+                                {rows.map(row => (
+                                  <div key={row.key} className="flex items-center gap-1">
+                                    <span
+                                      className="inline-block h-2 w-2 rounded-full border border-slate-300"
+                                      style={{ backgroundColor: row.color }}
+                                    />
+                                    <span className="text-[10px] text-slate-600">
+                                      {row.group}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           </div>
-                        );
-                      });
+
+                          <p className="mt-1 text-[10px] text-slate-500">
+                            {t(
+                              "Tree functions and proxies are grouped into climate/carbon, water & flood management, health & community and property & economic uplift, following international ecosystem‑service valuation dashboards.",
+                              "Les fonctions des arbres et leurs proxys sont regroupées en climat/carbone, gestion de l’eau et des inondations, santé et communauté, et hausse foncière et économique, en s’inspirant des tableaux de bord internationaux de valorisation des services écosystémiques."
+                            )}
+                          </p>
+                        </>
+                      );
                     })()}
-                    <p className="mt-1 text-[10px] text-slate-500">
-                      {t(
-                        "Shares are based on the monetary proxies used in this tool (carbon price, avoided stormwater costs, health proxy and property uplift).",
-                        "Les parts sont basées sur les proxys monétaires utilisés par l’outil (prix du carbone, coûts d’eaux pluviales évités, proxy santé et hausse foncière)."
-                      )}
-                    </p>
                   </div>
                 ) : (
                   <p className="text-[11px] text-slate-500">
@@ -4370,88 +4570,163 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
             </div>
 
-            {/* Additional impact perspectives */}
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
-                  {t("Compared to turf grass", "Comparaison avec le gazon")}
-                </h4>
-                <p className="text-[11px] text-slate-700 mb-2">
-                  {t(
-                    "Explore how benefits change if the same area stayed as turf grass instead of being planted with trees.",
-                    "Explorez comment les bénéfices changent si la même superficie reste en gazon plutôt qu’en plantation d’arbres."
-                  )}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setShowTurfComparison(true)}
-                  className="mt-1 inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!results || !turfScenario}
-                >
-                  {t(
-                    "Open full-screen turf vs trees comparison",
-                    "Ouvrir la comparaison plein écran gazon vs arbres"
-                  )}
-                </button>
-                <p className="mt-1 text-[10px] text-slate-500">
-                  {t(
-                    "Uses simplified assumptions about how turf performs for carbon, water, health and heat.",
-                    "S’appuie sur des hypothèses simplifiées de performance du gazon en carbone, eau, santé et chaleur."
-                  )}
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
-                  {t("Stakeholders benefiting", "Parties prenantes bénéficiaires")}
-                </h4>
-                <p className="text-[11px] text-slate-700 mb-2">
-                  {t(
-                    "Use this as a starting point when tailoring your story for different audiences.",
-                    "Utilisez cette vue comme point de départ pour adapter votre récit à différents publics."
-                  )}
-                </p>
-                <div className="flex flex-wrap gap-1.5 text-[11px]">
-                  <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
-                    {t("Residents near the site", "Résident·es près du site")}
+            {/* Additional impact perspectives – optional panels to add to report */}
+            <div className="mt-4 space-y-3">
+              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-2">
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-[11px] text-slate-700">
+                    +
                   </span>
-                  <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
-                    {t("People walking, rolling & cycling", "Piétons, cyclistes et usagers en mobilité réduite")}
-                  </span>
-                  <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-800">
-                    {t("Municipal operations & infrastructure teams", "Services municipaux et équipes d’infrastructure")}
-                  </span>
-                  {priorityGroups.length > 0 && (
-                    <span className="rounded-full bg-primary-50 border border-primary-200 px-2 py-1 text-primary-800">
-                      {t("Priority groups you selected", "Groupes prioritaires sélectionnés")}
-                    </span>
-                  )}
+                  <div className="flex-1">
+                    <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-1">
+                      {t("Compared to turf grass or pavement", "Comparaison avec le gazon ou le pavage")}
+                    </h4>
+                    <p className="text-[11px] text-slate-700 mb-2">
+                      {t(
+                        "Explore how benefits change if the same area stayed as turf grass or hard surface instead of being planted with trees.",
+                        "Explorez comment les bénéfices changent si la même superficie reste en gazon ou en surface dure plutôt qu’en plantation d’arbres."
+                      )}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setShowTurfComparison(true)}
+                      className="mt-1 inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={!results || !turfScenario}
+                    >
+                      {t(
+                        "View comparison with other land covers",
+                        "Voir la comparaison avec d’autres types de couverture du sol"
+                      )}
+                    </button>
+                    <p className="mt-1 text-[10px] text-slate-500">
+                      {t(
+                        "Uses simplified assumptions about how turf and paved surfaces perform for carbon, water, health and heat.",
+                        "S’appuie sur des hypothèses simplifiées de performance du gazon et des surfaces pavées en carbone, eau, santé et chaleur."
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
-                  {t("Methodology & validation", "Méthodologie et validation")}
-                </h4>
-                <p className="text-[11px] text-slate-700 mb-2">
-                  {t(
-                    "The model combines Canadian datasets and peer-reviewed literature. It is being refined with academic partners.",
-                    "Le modèle combine des ensembles de données canadiens et de la littérature examinée par les pairs. Il est affiné avec des partenaires universitaires."
-                  )}
-                </p>
-                <p className="text-[11px] text-slate-500 mb-2">
-                  {t(
-                    "Placeholder: list of universities and research groups validating this model will appear here.",
-                    "Espace réservé : la liste des universités et groupes de recherche qui valident ce modèle apparaîtra ici."
-                  )}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => window.open("#methodology", "_blank")}
-                  className="mt-1 inline-flex items-center gap-1 rounded-full border border-slate-300 px-3 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-50 transition"
-                >
-                  {t("Read more about the methodology", "En savoir plus sur la méthodologie")}
-                </button>
+              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-2">
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-[11px] text-slate-700">
+                    +
+                  </span>
+                  <div className="flex-1">
+                    <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-1">
+                      {t("Stakeholders benefiting", "Parties prenantes bénéficiaires")}
+                    </h4>
+                    <p className="text-[11px] text-slate-700 mb-2">
+                      {t(
+                        "Capture which stakeholder groups benefit most and add a short title you can reuse in reports.",
+                        "Indiquez quels groupes de parties prenantes bénéficient le plus et ajoutez un court titre réutilisable dans vos rapports."
+                      )}
+                    </p>
+                    <div className="grid gap-2 md:grid-cols-[1.2fr,1.5fr] items-start mb-2">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-medium text-slate-700">
+                          {t("Stakeholder type", "Type de partie prenante")}
+                        </label>
+                        <select
+                          value={stakeholderType}
+                          onChange={e => setStakeholderType(e.target.value)}
+                          className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-[11px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                        >
+                          <option value="">
+                            {t("Select a type…", "Sélectionnez un type…")}
+                          </option>
+                          <option value="nearbyResidents">
+                            {t("Residents near the site", "Résident·es près du site")}
+                          </option>
+                          <option value="activeTravel">
+                            {t(
+                              "People walking, rolling & cycling",
+                              "Piétons, cyclistes et usagers en mobilité réduite"
+                            )}
+                          </option>
+                          <option value="municipalTeams">
+                            {t(
+                              "Municipal operations & infrastructure teams",
+                              "Services municipaux et équipes d’infrastructure"
+                            )}
+                          </option>
+                          <option value="schools">
+                            {t("Schools & students", "Écoles et élèves")}
+                          </option>
+                          <option value="businesses">
+                            {t("Local businesses", "Entreprises locales")}
+                          </option>
+                          <option value="communityGroups">
+                            {t("Community and equity groups", "Groupes communautaires et d’équité")}
+                          </option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-medium text-slate-700">
+                          {t(
+                            "Short stakeholder title (max 80 characters)",
+                            "Court titre pour la partie prenante (80 caractères max.)"
+                          )}
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={stakeholderTitle}
+                            maxLength={80}
+                            onChange={e => setStakeholderTitle(e.target.value)}
+                            className="flex-1 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-[11px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+                            placeholder={t(
+                              "Example: Seniors in nearby apartment towers",
+                              "Ex. : Aîné·es des immeubles à proximité"
+                            )}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (!stakeholderType || !stakeholderTitle.trim()) return;
+                              setStakeholderEntries(prev => [
+                                ...prev,
+                                {
+                                  type: stakeholderType,
+                                  title: stakeholderTitle.trim()
+                                }
+                              ]);
+                              setStakeholderTitle("");
+                            }}
+                            className="inline-flex items-center justify-center rounded-md bg-slate-900 px-2.5 py-1.5 text-[11px] font-semibold text-white shadow hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={!stakeholderType || !stakeholderTitle.trim()}
+                          >
+                            {t("Add", "Ajouter")}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 text-[11px]">
+                      {stakeholderEntries.length === 0 && (
+                        <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700">
+                          {t(
+                            "No stakeholders added yet – use the form above to capture them.",
+                            "Aucune partie prenante ajoutée pour l’instant – utilisez le formulaire ci‑dessus pour les saisir."
+                          )}
+                        </span>
+                      )}
+                      {stakeholderEntries.map((entry, idx) => (
+                        <span
+                          key={`${entry.type}-${idx}-${entry.title}`}
+                          className="rounded-full bg-primary-50 border border-primary-200 px-2 py-1 text-primary-800"
+                        >
+                          {entry.title}
+                        </span>
+                      ))}
+                      {priorityGroups.length > 0 && (
+                        <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2 py-1 text-emerald-800">
+                          {t("Priority groups you selected", "Groupes prioritaires sélectionnés")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
