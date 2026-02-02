@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import Map, { Marker, Popup, MapRef } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { calculateBenefits } from "@/lib/benefitCalculator";
 
 type Language = "en" | "fr";
 
@@ -243,6 +244,346 @@ const mockProjects: MockProject[] = [
     stormwaterLitres: 4800000,
     lat: 53.5461,
     lng: -113.4938
+  },
+  {
+    id: "p13",
+    name: "River Walk Greenway",
+    municipality: "Moncton",
+    province: "NB",
+    region: "atlantic",
+    size: "medium",
+    typology: "riparian",
+    stage: "planting",
+    year: 2025,
+    trees: 520,
+    areaHa: 11,
+    carbonTonnes: 10,
+    stormwaterLitres: 1560000,
+    lat: 46.0878,
+    lng: -64.7782
+  },
+  {
+    id: "p14",
+    name: "Old Port Shade Initiative",
+    municipality: "Quebec City",
+    province: "QC",
+    region: "quebec",
+    size: "large",
+    typology: "street-trees",
+    stage: "approved",
+    year: 2025,
+    trees: 950,
+    areaHa: 14,
+    carbonTonnes: 20,
+    stormwaterLitres: 2850000,
+    lat: 46.8139,
+    lng: -71.2082
+  },
+  {
+    id: "p15",
+    name: "West End Urban Forest",
+    municipality: "Victoria",
+    province: "BC",
+    region: "bc",
+    size: "medium",
+    typology: "urban-forest",
+    stage: "completed",
+    year: 2024,
+    trees: 680,
+    areaHa: 9,
+    carbonTonnes: 14,
+    stormwaterLitres: 2040000,
+    lat: 48.4284,
+    lng: -123.3656
+  },
+  {
+    id: "p16",
+    name: "Trans-Canada Green Corridor",
+    municipality: "Regina",
+    province: "SK",
+    region: "prairies",
+    size: "medium",
+    typology: "green-infrastructure",
+    stage: "monitoring",
+    year: 2024,
+    trees: 420,
+    areaHa: 8,
+    carbonTonnes: 8,
+    stormwaterLitres: 1260000,
+    lat: 50.4452,
+    lng: -104.6189
+  },
+  {
+    id: "p17",
+    name: "Downtown Hamilton Canopy",
+    municipality: "Hamilton",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "street-trees",
+    stage: "planting",
+    year: 2025,
+    trees: 1100,
+    areaHa: 17,
+    carbonTonnes: 22,
+    stormwaterLitres: 3300000,
+    lat: 43.2557,
+    lng: -79.8711
+  },
+  {
+    id: "p18",
+    name: "Bay of Fundy Buffer",
+    municipality: "Saint John",
+    province: "NB",
+    region: "atlantic",
+    size: "small",
+    typology: "riparian",
+    stage: "planning",
+    year: 2025,
+    trees: 280,
+    areaHa: 7,
+    carbonTonnes: 6,
+    stormwaterLitres: 840000,
+    lat: 45.2733,
+    lng: -66.0633
+  },
+  {
+    id: "p19",
+    name: "Gatineau Park Edge Restoration",
+    municipality: "Gatineau",
+    province: "QC",
+    region: "quebec",
+    size: "medium",
+    typology: "park-restoration",
+    stage: "approved",
+    year: 2025,
+    trees: 780,
+    areaHa: 15,
+    carbonTonnes: 16,
+    stormwaterLitres: 2340000,
+    lat: 45.4765,
+    lng: -75.7013
+  },
+  {
+    id: "p20",
+    name: "Okanagan Shade & Stormwater",
+    municipality: "Kelowna",
+    province: "BC",
+    region: "bc",
+    size: "large",
+    typology: "urban-forest",
+    stage: "planting",
+    year: 2025,
+    trees: 1300,
+    areaHa: 19,
+    carbonTonnes: 26,
+    stormwaterLitres: 3900000,
+    lat: 49.8880,
+    lng: -119.4960
+  },
+  {
+    id: "p21",
+    name: "North Saskatchewan Riparian",
+    municipality: "Edmonton",
+    province: "AB",
+    region: "prairies",
+    size: "large",
+    typology: "riparian",
+    stage: "monitoring",
+    year: 2024,
+    trees: 890,
+    areaHa: 24,
+    carbonTonnes: 18,
+    stormwaterLitres: 2670000,
+    lat: 53.5461,
+    lng: -113.4938
+  },
+  {
+    id: "p22",
+    name: "Yellowknife Community Forest",
+    municipality: "Yellowknife",
+    province: "NT",
+    region: "territories",
+    size: "small",
+    typology: "urban-forest",
+    stage: "planting",
+    year: 2025,
+    trees: 240,
+    areaHa: 5,
+    carbonTonnes: 5,
+    stormwaterLitres: 720000,
+    lat: 62.4540,
+    lng: -114.3718
+  },
+  {
+    id: "p23",
+    name: "London Civic Greens",
+    municipality: "London",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "park-restoration",
+    stage: "completed",
+    year: 2024,
+    trees: 1400,
+    areaHa: 20,
+    carbonTonnes: 28,
+    stormwaterLitres: 4200000,
+    lat: 42.9849,
+    lng: -81.2453
+  },
+  {
+    id: "p24",
+    name: "Fredericton Treeway",
+    municipality: "Fredericton",
+    province: "NB",
+    region: "atlantic",
+    size: "small",
+    typology: "street-trees",
+    stage: "approved",
+    year: 2025,
+    trees: 190,
+    areaHa: 4,
+    carbonTonnes: 4,
+    stormwaterLitres: 570000,
+    lat: 45.9636,
+    lng: -66.6431
+  },
+  {
+    id: "p25",
+    name: "Sherbrooke Green Streets",
+    municipality: "Sherbrooke",
+    province: "QC",
+    region: "quebec",
+    size: "medium",
+    typology: "street-trees",
+    stage: "planting",
+    year: 2025,
+    trees: 580,
+    areaHa: 10,
+    carbonTonnes: 12,
+    stormwaterLitres: 1740000,
+    lat: 45.4009,
+    lng: -71.8824
+  },
+  {
+    id: "p26",
+    name: "Iqaluit Northern Greening",
+    municipality: "Iqaluit",
+    province: "NU",
+    region: "territories",
+    size: "small",
+    typology: "urban-forest",
+    stage: "planning",
+    year: 2025,
+    trees: 90,
+    areaHa: 3,
+    carbonTonnes: 2,
+    stormwaterLitres: 270000,
+    lat: 63.7467,
+    lng: -68.5170
+  },
+  {
+    id: "p27",
+    name: "Kitchener Innovation District Canopy",
+    municipality: "Kitchener",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "green-infrastructure",
+    stage: "approved",
+    year: 2025,
+    trees: 620,
+    areaHa: 11,
+    carbonTonnes: 12,
+    stormwaterLitres: 1860000,
+    lat: 43.4516,
+    lng: -80.4925
+  },
+  {
+    id: "p28",
+    name: "Red River Floodplain Planting",
+    municipality: "Winnipeg",
+    province: "MB",
+    region: "prairies",
+    size: "large",
+    typology: "riparian",
+    stage: "monitoring",
+    year: 2024,
+    trees: 1050,
+    areaHa: 22,
+    carbonTonnes: 21,
+    stormwaterLitres: 3150000,
+    lat: 49.8951,
+    lng: -97.1384
+  },
+  {
+    id: "p29",
+    name: "Nanaimo Waterfront Park",
+    municipality: "Nanaimo",
+    province: "BC",
+    region: "bc",
+    size: "medium",
+    typology: "park-restoration",
+    stage: "completed",
+    year: 2024,
+    trees: 470,
+    areaHa: 8,
+    carbonTonnes: 9,
+    stormwaterLitres: 1410000,
+    lat: 49.1659,
+    lng: -123.9401
+  },
+  {
+    id: "p30",
+    name: "Dartmouth Lakes Green Network",
+    municipality: "Dartmouth",
+    province: "NS",
+    region: "atlantic",
+    size: "medium",
+    typology: "green-infrastructure",
+    stage: "planting",
+    year: 2025,
+    trees: 540,
+    areaHa: 12,
+    carbonTonnes: 11,
+    stormwaterLitres: 1620000,
+    lat: 44.6653,
+    lng: -63.5672
+  },
+  {
+    id: "p31",
+    name: "Trois-Rivières Urban Oasis",
+    municipality: "Trois-Rivières",
+    province: "QC",
+    region: "quebec",
+    size: "medium",
+    typology: "urban-forest",
+    stage: "approved",
+    year: 2025,
+    trees: 410,
+    areaHa: 9,
+    carbonTonnes: 8,
+    stormwaterLitres: 1230000,
+    lat: 46.3432,
+    lng: -72.5763
+  },
+  {
+    id: "p32",
+    name: "Lethbridge Coulee Restoration",
+    municipality: "Lethbridge",
+    province: "AB",
+    region: "prairies",
+    size: "medium",
+    typology: "riparian",
+    stage: "planning",
+    year: 2025,
+    trees: 380,
+    areaHa: 13,
+    carbonTonnes: 8,
+    stormwaterLitres: 1140000,
+    lat: 49.6935,
+    lng: -112.8418
   }
 ];
 
@@ -828,6 +1169,114 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
               </div>
             </div>
           </div>
+
+          {/* Benefits & impacts (aligned with project setup / calculator) */}
+          {(() => {
+            const projectResults = calculateBenefits({
+              region: selectedProject.region,
+              municipalitySize: selectedProject.size,
+              populationServed: 10000,
+              householdsServed: 4000,
+              numberOfTrees: selectedProject.trees,
+              projectAreaHa: selectedProject.areaHa,
+              year: selectedProject.year
+            });
+            return (
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
+                <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
+                  {t("Benefits & impacts", "Bénéfices et impacts")}
+                </h2>
+                <p className="text-[11px] text-slate-600 mb-4">
+                  {t(
+                    "Estimated benefits for this project, using the same methodology as the calculator. Values are indicative for reporting and stakeholder communication.",
+                    "Bénéfices estimés pour ce projet, selon la même méthodologie que le calculateur. Les valeurs sont indicatives pour les rapports et la communication avec les parties prenantes."
+                  )}
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="rounded-xl border border-primary-200 bg-primary-50/80 p-3 shadow-sm">
+                    <h3 className="text-[11px] font-semibold text-primary-800 uppercase tracking-wide mb-1">
+                      {t("Climate / carbon", "Climat / carbone")}
+                    </h3>
+                    <p className="text-base font-bold text-primary-900">
+                      {projectResults.total.carbonTonnes.toFixed(1)} tCO₂e / {t("yr", "an")}
+                    </p>
+                    <p className="text-[11px] text-primary-800 mt-0.5">
+                      ≈ ${projectResults.total.carbonValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
+                      {t("carbon value", "valeur carbone")}
+                    </p>
+                    <p className="text-[10px] text-slate-600 mt-1">
+                      {t(
+                        "Based on Canadian social carbon value assumptions.",
+                        "Basé sur les hypothèses de valeur sociale du carbone au Canada."
+                      )}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-secondary-200 bg-secondary-50/80 p-3 shadow-sm">
+                    <h3 className="text-[11px] font-semibold text-secondary-800 uppercase tracking-wide mb-1">
+                      {t("Stormwater / flooding", "Eaux pluviales / inondations")}
+                    </h3>
+                    <p className="text-base font-bold text-secondary-900">
+                      {(projectResults.total.stormwaterLitres / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 1 })}{" "}
+                      M L {t("intercepted", "interceptés")}
+                    </p>
+                    <p className="text-[11px] text-secondary-800 mt-0.5">
+                      ≈ ${projectResults.total.stormwaterValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
+                      {t("avoided infrastructure", "infrastructure évitée")}
+                    </p>
+                    <p className="text-[10px] text-slate-600 mt-1">
+                      {t(
+                        "Rainfall intercepted and slowed by trees vs hard surfaces.",
+                        "Pluie interceptée et ralentie par les arbres par rapport aux surfaces imperméables."
+                      )}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-accent-200 bg-accent-50/80 p-3 shadow-sm">
+                    <h3 className="text-[11px] font-semibold text-accent-800 uppercase tracking-wide mb-1">
+                      {t("Health & wellbeing", "Santé et bien-être")}
+                    </h3>
+                    <p className="text-base font-bold text-accent-900">
+                      ${projectResults.total.healthSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
+                      / {t("yr (proxy)", "an (proxy)")}
+                    </p>
+                    <p className="text-[10px] text-slate-600 mt-1">
+                      {t(
+                        "Estimated value of reduced illness and improved mental wellbeing.",
+                        "Valeur estimée de la réduction des maladies et de l'amélioration du bien-être mental."
+                      )}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-amber-200 bg-amber-50/80 p-3 shadow-sm">
+                    <h3 className="text-[11px] font-semibold text-amber-800 uppercase tracking-wide mb-1">
+                      {t("Property value", "Valeur foncière")}
+                    </h3>
+                    <p className="text-base font-bold text-amber-900">
+                      ${projectResults.total.propertyValueIncrease.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </p>
+                    <p className="text-[10px] text-slate-600 mt-1">
+                      {t(
+                        "Indicative uplift in adjacent property value.",
+                        "Hausse indicative de la valeur des propriétés adjacentes."
+                      )}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-orange-200 bg-orange-50/80 p-3 shadow-sm">
+                    <h3 className="text-[11px] font-semibold text-orange-800 uppercase tracking-wide mb-1">
+                      {t("Urban heat", "Îlots de chaleur urbains")}
+                    </h3>
+                    <p className="text-base font-bold text-orange-900">
+                      −{projectResults.total.heatIslandReductionDegC.toFixed(2)}°C
+                    </p>
+                    <p className="text-[10px] text-slate-600 mt-1">
+                      {t(
+                        "Cooling effect over the project footprint.",
+                        "Effet rafraîchissant sur l'emprise du projet."
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Project Images Gallery */}
           <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
