@@ -20,6 +20,7 @@ export type BenefitCategory =
   | "aesthetics"
   | "noiseReduction"
   | "culturalValues"
+  | "safetySecurity"
   | "propertyValue"
   | "energySavings"
   | "labourProductivity"

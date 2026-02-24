@@ -36,6 +36,106 @@ type SupportedActivity =
   | "riparian"
   | "forestRestorationActivity";
 
+type GcccPlantingSiteType =
+  | "streetPlanting"
+  | "parkPlanting"
+  | "naturalAreasPlanting"
+  | "otherPlantingAreas";
+
+type GcccLandUseType =
+  | "transportationCorridors"
+  | "recreationalAreas"
+  | "conservationAreas"
+  | "institutionalAreas"
+  | "residentialAreas"
+  | "otherLandUse";
+
+function deriveGcccTags(params: {
+  projectTypology: ProjectTypology | null;
+  supportedActivities: SupportedActivity[];
+  projectAreaContext: string;
+  localizedSiteContext: string;
+}): { plantingSiteTypes: GcccPlantingSiteType[]; landUseTypes: GcccLandUseType[] } {
+  const { projectTypology, supportedActivities, projectAreaContext, localizedSiteContext } =
+    params;
+
+  const plantingSiteTypes = new Set<GcccPlantingSiteType>();
+  const landUseTypes = new Set<GcccLandUseType>();
+
+  // Planting site types (GCCC 1.x)
+  if (supportedActivities.includes("streetTrees")) {
+    plantingSiteTypes.add("streetPlanting");
+  }
+  if (supportedActivities.includes("parkTrees")) {
+    plantingSiteTypes.add("parkPlanting");
+  }
+  if (
+    supportedActivities.includes("forestRestorationActivity") ||
+    supportedActivities.includes("riparian") ||
+    projectTypology === "forestRestoration"
+  ) {
+    plantingSiteTypes.add("naturalAreasPlanting");
+  }
+  if (
+    supportedActivities.includes("urbanLowCanopy") ||
+    (plantingSiteTypes.size === 0 && projectTypology === "communityWideUrbanPlanting")
+  ) {
+    plantingSiteTypes.add("otherPlantingAreas");
+  }
+
+  // Land use types (GCCC 2.x)
+  // Transportation corridors
+  if (
+    supportedActivities.includes("streetTrees") ||
+    localizedSiteContext === "corridor" ||
+    projectAreaContext === "industrial"
+  ) {
+    landUseTypes.add("transportationCorridors");
+  }
+
+  // Recreational areas
+  if (
+    supportedActivities.includes("parkTrees") ||
+    localizedSiteContext === "park"
+  ) {
+    landUseTypes.add("recreationalAreas");
+  }
+
+  // Conservation areas
+  if (
+    supportedActivities.includes("forestRestorationActivity") ||
+    supportedActivities.includes("riparian") ||
+    projectTypology === "forestRestoration"
+  ) {
+    landUseTypes.add("conservationAreas");
+  }
+
+  // Institutional areas
+  if (localizedSiteContext === "school") {
+    landUseTypes.add("institutionalAreas");
+  }
+
+  // Residential areas
+  if (
+    projectAreaContext === "urbanNeighbourhood" ||
+    projectAreaContext === "suburban" ||
+    projectAreaContext === "rural" ||
+    supportedActivities.includes("urbanLowCanopy")
+  ) {
+    landUseTypes.add("residentialAreas");
+  }
+
+  // Fallback to other if nothing matched
+  if (landUseTypes.size === 0) {
+    landUseTypes.add("otherLandUse");
+  }
+
+  return {
+    plantingSiteTypes: Array.from(plantingSiteTypes),
+    landUseTypes: Array.from(landUseTypes)
+  };
+}
+
 const canadianMunicipalities: {
   name: string;
   province: string;
@@ -129,7 +229,12 @@ const benefitCategoriesByGroup: {
       { id: "recreation", labelEn: "Recreation & Community Connection", labelFr: "Loisirs et liens communautaires" },
       { id: "aesthetics", labelEn: "Aesthetics & Visual Amenity", labelFr: "Esthétique et aménité visuelle" },
       { id: "noiseReduction", labelEn: "Noise Reduction", labelFr: "Réduction du bruit" },
-      { id: "culturalValues", labelEn: "Cultural & Indigenous Values", labelFr: "Valeurs culturelles et autochtones" }
+      { id: "culturalValues", labelEn: "Cultural & Indigenous Values", labelFr: "Valeurs culturelles et autochtones" },
+      {
+        id: "safetySecurity",
+        labelEn: "Safety & traffic calming",
+        labelFr: "Sécurité et modération de la circulation"
+      }
     ]
   },
   {
@@ -202,6 +307,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [projectName, setProjectName] = useState("");
   const [municipality, setMunicipality] = useState("");
   const [municipalityQuery, setMunicipalityQuery] = useState("");
+  const [showMunicipalitySuggestions, setShowMunicipalitySuggestions] =
+    useState(false);
   const [municipalityIsCustom, setMunicipalityIsCustom] = useState(false);
   const [region, setRegion] = useState<Region>("ontario");
   const [municipalitySize, setMunicipalitySize] =
@@ -220,7 +327,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [improvedGreenSpaceHa, setImprovedGreenSpaceHa] = useState(0);
   const [newTreesInFootpath, setNewTreesInFootpath] = useState(0);
   const [hasSustainableWaterSystems, setHasSustainableWaterSystems] = useState(false);
-  const [sustainableWaterSystemType, setSustainableWaterSystemType] = useState("");
+  const [sustainableWaterSystemTypes, setSustainableWaterSystemTypes] = useState<string[]>([]);
 
   // Project typology & activities
   const [projectTypology, setProjectTypology] =
@@ -429,6 +536,103 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
   const [results, setResults] = useState<BenefitResults | null>(null);
 
+  // Simple local save / restore of core inputs so work isn't lost when navigating away
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem("tree-benefits-calculator-v1");
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (parsed.step) setStep(parsed.step);
+      if (parsed.projectName) setProjectName(parsed.projectName);
+      if (parsed.municipality) {
+        setMunicipality(parsed.municipality);
+        setMunicipalityQuery(parsed.municipality);
+      }
+      if (parsed.region) setRegion(parsed.region);
+      if (parsed.municipalitySize) setMunicipalitySize(parsed.municipalitySize);
+      if (typeof parsed.populationServed === "number")
+        setPopulationServed(parsed.populationServed);
+      if (typeof parsed.householdsServed === "number")
+        setHouseholdsServed(parsed.householdsServed);
+      if (typeof parsed.numberOfTrees === "number")
+        setNumberOfTrees(parsed.numberOfTrees);
+      if (typeof parsed.projectAreaHa === "number")
+        setProjectAreaHa(parsed.projectAreaHa);
+      if (typeof parsed.year === "number") setYear(parsed.year);
+      if (typeof parsed.projectIncludesShrubs === "boolean")
+        setProjectIncludesShrubs(parsed.projectIncludesShrubs);
+      if (typeof parsed.numberOfShrubs === "number")
+        setNumberOfShrubs(parsed.numberOfShrubs);
+      if (Array.isArray(parsed.selectedBenefits))
+        setSelectedBenefits(parsed.selectedBenefits);
+      if (parsed.projectDescription)
+        setProjectDescription(parsed.projectDescription);
+      if (typeof parsed.projectCapitalCost === "number")
+        setProjectCapitalCost(parsed.projectCapitalCost);
+      if (typeof parsed.projectAnnualCost === "number")
+        setProjectAnnualCost(parsed.projectAnnualCost);
+      if (parsed.equityFocusLevel)
+        setEquityFocusLevel(parsed.equityFocusLevel);
+      if (Array.isArray(parsed.priorityGroups))
+        setPriorityGroups(parsed.priorityGroups);
+    } catch {
+      // ignore restore errors in demo
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const payload = {
+      step,
+      projectName,
+      municipality,
+      region,
+      municipalitySize,
+      populationServed,
+      householdsServed,
+      numberOfTrees,
+      projectAreaHa,
+      year,
+      projectIncludesShrubs,
+      numberOfShrubs,
+      selectedBenefits,
+      projectDescription,
+      projectCapitalCost,
+      projectAnnualCost,
+      equityFocusLevel,
+      priorityGroups
+    };
+    try {
+      window.localStorage.setItem(
+        "tree-benefits-calculator-v1",
+        JSON.stringify(payload)
+      );
+    } catch {
+      // ignore save errors in demo
+    }
+  }, [
+    step,
+    projectName,
+    municipality,
+    region,
+    municipalitySize,
+    populationServed,
+    householdsServed,
+    numberOfTrees,
+    projectAreaHa,
+    year,
+    projectIncludesShrubs,
+    numberOfShrubs,
+    selectedBenefits,
+    projectDescription,
+    projectCapitalCost,
+    projectAnnualCost,
+    equityFocusLevel,
+    priorityGroups
+  ]);
+
   // Derived mixes and comparison helpers (only used when results exist)
   let valueMix:
     | null
@@ -631,12 +835,17 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   };
 
   const handleCalculate = () => {
+    const totalTreesForCalculation =
+      projectIncludesShrubs && numberOfShrubs
+        ? numberOfTrees + numberOfShrubs
+        : numberOfTrees;
+
     const res = calculateBenefits({
       region,
       municipalitySize,
       populationServed,
       householdsServed,
-      numberOfTrees,
+      numberOfTrees: totalTreesForCalculation,
       projectAreaHa,
       year
     });
@@ -751,15 +960,16 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         setMunicipalityIsCustom(true);
                       }
                     }}
+                    onFocus={() => setShowMunicipalitySuggestions(true)}
                     placeholder={t(
                       "Start typing to search Canadian municipalities",
                       "Commencez à taper pour rechercher des municipalités canadiennes"
                     )}
                     className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                     aria-autocomplete="list"
-                    aria-expanded={municipalityQuery.length > 1}
+                    aria-expanded={municipalityQuery.length > 1 && showMunicipalitySuggestions}
                   />
-                  {municipalityQuery.length > 1 && (
+                  {municipalityQuery.length > 1 && showMunicipalitySuggestions && (
                     <div className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md border border-slate-200 bg-white shadow-lg text-sm">
                       {canadianMunicipalities
                         .filter(m =>
@@ -783,6 +993,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                                 municipalPopulation: m.population,
                                 municipalAreaKm2: m.areaKm2
                               }));
+                              setShowMunicipalitySuggestions(false);
                             }}
                             className="flex w-full items-center justify-between px-3 py-1.5 text-left hover:bg-primary-50"
                           >
@@ -814,8 +1025,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         "Nous appliquerons pour l’instant des valeurs par défaut régionales basées sur des moyennes nationales."
                       )
                     : t(
-                        "Used to set climate and carbon defaults automatically by region.",
-                        "Utilisé pour définir automatiquement les paramètres climatiques et de carbone par région."
+                        "Used to set climate and carbon defaults automatically by region. This demo uses a sample of Canadian municipalities; a full version would include a more complete list and finer geography.",
+                        "Utilisé pour définir automatiquement les paramètres climatiques et de carbone par région. Cette démo utilise un échantillon de municipalités canadiennes; une version complète inclurait une liste plus exhaustive et une géographie plus fine."
                       )}
                 </p>
                 {matchedMunicipality && !municipalityIsCustom && (
@@ -948,6 +1159,12 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     {t("Large", "Grand")}
                   </option>
                 </select>
+                <p className="text-[11px] text-slate-500 italic">
+                  {t(
+                    "Small: <10K residents, Medium: 10–100K, Large: >100K (approximate).",
+                    "Petit : <10 k résident·es, Moyen : 10–100 k, Grand : >100 k (approx.)."
+                  )}
+                </p>
               </div>
 
               <div className="space-y-1.5">
@@ -963,6 +1180,12 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   onChange={e => setYear(Number(e.target.value) || year)}
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                 />
+                <p className="text-[11px] text-slate-500 italic">
+                  {t(
+                    "For projects planting over multiple years, use the year when the last trees will be planted.",
+                    "Pour les projets plantant sur plusieurs années, indiquez l’année où les derniers arbres seront plantés."
+                  )}
+                </p>
               </div>
 
               <div className="space-y-1.5">
@@ -1531,8 +1754,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 />
                 <p className="text-[11px] text-slate-500 italic">
                   {t(
-                    "Use your best estimate – the tool will scale results.",
-                    "Utilisez votre meilleure estimation – l’outil ajustera les résultats."
+                    "Use your best estimate – the tool will scale results. If you also plant woody shrubs, you can record them separately below; in this demo they are added to the tree total for benefit calculations.",
+                    "Utilisez votre meilleure estimation – l’outil ajustera les résultats. Si vous plantez aussi des arbustes ligneux, vous pouvez les saisir séparément ci‑dessous; dans cette démo, ils sont ajoutés au total d’arbres pour les calculs de bénéfices."
                   )}
                 </p>
                 <label className="flex items-center gap-2 text-xs font-medium text-slate-700">
@@ -1582,6 +1805,12 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   }
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                 />
+                <p className="text-[11px] text-slate-500 italic">
+                  {t(
+                    "For community-wide projects, use the approximate area where trees are actually planted (not the whole municipality).",
+                    "Pour les projets à l’échelle de la collectivité, utilisez la superficie approximative où les arbres sont effectivement plantés (et non toute la municipalité)."
+                  )}
+                </p>
               </div>
             </div>
 
@@ -1715,7 +1944,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       checked={!hasSustainableWaterSystems}
                       onChange={() => {
                         setHasSustainableWaterSystems(false);
-                        setSustainableWaterSystemType("");
+                        setSustainableWaterSystemTypes([]);
                       }}
                       className="mt-0.5 h-4 w-4 border-slate-300 text-primary-600 focus:ring-2 focus:ring-primary-500"
                     />
@@ -1742,19 +1971,65 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 {hasSustainableWaterSystems && (
                   <div className="ml-6 mt-3 space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      {t("Water management system type:", "Type de système de gestion de l'eau :")}
+                      {t(
+                        "Water management system types (select all that apply – examples):",
+                        "Types de système de gestion de l'eau (sélectionnez tout ce qui s’applique – exemples) :"
+                      )}
                     </label>
-                    <select
-                      value={sustainableWaterSystemType}
-                      onChange={e => setSustainableWaterSystemType(e.target.value)}
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-                    >
-                      <option value="">{t("Select types", "Sélectionner les types")}</option>
-                      <option value="bioswales">{t("Bioswales/vegetated swales", "Bioswales / fossés végétalisés")}</option>
-                      <option value="rainGardens">{t("Rain gardens", "Jardins pluviaux")}</option>
-                      <option value="filterStrips">{t("Filter strips", "Bandes filtrantes")}</option>
-                      <option value="retentionDetention">{t("Retention or detention ponds", "Bassins de rétention ou de détention")}</option>
-                    </select>
+                    <div className="space-y-1.5 text-sm text-slate-700">
+                      {[
+                        {
+                          id: "bioswales",
+                          labelEn: "Bioswales / vegetated swales",
+                          labelFr: "Bioswales / fossés végétalisés"
+                        },
+                        {
+                          id: "rainGardens",
+                          labelEn: "Rain gardens",
+                          labelFr: "Jardins pluviaux"
+                        },
+                        {
+                          id: "filterStrips",
+                          labelEn: "Filter strips",
+                          labelFr: "Bandes filtrantes"
+                        },
+                        {
+                          id: "retentionDetention",
+                          labelEn: "Retention or detention ponds",
+                          labelFr: "Bassins de rétention ou de détention"
+                        }
+                      ].map(option => {
+                        const selected = sustainableWaterSystemTypes.includes(option.id);
+                        const label =
+                          language === "fr" ? option.labelFr : option.labelEn;
+                        return (
+                          <label
+                            key={option.id}
+                            className="flex items-start gap-2 cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selected}
+                              onChange={() =>
+                                setSustainableWaterSystemTypes(prev =>
+                                  prev.includes(option.id)
+                                    ? prev.filter(id => id !== option.id)
+                                    : [...prev, option.id]
+                                )
+                              }
+                              className="mt-0.5 h-3.5 w-3.5 rounded border-slate-400 text-primary-600 focus:ring-primary-500"
+                            />
+                            <span>{label}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <p className="text-[11px] text-slate-500 italic">
+                      {t(
+                        "These examples help describe how trees interact with green infrastructure; they are optional and do not change the calculations yet.",
+                        "Ces exemples aident à décrire la façon dont les arbres interagissent avec l’infrastructure verte; ils sont optionnels et ne modifient pas encore les calculs."
+                      )}
+                    </p>
                   </div>
                 )}
               </div>
@@ -1764,8 +2039,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
             <div className="mt-4 space-y-6 rounded-xl border border-dashed border-slate-200 bg-slate-50/70 p-4">
               <p className="text-[11px] text-slate-600">
                 {t(
-                  "These optional questions help describe project context in a way that aligns with funder language. They do not change the calculations yet.",
-                  "Ces questions optionnelles aident à décrire le contexte du projet en cohérence avec le langage des bailleurs de fonds. Elles ne modifient pas encore les calculs."
+                  "These optional questions help describe project context in plain language you can reuse in applications and reports. They are for reporting only and do not change the calculations yet.",
+                  "Ces questions optionnelles aident à décrire le contexte du projet dans un langage simple que vous pouvez réutiliser dans vos demandes et rapports. Elles servent au rapport seulement et ne modifient pas encore les calculs."
                 )}
               </p>
 
@@ -3169,6 +3444,12 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
                     />
                   </div>
+                  <p className="text-[11px] text-slate-500 italic">
+                    {t(
+                      "Enter a typical yearly amount for ongoing maintenance, watering and monitoring (not the total over the full lifespan).",
+                      "Indiquez un montant annuel typique pour l’entretien, l’arrosage et le suivi (et non le total sur toute la durée de vie)."
+                    )}
+                  </p>
                 </div>
               </div>
             </div>
@@ -3246,11 +3527,17 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </p>
                   <div className="grid gap-1.5 sm:grid-cols-2">
                     {[
-                      t("Equity-deserving communities", "Communautés en quête d’équité"),
-                      t("Indigenous communities", "Communautés autochtones"),
-                      t("Children & youth", "Enfants et jeunes"),
+                      t("2SLGBTQ+ people", "Personnes 2SLGBTQ+"),
+                      t("Francophones", "Francophones"),
+                      t("Immigrants and newcomers", "Immigrant·es et nouveaux arrivant·es"),
+                      t("Indigenous Peoples", "Peuples autochtones"),
                       t("Older adults", "Personnes aînées"),
-                      t("Low-income households", "Ménages à faible revenu")
+                      t("People with disabilities", "Personnes en situation de handicap"),
+                      t("People with low income", "Personnes à faible revenu"),
+                      t("Racialized people", "Personnes racisées"),
+                      t("Rural residents", "Résident·es des milieux ruraux"),
+                      t("Women", "Femmes"),
+                      t("Youth", "Jeunes")
                     ].map(label => {
                       const selected = priorityGroups.includes(label);
                       return (
@@ -3473,11 +3760,17 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="mb-2 font-semibold text-slate-800">
-                      {t("Carbon market", "Marché du carbone")}
-                    </h4>
-                    <div className="grid gap-2 sm:grid-cols-2">
+                <div>
+                  <h4 className="mb-1 font-semibold text-slate-800">
+                    {t("Carbon market", "Marché du carbone")}
+                  </h4>
+                  <p className="text-[11px] text-slate-600 mb-2">
+                    {t(
+                      "Only relevant where a carbon market or internal carbon price exists. In other contexts, you can leave these defaults as-is.",
+                      "Pertinent uniquement lorsqu’un marché du carbone ou un prix interne du carbone existe. Dans les autres contextes, vous pouvez laisser ces valeurs par défaut."
+                    )}
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-2">
                       <div className="space-y-0.5">
                         <label className="font-medium text-slate-700">{t("Carbon credit price (CAD/tCO₂e)", "Prix crédit carbone (CAD/tCO₂e)")}</label>
                         <input type="number" value={contextParams.carbonCreditPrice} onChange={e => setContextParams(prev => ({ ...prev, carbonCreditPrice: Number(e.target.value) || 0 }))} className="w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500" />
@@ -3636,8 +3929,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-700">
                         {t(
-                          "What is the typical level of pedestrian activity on these streets?",
-                          "Quel est le niveau habituel d’activité piétonne sur ces rues?"
+                          "What is the typical level of pedestrian activity in the main planting area (streets, paths, parks, campuses, etc.)?",
+                          "Quel est le niveau habituel d’activité piétonne dans la principale zone de plantation (rues, sentiers, parcs, campus, etc.)?"
                         )}
                       </label>
                       <select
@@ -3977,6 +4270,94 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </div>
                 </div>
               </div>
+
+              {/* GCCC mapping summary for FCM / reporting */}
+              <div className="mt-4 rounded-lg border border-dashed border-slate-300 bg-white/70 p-3">
+                {(() => {
+                  const { plantingSiteTypes, landUseTypes } = deriveGcccTags({
+                    projectTypology,
+                    supportedActivities,
+                    projectAreaContext,
+                    localizedSiteContext
+                  });
+                  return (
+                    <>
+                      <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-600 mb-1">
+                        {t(
+                          "Mapped to GCCC categories (for reporting)",
+                          "Correspondance avec les catégories GCCC (pour le rapport)"
+                        )}
+                      </p>
+                      <div className="grid gap-2 sm:grid-cols-2 text-[11px] text-slate-700">
+                        <div>
+                          <div className="font-medium">
+                            {t("Planting site type(s)", "Type(s) de site de plantation")}
+                          </div>
+                          <p className="mt-0.5">
+                            {plantingSiteTypes.length === 0
+                              ? t("Not classified in demo", "Non classé dans la démo")
+                              : plantingSiteTypes
+                                  .map(type =>
+                                    t(
+                                      type === "streetPlanting"
+                                        ? "Street planting"
+                                        : type === "parkPlanting"
+                                        ? "Park planting"
+                                        : type === "naturalAreasPlanting"
+                                        ? "Natural areas planting"
+                                        : "Other planting areas",
+                                      type === "streetPlanting"
+                                        ? "Plantation de rue"
+                                        : type === "parkPlanting"
+                                        ? "Plantation en parc"
+                                        : type === "naturalAreasPlanting"
+                                        ? "Plantation en milieux naturels"
+                                        : "Autres zones de plantation"
+                                    )
+                                  )
+                                  .join(", ")}
+                          </p>
+                        </div>
+                        <div>
+                          <div className="font-medium">
+                            {t("Land use type(s)", "Type(s) d’usage du sol")}
+                          </div>
+                          <p className="mt-0.5">
+                            {landUseTypes
+                              .map(type =>
+                                t(
+                                  type === "transportationCorridors"
+                                    ? "Transportation corridors"
+                                    : type === "recreationalAreas"
+                                    ? "Recreational areas"
+                                    : type === "conservationAreas"
+                                    ? "Conservation areas"
+                                    : type === "institutionalAreas"
+                                    ? "Institutional areas"
+                                    : type === "residentialAreas"
+                                    ? "Residential areas"
+                                    : "Other",
+                                  type === "transportationCorridors"
+                                    ? "Corridors de transport"
+                                    : type === "recreationalAreas"
+                                    ? "Espaces récréatifs"
+                                    : type === "conservationAreas"
+                                    ? "Zones de conservation"
+                                    : type === "institutionalAreas"
+                                    ? "Zones institutionnelles"
+                                    : type === "residentialAreas"
+                                    ? "Zones résidentielles"
+                                    : "Autre"
+                                )
+                              )
+                              .join(", ")}
+                          </p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
             </div>
 
             {/* Project map (placeholder visual) */}
@@ -4089,8 +4470,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </button>
                   </div>
                   <p className="text-lg font-bold text-primary-900">
-                    {results.total.carbonTonnes.toFixed(1)} tCO₂e /{" "}
-                    {t("year (approx.)", "an (approx.)")}
+                    {results.total.carbonTonnes.toFixed(1)} tCO₂e{" "}
+                    {t("per year (approx.)", "par an (approx.)")}
                   </p>
                   <p className="text-sm text-primary-700 mt-1 font-medium">
                     ≈ $
@@ -4135,7 +4516,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 <div className="rounded-xl border border-secondary-300 bg-gradient-to-br from-secondary-50 to-secondary-100/50 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <h4 className="text-xs font-semibold text-secondary-700 uppercase tracking-wide">
-                      {t("Stormwater", "Eaux pluviales")}
+                      {t("Stormwater & flooding", "Eaux pluviales et inondations")}
                     </h4>
                     <button
                       type="button"
@@ -4168,6 +4549,22 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       "infrastructure évitée (approx.)"
                     )}
                   </p>
+                  {projectAreaHa > 0 && (
+                    <p className="mt-1 text-[11px] text-slate-600">
+                      {t(
+                        "≈ ",
+                        "≈ "
+                      )}
+                      {(
+                        (results.total.stormwaterLitres / 1000) /
+                        (projectAreaHa * 10)
+                      ).toFixed(1)}{" "}
+                      {t(
+                        "mm of rainfall retained over the planted area (approx.).",
+                        "mm de pluie retenue sur la zone plantée (approx.)."
+                      )}
+                    </p>
+                  )}
                   <div className="mt-3">
                     <p className="text-[11px] text-slate-700 mb-1">
                       {t("Impact scale", "Échelle d’impact")}
@@ -4228,6 +4625,21 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       "Valeur estimée de la réduction des maladies respiratoires, des problèmes de santé liés à la chaleur et de l’amélioration du bien‑être mental, basée sur la recherche canadienne."
                     )}
                   </p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      window.open(
+                        "https://fcm.ca",
+                        "_blank",
+                      )
+                    }
+                    className="mt-2 inline-flex items-center gap-1 rounded-full border border-accent-200 bg-white px-3 py-1.5 text-[11px] font-medium text-accent-800 hover:bg-accent-50 transition"
+                  >
+                    {t(
+                      "Learn more in GMF health resources",
+                      "En savoir plus avec les ressources de la FGM sur la santé"
+                    )}
+                  </button>
                 </div>
               )}
 
@@ -4263,8 +4675,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </p>
                   <p className="text-[11px] text-slate-600 mt-1">
                     {t(
-                      "Indicative uplift in adjacent property value.",
-                      "Hausse indicative de la valeur des propriétés adjacentes."
+                      "Highly simplified, indicative uplift in adjacent property value – for communications only, not for assessing displacement or gentrification risk.",
+                      "Hausse très simplifiée et indicative de la valeur des propriétés adjacentes – à utiliser pour la communication seulement, et non pour évaluer les risques de déplacement ou de gentrification."
                     )}
                   </p>
                 </div>
@@ -4297,8 +4709,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </p>
                   <p className="text-[11px] text-slate-600 mt-1">
                     {t(
-                      "Cooling effect over the project footprint.",
-                      "Effet rafraîchissant sur l’emprise du projet."
+                      "Cooling effect over the planted area and its immediate surroundings.",
+                      "Effet rafraîchissant sur la zone plantée et ses abords immédiats."
                     )}
                   </p>
                   <div className="mt-3">
@@ -4557,8 +4969,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
                           <p className="mt-3 text-xs text-slate-500">
                             {t(
-                              "Tree functions and proxies are grouped into climate/carbon, water & flood management, health & community and property & economic uplift, following international ecosystem‑service valuation dashboards.",
-                              "Les fonctions des arbres et leurs proxys sont regroupées en climat/carbone, gestion de l’eau et des inondations, santé et communauté, et hausse foncière et économique, en s’inspirant des tableaux de bord internationaux de valorisation des services écosystémiques."
+                              "Tree functions and proxies are grouped into climate/carbon, water & flood management, health & community and property & economic uplift. These are simplified annual estimates for a representative year of maturity, not full-lifespan totals.",
+                              "Les fonctions des arbres et leurs proxys sont regroupées en climat/carbone, gestion de l’eau et des inondations, santé et communauté, et hausse foncière et économique. Il s’agit d’estimations annuelles simplifiées pour une année représentative de maturité, et non de totaux sur toute la durée de vie."
                             )}
                           </p>
                         </>
@@ -4700,18 +5112,18 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   </span>
                   <div className="flex-1">
                     <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-1">
-                      {t("Stakeholders benefiting", "Parties prenantes bénéficiaires")}
+                      {t("Groups benefiting", "Groupes bénéficiaires")}
                     </h4>
                     <p className="text-[11px] text-slate-700 mb-2">
                       {t(
-                        "Capture which stakeholder groups benefit most and add a short title you can reuse in reports.",
-                        "Indiquez quels groupes de parties prenantes bénéficient le plus et ajoutez un court titre réutilisable dans vos rapports."
+                        "Capture which groups benefit most and add a short title you can reuse in reports and exports.",
+                        "Indiquez quels groupes bénéficient le plus et ajoutez un court titre réutilisable dans vos rapports et exports."
                       )}
                     </p>
                     <div className="grid gap-2 md:grid-cols-[1.2fr,1.5fr] items-start mb-2">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-medium text-slate-700">
-                          {t("Stakeholder type", "Type de partie prenante")}
+                          {t("Group type", "Type de groupe")}
                         </label>
                         <select
                           value={stakeholderType}
@@ -4750,8 +5162,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-medium text-slate-700">
                           {t(
-                            "Short stakeholder title (max 80 characters)",
-                            "Court titre pour la partie prenante (80 caractères max.)"
+                            "Short group title (max 80 characters)",
+                            "Court titre pour le groupe (80 caractères max.)"
                           )}
                         </label>
                         <div className="flex gap-2">
@@ -4791,8 +5203,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       {stakeholderEntries.length === 0 && (
                         <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700">
                           {t(
-                            "No stakeholders added yet – use the form above to capture them.",
-                            "Aucune partie prenante ajoutée pour l’instant – utilisez le formulaire ci‑dessus pour les saisir."
+                            "No groups added yet – use the form above to capture them.",
+                            "Aucun groupe ajouté pour l’instant – utilisez le formulaire ci‑dessus pour les saisir."
                           )}
                         </span>
                       )}
@@ -4810,6 +5222,12 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         </span>
                       )}
                     </div>
+                    <p className="mt-2 text-[10px] text-slate-500">
+                      {t(
+                        "These groups do not change the calculations; they appear in the printable report and structured exports.",
+                        "Ces groupes ne modifient pas les calculs; ils apparaissent dans le rapport imprimable et les exports structurés."
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>
