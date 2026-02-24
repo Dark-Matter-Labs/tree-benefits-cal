@@ -645,8 +645,8 @@ const typologyMeta: Record<Typology, { en: string; fr: string; icon: string }> =
     icon: "🏞️"
   },
   "green-infrastructure": {
-    en: "Urban planting in low-canopy areas",
-    fr: "Plantation urbaine en zones à faible canopée",
+    en: "Urban low-canopy neighbourhoods",
+    fr: "Quartiers urbains à faible canopée",
     icon: "🌿"
   }
 };
@@ -668,7 +668,6 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
   const [selectedRegion, setSelectedRegion] = useState<RegionKey | "all">("all");
   const [selectedTypology, setSelectedTypology] = useState<Typology | "all">("all");
   const [selectedSize, setSelectedSize] = useState<"small" | "medium" | "large" | "all">("all");
-  const [selectedStage, setSelectedStage] = useState<Stage | "all">("all");
   const [selectedProject, setSelectedProject] = useState<MockProject | null>(null);
   const [activeMapLayer, setActiveMapLayer] = useState<"temperature" | "canopy" | "indigenous" | null>(null);
   const mapRef = useRef<MapRef>(null);
@@ -686,10 +685,9 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
       if (selectedRegion !== "all" && p.region !== selectedRegion) return false;
       if (selectedTypology !== "all" && p.typology !== selectedTypology) return false;
       if (selectedSize !== "all" && p.size !== selectedSize) return false;
-      if (selectedStage !== "all" && p.stage !== selectedStage) return false;
       return true;
     });
-  }, [selectedRegion, selectedTypology, selectedSize, selectedStage]);
+  }, [selectedRegion, selectedTypology, selectedSize]);
 
   const totalProjects = filteredProjects.length;
   const totalTrees = filteredProjects.reduce((sum, p) => sum + p.trees, 0);
@@ -1134,17 +1132,11 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
               <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                {t("Trees & shrubs", "Arbres et arbustes")}
+                {t("Trees", "Arbres")}
               </div>
               <div className="mt-1 text-lg font-bold text-slate-900">
                 {selectedProject.trees.toLocaleString()}
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">
-                {t(
-                  "Includes woody shrubs where reported",
-                  "Comprend les arbustes ligneux lorsque déclarés"
-                )}
-              </p>
             </div>
             <div className="rounded-xl border border-primary-200 bg-primary-50 p-3 shadow-sm">
               <div className="text-[11px] uppercase tracking-wide text-primary-800 font-medium">
@@ -1876,7 +1868,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-5">
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
               {t("Projects", "Projets")}
@@ -1887,7 +1879,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
           </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-              {t("Trees & shrubs", "Arbres et arbustes")}
+              {t("Trees", "Arbres")}
             </div>
             <div className="mt-1 text-lg font-bold text-slate-900">
               {totalTrees.toLocaleString()}
@@ -1905,8 +1897,8 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             </div>
             <p className="mt-1 text-[11px] text-slate-500">
               {t(
-                "Based on trees per project across current portfolio filters.",
-                "Basé sur le nombre d’arbres par projet pour les filtres actuels du portefeuille."
+                "Based on trees per project across current portfolio filters (demo thresholds: emerging <300, moderate 300–700, strong 700–1500, very strong >1500 trees/project).",
+                "Basé sur le nombre d’arbres par projet pour les filtres actuels du portefeuille (seuils de démonstration : émergent <300, modéré 300–700, fort 700–1500, très fort >1500 arbres/projet)."
               )}
             </p>
           </div>
@@ -1920,6 +1912,27 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
               })}{" "}
               M
             </div>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
+              {t("Equity / access (proxy)", "Équité / accès (proxy)")}
+            </div>
+            <div className="mt-1 text-lg font-bold text-slate-900">
+              {(() => {
+                const equityProjects = filteredProjects.filter(
+                  p => p.size === "small" || p.region === "territories"
+                ).length;
+                return totalProjects === 0
+                  ? 0
+                  : `${equityProjects.toLocaleString()}`;
+              })()}
+            </div>
+            <p className="mt-1 text-[11px] text-slate-500">
+              {t(
+                "Indicative count of projects in smaller communities or territories that may improve access for equity-deserving groups (demo rule).",
+                "Nombre indicatif de projets dans des petites collectivités ou des territoires pouvant améliorer l’accès pour des groupes en quête d’équité (règle de démonstration)."
+              )}
+            </p>
           </div>
         </div>
       </div>
@@ -1982,23 +1995,6 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             </select>
           </div>
 
-          <div>
-            <label className="text-[11px] font-medium text-slate-700 block mb-1.5">
-              {t("Stage", "Étape")}
-            </label>
-            <select
-              value={selectedStage}
-              onChange={e => setSelectedStage(e.target.value as Stage | "all")}
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
-            >
-              <option value="all">{t("All stages", "Toutes les étapes")}</option>
-              {Object.entries(stageLabels).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {language === "fr" ? label.fr : label.en}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
       </div>
 
