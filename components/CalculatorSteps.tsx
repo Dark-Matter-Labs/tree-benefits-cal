@@ -543,7 +543,11 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
       const raw = window.localStorage.getItem("tree-benefits-calculator-v1");
       if (!raw) return;
       const parsed = JSON.parse(raw);
-      if (parsed.step) setStep(parsed.step);
+      if (parsed.step) {
+        // Avoid restoring directly into step 5 without results, which would show a blank UI.
+        // If the last saved step was 5, send users back to step 4 so they can recalculate.
+        setStep(parsed.step === 5 ? 4 : parsed.step);
+      }
       if (parsed.projectName) setProjectName(parsed.projectName);
       if (parsed.municipality) {
         setMunicipality(parsed.municipality);
