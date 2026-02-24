@@ -1572,7 +1572,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 {t("Next: Trees", "Suivant : Arbres")}
               </button>
             </div>
-            {renderStepProgress(1)}
           </div>
         )}
 
@@ -3356,7 +3355,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 )}
               </button>
             </div>
-            {renderStepProgress(2)}
           </div>
         )}
 
@@ -3639,7 +3637,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 {t("Next: Benefit details", "Suivant : Détails des bénéfices")}
               </button>
             </div>
-            {renderStepProgress(3)}
           </div>
         )}
 
@@ -4205,7 +4202,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 {t("Calculate benefits", "Calculer les bénéfices")}
               </button>
             </div>
-            {renderStepProgress(4)}
           </div>
         )}
 
@@ -4388,6 +4384,51 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                   "Les prochaines versions utiliseront une carte interactive centrée sur le lieu de votre projet avec la zone de plantation surlignée."
                 )}
               </p>
+            </div>
+
+            {/* Data & methodology – demo */}
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-2">
+                {t("Data & methodology (demo)", "Données et méthodologie (démo)")}
+              </h4>
+              <p className="text-[11px] text-slate-700 mb-2">
+                {t(
+                  "Results are generated using simplified Canadian default assumptions for tree carbon, stormwater and health benefits. They are designed for order-of-magnitude exploration, not for official reporting or carbon crediting.",
+                  "Les résultats sont générés à partir d’hypothèses canadiennes simplifiées concernant les bénéfices en carbone, eaux pluviales et santé. Ils servent à explorer des ordres de grandeur, et non à la reddition de comptes officielle ni à la création de crédits carbone."
+                )}
+              </p>
+              <ul className="list-disc list-inside text-[11px] text-slate-600 space-y-1">
+                <li>
+                  {t(
+                    "Per-tree and per-hectare multipliers are constant across the lifespan of the project in this prototype.",
+                    "Les multiplicateurs par arbre et par hectare sont constants sur la durée de vie du projet dans ce prototype."
+                  )}
+                </li>
+                <li>
+                  {t(
+                    "Regional factors adjust results by broad Canadian regions, not by municipality-level measurements.",
+                    "Des facteurs régionaux ajustent les résultats par grandes régions canadiennes, et non à l’échelle précise de la municipalité."
+                  )}
+                </li>
+                <li>
+                  {t(
+                    "Equity and access metrics are illustrative proxies only and do not yet incorporate detailed demographic data.",
+                    "Les indicateurs d’équité et d’accessibilité sont des proxys illustratifs et n’intègrent pas encore de données démographiques détaillées."
+                  )}
+                </li>
+              </ul>
+              <button
+                type="button"
+                onClick={() =>
+                  window.open("https://greenmunicipalfund.ca/trees", "_blank")
+                }
+                className="mt-2 inline-flex items-center gap-1 rounded-full border border-primary-200 bg-primary-50 px-3 py-1.5 text-[11px] font-medium text-primary-800 hover:bg-primary-100 transition"
+              >
+                {t(
+                  "Learn more about GCCC context",
+                  "En savoir plus sur le contexte de GCCC"
+                )}
+              </button>
             </div>
 
             {(projectDescription || projectCapitalCost !== null || projectAnnualCost !== null) && (
@@ -4937,7 +4978,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                                 })}
                               </div>
                             </div>
-                            <div className="space-y-4 flex flex-col items-center w-full">
+                            <div className="space-y-3 flex flex-col items-center w-full">
                               <div className="text-sm font-semibold uppercase tracking-wide text-slate-600 self-start">
                                 {t(
                                   "Pie chart – share of total value",
@@ -4945,7 +4986,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                                 )}
                               </div>
                               <div
-                                className="h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 rounded-full border-2 border-slate-200 shadow-inner flex-shrink-0"
+                                className="h-36 w-36 sm:h-40 sm:w-40 md:h-44 md:w-44 rounded-full border border-slate-200 shadow-inner flex-shrink-0"
                                 style={{
                                   backgroundImage: `conic-gradient(${pieGradient})`
                                 }}
