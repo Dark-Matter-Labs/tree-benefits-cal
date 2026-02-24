@@ -4207,15 +4207,24 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
         {step === 5 && results && (
           <div className="space-y-5">
-            <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
-              {t("Summary", "Résumé")}
-            </h3>
-            <p className="text-xs text-slate-600">
-              {t(
-                "These results provide an order-of-magnitude view of your project’s benefits, based on simplified Canadian default assumptions.",
-                "Ces résultats offrent un ordre de grandeur des bénéfices de votre projet, à partir d’hypothèses canadiennes simplifiées."
-              )}
-            </p>
+            <div className="rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 text-white p-4 md:p-5 shadow-md flex flex-col gap-3">
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary-900/50 border border-white/30 text-sm">
+                  !
+                </span>
+                <div className="space-y-1">
+                  <h3 className="text-sm md:text-base font-semibold uppercase tracking-wide">
+                    {t("Grant-ready snapshot (demo)", "Récapitulatif prêt pour une demande (démo)")}
+                  </h3>
+                  <p className="text-[11px] md:text-xs text-primary-50/90">
+                    {t(
+                      "Use this page to tell a concise story about who benefits, how the site is changing and what risks are reduced. Values are simplified annual estimates for a representative year of maturity.",
+                      "Utilisez cette page pour raconter en quelques lignes qui bénéficie, comment le site change et quels risques sont réduits. Les valeurs sont des estimations annuelles simplifiées pour une année de maturité représentative."
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
 
             {/* Project overview */}
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
@@ -4492,7 +4501,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               {selectedBenefits.includes("carbon") && (
                 <div className="rounded-xl border border-primary-300 bg-gradient-to-br from-primary-50 to-primary-100/50 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h4 className="text-xs font-semibold text-primary-700 uppercase tracking-wide">
+                    <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
                       {t("Carbon", "Carbone")}
                     </h4>
                     <button
@@ -4510,11 +4519,11 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       ℹ️
                     </button>
                   </div>
-                  <p className="text-lg font-bold text-primary-900">
+                  <p className="text-lg font-bold text-slate-900">
                     {results.total.carbonTonnes.toFixed(1)} tCO₂e{" "}
                     {t("per year (approx.)", "par an (approx.)")}
                   </p>
-                  <p className="text-sm text-primary-700 mt-1 font-medium">
+                  <p className="text-sm text-slate-800 mt-1 font-medium">
                     ≈ $
                     {results.total.carbonValue.toLocaleString(undefined, {
                       maximumFractionDigits: 0
@@ -4556,7 +4565,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               {selectedBenefits.includes("stormwater") && (
                 <div className="rounded-xl border border-secondary-300 bg-gradient-to-br from-secondary-50 to-secondary-100/50 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h4 className="text-xs font-semibold text-secondary-700 uppercase tracking-wide">
+                    <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
                       {t("Stormwater & flooding", "Eaux pluviales et inondations")}
                     </h4>
                     <button
@@ -4574,13 +4583,13 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       ℹ️
                     </button>
                   </div>
-                  <p className="text-lg font-bold text-secondary-900">
+                  <p className="text-lg font-bold text-slate-900">
                     {results.total.stormwaterLitres.toLocaleString(undefined, {
                       maximumFractionDigits: 0
                     })}{" "}
                     L
                   </p>
-                  <p className="text-sm text-secondary-700 mt-1 font-medium">
+                  <p className="text-sm text-slate-800 mt-1 font-medium">
                     ≈ $
                     {results.total.stormwaterValue.toLocaleString(undefined, {
                       maximumFractionDigits: 0
@@ -4635,7 +4644,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               {selectedBenefits.includes("health") && (
                 <div className="rounded-xl border border-accent-300 bg-gradient-to-br from-accent-50 to-accent-100/50 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h4 className="text-xs font-semibold text-accent-700 uppercase tracking-wide">
+                    <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
                       {t("Health & well-being", "Santé et bien-être")}
                     </h4>
                     <button
@@ -4653,7 +4662,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       ℹ️
                     </button>
                   </div>
-                  <p className="text-lg font-bold text-accent-900">
+                  <p className="text-lg font-bold text-slate-900">
                     $
                     {results.total.healthSavings.toLocaleString(undefined, {
                       maximumFractionDigits: 0
@@ -4687,7 +4696,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               {selectedBenefits.includes("propertyValue") && (
                 <div className="rounded-xl border border-amber-300 bg-gradient-to-br from-amber-50 to-amber-100/50 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h4 className="text-xs font-semibold text-amber-700 uppercase tracking-wide">
+                    <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
                       {t("Property value", "Valeur foncière")}
                     </h4>
                     <button
@@ -4705,7 +4714,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       ℹ️
                     </button>
                   </div>
-                  <p className="text-lg font-bold text-amber-900">
+                  <p className="text-lg font-bold text-slate-900">
                     $
                     {results.total.propertyValueIncrease.toLocaleString(
                       undefined,
@@ -4726,7 +4735,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               {selectedBenefits.includes("heat") && (
                 <div className="rounded-xl border border-orange-300 bg-gradient-to-br from-orange-50 to-orange-100/50 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h4 className="text-xs font-semibold text-orange-700 uppercase tracking-wide">
+                    <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
                       {t("Urban heat", "Îlots de chaleur urbains")}
                     </h4>
                     <button
@@ -4744,7 +4753,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                       ℹ️
                     </button>
                   </div>
-                  <p className="text-lg font-bold text-orange-900">
+                  <p className="text-lg font-bold text-slate-900">
                     −
                     {results.total.heatIslandReductionDegC.toFixed(2)}°C
                   </p>

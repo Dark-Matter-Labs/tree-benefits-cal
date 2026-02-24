@@ -1873,7 +1873,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
               {t("Projects", "Projets")}
             </div>
-            <div className="mt-1 text-lg font-bold text-slate-900">
+            <div className="mt-1 text-2xl font-bold text-slate-900">
               {totalProjects}
             </div>
           </div>
@@ -1881,7 +1881,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
               {t("Trees", "Arbres")}
             </div>
-            <div className="mt-1 text-lg font-bold text-slate-900">
+            <div className="mt-1 text-2xl font-bold text-slate-900">
               {totalTrees.toLocaleString()}
             </div>
           </div>
@@ -1892,7 +1892,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                 "Baromètre d'impact communautaire"
               )}
             </div>
-            <div className="mt-1 text-lg font-bold text-slate-900">
+            <div className="mt-1 text-2xl font-bold text-slate-900">
               {communityImpactIndicator}
             </div>
             <p className="mt-1 text-[11px] text-slate-500">
@@ -1906,7 +1906,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
               {t("Stormwater (L/yr)", "Eaux pluviales (L/an)")}
             </div>
-            <div className="mt-1 text-lg font-bold text-slate-900">
+            <div className="mt-1 text-2xl font-bold text-slate-900">
               {(totalStormwater / 1_000_000).toLocaleString(undefined, {
                 maximumFractionDigits: 1
               })}{" "}
@@ -1917,7 +1917,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
               {t("Equity / access (proxy)", "Équité / accès (proxy)")}
             </div>
-            <div className="mt-1 text-lg font-bold text-slate-900">
+            <div className="mt-1 text-2xl font-bold text-slate-900">
               {(() => {
                 const equityProjects = filteredProjects.filter(
                   p => p.size === "small" || p.region === "territories"
@@ -1999,7 +1999,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
       </div>
 
       {/* Map and List Layout */}
-      <section className="grid gap-4 lg:grid-cols-[1.2fr,1fr] items-start">
+      <section className="grid gap-4 lg:grid-cols-[1.4fr,1fr] items-start">
         {/* Map */}
         <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-md relative" style={{ height: "600px" }}>
           {/* Map Layer Controls */}
@@ -2017,7 +2017,12 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                     : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
                 }`}
               >
-                🌡️ {t("Mean temperature", "Température moyenne")}
+                <span className="inline-flex items-center gap-1">
+                  <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-amber-200 text-[9px] text-amber-900 font-semibold">
+                    T°
+                  </span>
+                  {t("Mean temperature", "Température moyenne")}
+                </span>
               </button>
               <button
                 type="button"
@@ -2028,7 +2033,12 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                     : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
                 }`}
               >
-                🌳 {t("Canopy cover", "Couverture de canopée")}
+                <span className="inline-flex items-center gap-1">
+                  <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-200 text-[9px] text-emerald-900 font-semibold">
+                    C
+                  </span>
+                  {t("Canopy cover", "Couverture de canopée")}
+                </span>
               </button>
               <button
                 type="button"
@@ -2039,7 +2049,12 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                     : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
                 }`}
               >
-                🏘️ {t("Indigenous communities", "Communautés autochtones")}
+                <span className="inline-flex items-center gap-1">
+                  <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-violet-200 text-[9px] text-violet-900 font-semibold">
+                    I
+                  </span>
+                  {t("Indigenous communities", "Communautés autochtones")}
+                </span>
               </button>
             </div>
             {activeMapLayer && (
@@ -2105,11 +2120,11 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
         </div>
 
         {/* Project List */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 shadow-md">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 shadow-md h-[600px] flex flex-col">
           <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-2">
             {t("Project list", "Liste de projets")} ({totalProjects})
           </h3>
-          <div className="space-y-2 max-h-[540px] overflow-auto pr-2 custom-scrollbar text-xs">
+          <div className="space-y-2 flex-1 overflow-auto pr-2 custom-scrollbar text-xs">
             {filteredProjects.length === 0 ? (
               <div className="text-center py-8 text-slate-500 text-sm">
                 {t("No projects match the selected filters.", "Aucun projet ne correspond aux filtres sélectionnés.")}
@@ -2129,7 +2144,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                   }}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <div className="font-medium text-slate-900 truncate">
+                    <div className="font-medium text-slate-900 truncate text-sm md:text-base">
                       {p.name}
                     </div>
                     <span className="rounded-full bg-primary-100 border border-primary-200 px-2 py-0.5 text-[10px] text-primary-700 font-medium flex-shrink-0">
@@ -2187,6 +2202,25 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             </button>
           </div>
         </div>
+      </section>
+
+      {/* Credits / methodology */}
+      <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2">
+        <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+          {t("Data & methodology (demo)", "Données et méthodologie (démo)")}
+        </h3>
+        <p className="text-[11px] text-slate-700">
+          {t(
+            "Portfolio metrics are based on mocked projects and simplified assumptions inspired by GMF’s Growing Canada’s Community Canopies resources. They illustrate how FCM could aggregate climate, water, health and equity benefits across projects.",
+            "Les indicateurs de portefeuille reposent sur des projets fictifs et des hypothèses simplifiées inspirées des ressources de l’initiative « Cultiver les canopées communautaires du Canada » du FMV. Ils illustrent comment la FCM pourrait agréger les bénéfices climatiques, hydriques, sanitaires et d’équité à l’échelle des projets."
+          )}
+        </p>
+        <p className="text-[11px] text-slate-600">
+          {t(
+            "For actual funding applications and reporting, please refer to official guidance and tools from the Green Municipal Fund.",
+            "Pour les demandes de financement et la reddition de comptes officielles, veuillez vous référer aux outils et lignes directrices du Fonds municipal vert."
+          )}
+        </p>
       </section>
     </main>
   );
