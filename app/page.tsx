@@ -75,25 +75,25 @@ export default function HomePage() {
             </div>
           </section>
 
-          <section className="rounded-[24px] border border-[rgba(255,255,255,0.07)] bg-[#141a16] p-4 md:p-5 space-y-4">
-            <h3 className="text-sm md:text-base font-semibold text-[#f0f5f2]">
+          <section className="rounded-[24px] border border-slate-200 bg-white/95 shadow-sm p-4 md:p-5 space-y-4">
+            <h3 className="text-sm md:text-base font-semibold text-slate-900">
               {language === "fr"
                 ? "Qui est derrière ce prototype ?"
                 : "Who is behind this prototype?"}
             </h3>
-            <p className="text-xs md:text-sm text-[#c8d5cc]">
+            <p className="text-xs md:text-sm text-slate-700">
               {language === "fr"
                 ? "Ce prototype a été conçu pour illustrer comment les municipalités et le FCM pourraient explorer les bénéfices des projets de plantation d’arbres. Il ne reflète pas encore la méthodologie ou les données officielles du Fonds municipal vert."
                 : "This prototype is designed to illustrate how municipalities and FCM could explore the benefits of tree planting projects. It does not yet reflect official Green Municipal Fund methodologies or data."}
             </p>
             <div className="flex flex-wrap items-center gap-3 text-[11px]">
-              <span className="text-[#6b8a77]">
+              <span className="text-slate-500">
                 {language === "fr" ? "Partenaires de conception" : "Design partners"}
               </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,255,255,0.07)] bg-[#1a2420] px-3 py-1 text-[#f0f5f2]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 border border-slate-200 text-slate-800">
                 <span className="font-semibold">Dark Matter Labs</span>
               </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,255,255,0.07)] bg-[#1a2420] px-3 py-1 text-[#f0f5f2]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 border border-slate-200 text-slate-800">
                 <span className="font-semibold">TreesAI</span>
               </span>
               <button
@@ -101,7 +101,7 @@ export default function HomePage() {
                 onClick={() =>
                   window.open("https://greenmunicipalfund.ca/trees", "_blank")
                 }
-                className="inline-flex items-center gap-1 rounded-md border border-[#3dd68c] bg-transparent px-3 py-1 text-[11px] font-medium text-[#3dd68c] hover:border-[#5ff0a4] hover:text-[#5ff0a4] transition"
+                className="inline-flex items-center gap-1 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-[11px] font-medium text-primary-800 hover:bg-primary-100 transition"
               >
                 {language === "fr"
                   ? "En savoir plus sur GCCC"
@@ -146,7 +146,7 @@ export default function HomePage() {
                   .getElementById("how-to")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="inline-flex items-center gap-1 rounded-md border border-[#3dd68c] bg-transparent px-4 py-2 text-xs font-semibold text-[#3dd68c] hover:border-[#5ff0a4] hover:text-[#5ff0a4] transition"
+              className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white/90 px-4 py-2 text-xs font-medium text-slate-800 shadow-sm hover:bg-slate-50 transition"
             >
               {language === "fr"
                 ? "Comment fonctionne ce prototype ?"
