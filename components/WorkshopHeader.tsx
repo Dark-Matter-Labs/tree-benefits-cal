@@ -20,7 +20,7 @@ export function WorkshopHeader({
   onTabChange
 }: WorkshopHeaderProps) {
   return (
-    <header className="sticky top-0 z-30 border-b border-primary-200 bg-white/95 backdrop-blur shadow-sm">
+    <header className="sticky top-0 z-30 border-b border-[rgba(255,255,255,0.07)] bg-[#0d1210]">
       <div className="mx-auto max-w-6xl px-4 py-3 md:py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <button
@@ -40,13 +40,13 @@ export function WorkshopHeader({
           </button>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-lg sm:text-2xl font-semibold text-primary-700 leading-tight">
+              <h1 className="text-lg sm:text-2xl font-semibold text-[#f0f5f2] leading-tight">
                 {language === "fr"
                   ? "Calculatrice canadienne des bénéfices des arbres"
                   : "Canadian Tree Benefits Calculator"}
               </h1>
             </div>
-            <p className="text-[11px] sm:text-xs text-slate-600 mt-0.5">
+            <p className="text-[11px] sm:text-xs text-[#6b8a77] mt-0.5">
               {language === "fr"
                 ? "Démonstration de flux pour les municipalités et le FCM"
                 : "Demo flow for municipalities and FCM portfolio view"}
@@ -55,14 +55,14 @@ export function WorkshopHeader({
         </div>
 
         <div className="flex items-center gap-4">
-          <nav className="hidden sm:flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 p-1 text-[11px]">
+          <nav className="hidden sm:flex items-center gap-4 text-[11px]">
             <button
               type="button"
               onClick={() => onTabChange("home")}
-              className={`px-3 py-1.5 rounded-full transition-all ${
+              className={`transition-colors ${
                 activeTab === "home"
-                  ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-sm font-medium"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  ? "text-[#3dd68c] font-semibold"
+                  : "text-[#6b8a77] hover:text-[#c8d5cc]"
               }`}
             >
               {language === "fr" ? "Accueil" : "Home"}
@@ -70,10 +70,10 @@ export function WorkshopHeader({
             <button
               type="button"
               onClick={() => onTabChange("calculator")}
-              className={`px-3 py-1.5 rounded-full transition-all ${
+              className={`transition-colors ${
                 activeTab === "calculator"
-                  ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-sm font-medium"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  ? "text-[#3dd68c] font-semibold"
+                  : "text-[#6b8a77] hover:text-[#c8d5cc]"
               }`}
             >
               {language === "fr"
@@ -83,10 +83,10 @@ export function WorkshopHeader({
             <button
               type="button"
               onClick={() => onTabChange("portfolio")}
-              className={`px-3 py-1.5 rounded-full transition-all ${
+              className={`transition-colors ${
                 activeTab === "portfolio"
-                  ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-sm font-medium"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  ? "text-[#3dd68c] font-semibold"
+                  : "text-[#6b8a77] hover:text-[#c8d5cc]"
               }`}
             >
               {language === "fr"

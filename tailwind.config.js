@@ -7,55 +7,42 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // TreesAI & GCCC brand colors - greens and earthy tones
         primary: {
-          50: "#f0f9f4",
-          100: "#dcf2e3",
-          200: "#bce4ca",
-          300: "#8fcea8",
-          400: "#5bb17e",
-          500: "#3b7a57", // Primary green
-          600: "#2d6246",
-          700: "#254f3a",
-          800: "#204030",
-          900: "#1a3528",
-          950: "#0d1c14"
+          50: "#e7fdf3",
+          100: "#c2f7e0",
+          200: "#98f0cc",
+          300: "#6de9b5",
+          400: "#4ee39f",
+          500: "#3dd68c", // vivid mid-green accent
+          600: "#2fb173",
+          700: "#24855a",
+          800: "#1a5a40",
+          900: "#143a2b",
+          950: "#0b2118"
         },
-        // GCCC blue accents
         secondary: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#2a5d84", // GCCC blue
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e40af",
-          900: "#1e3a8a",
-          950: "#172554"
+          50: "#111827",
+          100: "#1f2933",
+          200: "#3d4a57",
+          300: "#4b5c68",
+          400: "#5b7180",
+          500: "#6b8a77",
+          600: "#8ea59a",
+          700: "#a6b9ad",
+          800: "#c0cdc2",
+          900: "#dde6df"
         },
-        // Earthy accent colors
         accent: {
-          50: "#faf7f2",
-          100: "#f4ede0",
-          200: "#e8d9c0",
-          300: "#d9bf96",
-          400: "#c9a06a",
-          500: "#a67c52", // Earthy brown
-          600: "#8f6844",
-          700: "#755339",
-          800: "#604530",
-          900: "#4f3a2a",
-          950: "#2a1d15"
-        },
-        // Legacy forest color for compatibility
-        forest: {
-          50: "#f0f9f4",
-          100: "#dcf2e3",
-          500: "#3b7a57",
-          600: "#2d6246",
-          900: "#1a3528"
+          50: "#141a16",
+          100: "#1a2420",
+          200: "#223029",
+          300: "#2c3d34",
+          400: "#36493f",
+          500: "#41554b",
+          600: "#4c6156",
+          700: "#5a6e63",
+          800: "#6b7e73",
+          900: "#7d9084"
         }
       },
       fontFamily: {
@@ -69,9 +56,9 @@ module.exports = {
         ]
       },
       backgroundImage: {
-        "gradient-primary": "linear-gradient(135deg, #3b7a57 0%, #2d6246 100%)",
-        "gradient-secondary": "linear-gradient(135deg, #2a5d84 0%, #1d4ed8 100%)",
-        "gradient-nature": "linear-gradient(135deg, #3b7a57 0%, #2a5d84 100%)"
+        "gradient-primary": "linear-gradient(135deg, #141a16 0%, #0d1210 100%)",
+        "gradient-secondary": "linear-gradient(135deg, #141a16 0%, #0d1210 100%)",
+        "gradient-nature": "linear-gradient(135deg, #141a16 0%, #0d1210 100%)"
       }
     }
   },

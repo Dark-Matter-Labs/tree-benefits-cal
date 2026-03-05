@@ -5291,17 +5291,17 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
       </section>
 
       <aside className="space-y-4">
-        <div className="rounded-2xl border border-primary-200 bg-gradient-to-b from-primary-50 to-white p-5 shadow-md">
-          <h3 className="text-sm font-semibold text-primary-900 mb-1">
+        <div className="rounded-2xl border border-[rgba(255,255,255,0.07)] bg-[#141a16] p-5">
+          <h3 className="text-sm font-semibold text-[#f0f5f2] mb-1">
             {t("Grant-ready snapshot", "Résumé prêt pour la demande")}
           </h3>
-          <p className="text-xs text-slate-700 mb-4">
+          <p className="text-xs text-[#c8d5cc] mb-4">
             {t(
               "This calculator turns a few core project inputs into a grant-ready story: who benefits, how the site is changing, and what risks are being reduced.",
               "Ce calculateur transforme quelques éléments clés de votre projet en un récit prêt pour une demande de financement : qui bénéficie, comment le site change et quels risques sont réduits."
             )}
           </p>
-          <ul className="space-y-1.5 text-[11px] text-slate-700">
+          <ul className="space-y-1.5 text-[11px] text-[#c8d5cc]">
             <li>
               •{" "}
               {t(
@@ -5327,7 +5327,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
           <button
             type="button"
             onClick={() => window.open("#methodology", "_blank")}
-            className="mt-4 inline-flex items-center gap-1 rounded-full border border-primary-300 bg-white px-3 py-1.5 text-[11px] font-medium text-primary-800 hover:bg-primary-50 transition"
+            className="mt-4 inline-flex items-center gap-1 rounded-md border border-[#3dd68c] bg-transparent px-3 py-1.5 text-[11px] font-medium text-[#3dd68c] hover:border-[#5ff0a4] hover:text-[#5ff0a4] transition"
           >
             {t(
               "Read full methodology (coming soon)",
@@ -5340,7 +5340,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
           <button
             type="button"
             onClick={() => setStep(1)}
-            className="w-full inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-2 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition"
+            className="w-full inline-flex items-center justify-center rounded-md border border-[#3dd68c] bg-transparent px-3 py-2 text-[11px] font-semibold text-[#3dd68c] hover:border-[#5ff0a4] hover:text-[#5ff0a4] transition"
           >
             {t("Edit inputs and re-run", "Modifier les intrants et relancer")}
           </button>
