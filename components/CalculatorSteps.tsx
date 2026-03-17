@@ -5107,87 +5107,124 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                     </p>
                   </div>
 
-                  {/* ── Section 6: Benefit chain rows ── */}
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-3">
-                      {t('Benefit breakdown — function → benefit → economic value', 'Décomposition — fonction → bénéfice → valeur économique')}
-                    </p>
-                    <div className="space-y-2">
-                      {chainRows.map(row => {
-                        const isExpanded = expandedChainRows.has(row.key);
-                        const displayValue = Math.round(row.value / divisor);
-                        return (
-                          <div key={row.key} className="rounded-xl bg-white overflow-hidden" style={{ borderRadius: '12px', border: '0.5px solid #E2E8F0' }}>
-                            <button
-                              type="button"
-                              className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-slate-50 transition text-left"
-                              onClick={() => {
-                                setExpandedChainRows(prev => {
-                                  const next = new Set(prev);
-                                  if (next.has(row.key)) next.delete(row.key);
-                                  else next.add(row.key);
-                                  return next;
-                                });
-                              }}
-                            >
-                              <div className="flex items-center gap-3">
-                                <span
-                                  className="rounded-full px-2.5 py-0.5 text-xs font-medium flex-shrink-0"
-                                  style={{ background: row.badgeBg, color: row.badgeText }}
-                                >
-                                  {row.categoryLabel}
-                                </span>
-                                <span className="text-sm text-slate-700">{row.functionLabel}</span>
-                              </div>
-                              <div className="flex items-center gap-1.5 flex-shrink-0 ml-4">
-                                <span className="text-sm font-semibold text-slate-900">${displayValue.toLocaleString()}</span>
-                                <span className="text-[10px] text-slate-400">{unitLabel}</span>
-                                <span className="text-slate-400 text-[10px] ml-1">{isExpanded ? '▲' : '▼'}</span>
-                              </div>
-                            </button>
-                            {isExpanded && (
-                              <div className="border-t border-slate-100 px-5 py-4">
-                                <div className="grid gap-2" style={{ gridTemplateColumns: '1fr 20px 1fr 20px 1fr' }}>
-                                  {/* Function */}
-                                  <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
-                                    <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400 mb-1.5">{t('FUNCTION', 'FONCTION')}</p>
-                                    <p className="text-sm font-semibold text-slate-900 mb-1">{row.functionLabel}</p>
-                                    <p className="text-[11px] text-slate-600 mb-3">{row.physicalMetric}</p>
-                                    <div className="h-[3px] rounded-full bg-slate-200">
-                                      <div className="h-full rounded-full w-1/2" style={{ backgroundColor: row.dotColor }} />
-                                    </div>
-                                    <div className="flex justify-between mt-1">
-                                      <span className="text-[9px] text-slate-400">{t('Lower', 'Plus faible')}</span>
-                                      <span className="text-[9px] text-slate-400">{t('Typical', 'Typique')}</span>
-                                      <span className="text-[9px] text-slate-400">{t('High', 'Élevé')}</span>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center justify-center text-slate-300 text-base">→</div>
-                                  {/* Benefit */}
-                                  <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
-                                    <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400 mb-1.5">{t('BENEFIT', 'BÉNÉFICE')}</p>
-                                    <p className="text-sm font-semibold text-slate-900 mb-1">{row.benefitLabel}</p>
-                                    <p className="text-[11px] text-slate-600">{row.valuationMethod}</p>
-                                  </div>
-                                  <div className="flex items-center justify-center text-slate-300 text-base">→</div>
-                                  {/* Economic value */}
-                                  <div className="rounded-lg p-3" style={{ background: row.badgeBg }}>
-                                    <p className="text-[9px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: row.badgeText, opacity: 0.7 }}>{t('ECONOMIC VALUE', 'VALEUR ÉCONOMIQUE')}</p>
-                                    <p className="text-xs font-semibold mb-2" style={{ color: row.badgeText }}>{row.econLabel}</p>
-                                    <p className="text-xl font-bold" style={{ color: row.dotColor }}>${displayValue.toLocaleString()}</p>
-                                    <p className="text-[9px] mt-0.5" style={{ color: row.badgeText, opacity: 0.6 }}>{unitLabel}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                  {/* ── Section 6: 5-column benefit summary table ── */}
+                  <div className="rounded-xl bg-white overflow-hidden" style={{ borderRadius: '12px', border: '0.5px solid #E2E8F0' }}>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50 border-b border-slate-200">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide whitespace-nowrap">
+                              {t('Benefit group', 'Groupe de bénéfices')}
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide whitespace-nowrap">
+                              {t('Tree function', 'Fonction des arbres')}
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide whitespace-nowrap">
+                              {t('Valuation method', 'Méthode de valorisation')}
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide whitespace-nowrap">
+                              {t('Physical quantity', 'Quantité physique')}
+                            </th>
+                            <th className="px-4 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wide whitespace-nowrap">
+                              {t('Annual value', 'Valeur annuelle')}
+                            </th>
+                            <th className="px-4 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wide whitespace-nowrap">
+                              {t('Share', 'Part')}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(() => {
+                            const tableRows = [
+                              {
+                                key: 'carbon',
+                                badgeBg: '#E1F5EE', badgeText: '#085041',
+                                group: t('Climate / carbon', 'Climat / carbone'),
+                                fn: t('Carbon storage & avoided emissions', 'Stockage de carbone et émissions évitées'),
+                                method: t('Canadian social cost of carbon ($/tCO₂e)', 'Coût social canadien du carbone ($/tCO₂e)'),
+                                physical: `${results.total.carbonTonnes.toFixed(1)} tCO₂e/yr ${t('sequestered', 'séquestrés')}`,
+                                value: vm.carbon,
+                              },
+                              {
+                                key: 'stormwater',
+                                badgeBg: '#E6F1FB', badgeText: '#0C447C',
+                                group: t('Water & flood management', 'Gestion de l\'eau et des inondations'),
+                                fn: t('Stormwater retention & flood alleviation', 'Rétention des eaux pluviales et réduction des inondations'),
+                                method: t('Avoided grey infrastructure cost ($/L)', 'Coût d\'infrastructure grise évité ($/L)'),
+                                physical: `${Math.round(results.total.stormwaterLitres).toLocaleString()} L/yr ${t('diverted from sewers', 'détournés des égouts')}`,
+                                value: vm.stormwater,
+                              },
+                              {
+                                key: 'health',
+                                badgeBg: '#EEEDFE', badgeText: '#3C3489',
+                                group: t('Health & community', 'Santé et communauté'),
+                                fn: t('Health, well-being & exposure reduction', 'Santé, bien-être et réduction des expositions'),
+                                method: t('Damage costs function — reduced illness & heat exposure proxy', 'Fonction de coûts de dommages — proxy maladies et chaleur'),
+                                physical: `−${results.total.heatIslandReductionDegC.toFixed(2)}°C ${t('cooling; PM2.5 reduction', 'refroidissement; réduction PM2.5')}`,
+                                value: vm.health,
+                              },
+                              {
+                                key: 'property',
+                                badgeBg: '#E1F5EE', badgeText: '#085041',
+                                group: t('Property & economic', 'Foncière et économique'),
+                                fn: t('Property value & local economic uplift', 'Valeur foncière et retombées économiques locales'),
+                                method: t('Hedonic pricing — willingness to pay for green environment', 'Prix hédoniques — consentement à payer pour l\'environnement vert'),
+                                physical: t('Households benefiting in catchment area', 'Ménages bénéficiaires dans la zone de chalandise'),
+                                value: vm.property,
+                              },
+                            ];
+                            const totalDisplayVal = Math.round(vm.total / divisor);
+                            return (
+                              <>
+                                {tableRows.map((row, idx) => {
+                                  const displayVal = Math.round(row.value / divisor);
+                                  const sharePct = Math.round((row.value / (vm.total || 1)) * 100);
+                                  return (
+                                    <tr key={row.key} className={`border-b border-slate-100 ${idx % 2 === 1 ? 'bg-slate-50/40' : ''}`}>
+                                      <td className="px-4 py-3 align-top">
+                                        <span
+                                          className="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap"
+                                          style={{ background: row.badgeBg, color: row.badgeText }}
+                                        >
+                                          {row.group}
+                                        </span>
+                                      </td>
+                                      <td className="px-4 py-3 align-top text-slate-700">{row.fn}</td>
+                                      <td className="px-4 py-3 align-top" style={{ fontSize: '13px', color: '#64748B', fontStyle: 'italic' }}>
+                                        {row.method}
+                                      </td>
+                                      <td className="px-4 py-3 align-top" style={{ fontSize: '13px', color: '#64748B' }}>
+                                        {row.physical}
+                                      </td>
+                                      <td className="px-4 py-3 align-top text-right font-semibold text-slate-900 whitespace-nowrap">
+                                        ${displayVal.toLocaleString()}
+                                      </td>
+                                      <td className="px-4 py-3 align-top text-right text-slate-500 whitespace-nowrap">
+                                        {sharePct}%
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                                <tr className="border-t-2 border-slate-300 bg-slate-50">
+                                  <td className="px-4 py-3 font-semibold text-slate-900">{t('Total', 'Total')}</td>
+                                  <td className="px-4 py-3 text-slate-600 text-sm">{t('All quantified ecosystem services', 'Tous les services écosystémiques quantifiés')}</td>
+                                  <td className="px-4 py-3" />
+                                  <td className="px-4 py-3" />
+                                  <td className="px-4 py-3 text-right font-bold text-slate-900 whitespace-nowrap">
+                                    ${totalDisplayVal.toLocaleString()}
+                                  </td>
+                                  <td className="px-4 py-3 text-right font-semibold text-slate-900">100%</td>
+                                </tr>
+                              </>
+                            );
+                          })()}
+                        </tbody>
+                      </table>
                     </div>
-                    <p className="mt-3 text-xs text-slate-500">
+                    <p className="px-4 py-3 text-[11px] text-slate-400 border-t border-slate-100 italic">
                       {t(
-                        "Tree functions and proxies are grouped into climate/carbon, water & flood management, health & community and property & economic uplift. These are simplified annual estimates for a representative year at maturity, not full-lifespan totals.",
-                        "Les fonctions des arbres et leurs proxys sont regroupées en climat/carbone, gestion de l'eau et des inondations, santé et communauté, et hausse foncière et économique. Il s'agit d'estimations annuelles simplifiées pour une année représentative de maturité, et non de totaux sur toute la durée de vie."
+                        'Valuation methods follow simplified Canadian order-of-magnitude assumptions. Physical quantities are indicative for a representative year at canopy maturity. Not for official reporting.',
+                        'Les méthodes de valorisation suivent des hypothèses canadiennes simplifiées d\'ordre de grandeur. Les quantités physiques sont indicatives pour une année représentative à maturité du couvert. Non destiné à des rapports officiels.'
                       )}
                     </p>
                   </div>
@@ -5262,311 +5299,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                 </>
               );
             })()}
-
-            {/* Project benefits summary – replaced by dashboard above */}
-            <div className="mt-4 grid gap-6 grid-cols-1 w-full" style={{ display: 'none' }}>
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm w-full">
-                <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
-                  {t("Project benefits summary", "Résumé des bénéfices du projet")}
-                </h4>
-                {valueMix ? (
-                  <div className="space-y-5 text-sm">
-                    {(() => {
-                      const vm = valueMix!;
-                      const rows = [
-                        {
-                          key: "carbon",
-                          group: t("Climate / carbon", "Climat / carbone"),
-                          functionLabel: t(
-                            "Carbon storage & avoided emissions",
-                            "Stockage de carbone et émissions évitées"
-                          ),
-                          value: vm.carbon,
-                          color: "#0f766e"
-                        },
-                        {
-                          key: "stormwater",
-                          group: t(
-                            "Water & flood management",
-                            "Gestion de l’eau et des inondations"
-                          ),
-                          functionLabel: t(
-                            "Stormwater retention & flood alleviation",
-                            "Rétention des eaux pluviales et réduction des inondations"
-                          ),
-                          value: vm.stormwater,
-                          color: "#0369a1"
-                        },
-                        {
-                          key: "health",
-                          group: t(
-                            "Health & community",
-                            "Santé et communauté"
-                          ),
-                          functionLabel: t(
-                            "Health, well-being & exposure reduction",
-                            "Santé, bien‑être et réduction des expositions"
-                          ),
-                          value: vm.health,
-                          color: "#c026d3"
-                        },
-                        {
-                          key: "property",
-                          group: t(
-                            "Property & economic",
-                            "Foncière et économique"
-                          ),
-                          functionLabel: t(
-                            "Property value & local economic uplift",
-                            "Valeur foncière et retombées économiques locales"
-                          ),
-                          value: vm.property,
-                          color: "#d97706"
-                        }
-                      ];
-                      const total = vm.total || 1;
-
-                      // Build gradient for simple pie chart (conic)
-                      let acc = 0;
-                      const pieGradient = rows
-                        .map(row => {
-                          const start = (acc / total) * 360;
-                          acc += row.value;
-                          const end = (acc / total) * 360;
-                          return `${row.color} ${start}deg ${end}deg`;
-                        })
-                        .join(", ");
-
-                      return (
-                        <>
-                          {/* Table view (inspired by external methodology dashboards) */}
-                          <div className="overflow-x-auto w-full">
-                            <table className="min-w-full border border-slate-200 text-sm">
-                              <thead className="bg-slate-50">
-                                <tr>
-                                  <th className="px-4 py-3 text-left font-semibold text-slate-700">
-                                    {t("Benefit group", "Groupe de bénéfices")}
-                                  </th>
-                                  <th className="px-4 py-3 text-left font-semibold text-slate-700">
-                                    {t("Tree function", "Fonction des arbres")}
-                                  </th>
-                                  <th className="px-4 py-3 text-right font-semibold text-slate-700">
-                                    {t("Annual value (CAD/yr)", "Valeur annuelle (CAD/an)")}
-                                  </th>
-                                  <th className="px-4 py-3 text-right font-semibold text-slate-700">
-                                    {t("Share of total", "Part du total")}
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {rows.map(row => {
-                                  const pct = (row.value / total) * 100;
-                                  return (
-                                    <tr key={row.key} className="border-t border-slate-200">
-                                      <td className="px-4 py-2.5 align-top text-slate-800">
-                                        {row.group}
-                                      </td>
-                                      <td className="px-4 py-2.5 align-top text-slate-600">
-                                        {row.functionLabel}
-                                      </td>
-                                      <td className="px-4 py-2.5 align-top text-slate-900 text-right font-medium">
-                                        $
-                                        {row.value.toLocaleString(undefined, {
-                                          maximumFractionDigits: 0
-                                        })}
-                                      </td>
-                                      <td className="px-4 py-2.5 align-top text-slate-600 text-right">
-                                        {Math.round(pct)}%
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                                <tr className="border-t-2 border-slate-300 bg-slate-50/80">
-                                  <td className="px-4 py-2.5 text-slate-900 font-semibold">
-                                    {t("Total", "Total")}
-                                  </td>
-                                  <td className="px-4 py-2.5 text-slate-600">
-                                    {t(
-                                      "All quantified ecosystem services",
-                                      "Tous les services écosystémiques quantifiés"
-                                    )}
-                                  </td>
-                                  <td className="px-4 py-2.5 text-slate-900 font-semibold text-right">
-                                    $
-                                    {total.toLocaleString(undefined, {
-                                      maximumFractionDigits: 0
-                                    })}
-                                  </td>
-                                  <td className="px-4 py-2.5 text-slate-600 text-right">
-                                    100%
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-
-                          {/* Bar + pie visualisation of tree functions' contribution – full width, larger */}
-                          <div className="mt-6 grid gap-8 md:grid-cols-[1.4fr,1fr] items-start w-full">
-                            <div className="space-y-3 w-full">
-                              <div className="text-sm font-semibold uppercase tracking-wide text-slate-600">
-                                {t(
-                                  "Bar chart – contribution by function",
-                                  "Diagramme à barres – contribution par fonction"
-                                )}
-                              </div>
-                              <div className="space-y-3">
-                                {rows.map(row => {
-                                  const pct = Math.round((row.value / total) * 100);
-                                  const barWidth = Math.max(pct, 4);
-                                  return (
-                                    <div key={row.key} className="space-y-1">
-                                      <div className="flex justify-between text-sm">
-                                        <span className="text-slate-700 font-medium">{row.group}</span>
-                                        <span className="text-slate-500">{pct}%</span>
-                                      </div>
-                                      <div className="h-5 rounded-full bg-slate-100 overflow-hidden">
-                                        <div
-                                          className="h-5 rounded-full"
-                                          style={{
-                                            width: `${barWidth}%`,
-                                            backgroundColor: row.color
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                            <div className="space-y-3 flex flex-col items-center w-full">
-                              <div className="text-sm font-semibold uppercase tracking-wide text-slate-600 self-start">
-                                {t(
-                                  "Pie chart – share of total value",
-                                  "Diagramme circulaire – part du total"
-                                )}
-                              </div>
-                              <div
-                                className="h-36 w-36 sm:h-40 sm:w-40 md:h-44 md:w-44 rounded-full border border-slate-200 shadow-inner flex-shrink-0"
-                                style={{
-                                  backgroundImage: `conic-gradient(${pieGradient})`
-                                }}
-                                aria-hidden="true"
-                              />
-                              <div className="grid grid-cols-2 gap-2 w-full text-sm">
-                                {rows.map(row => (
-                                  <div key={row.key} className="flex items-center gap-2">
-                                    <span
-                                      className="inline-block h-3 w-3 rounded-full border border-slate-300 flex-shrink-0"
-                                      style={{ backgroundColor: row.color }}
-                                    />
-                                    <span className="text-slate-600">
-                                      {row.group}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-
-                          <p className="mt-3 text-xs text-slate-500">
-                            {t(
-                              "Tree functions and proxies are grouped into climate/carbon, water & flood management, health & community and property & economic uplift. These are simplified annual estimates for a representative year of maturity, not full-lifespan totals.",
-                              "Les fonctions des arbres et leurs proxys sont regroupées en climat/carbone, gestion de l’eau et des inondations, santé et communauté, et hausse foncière et économique. Il s’agit d’estimations annuelles simplifiées pour une année représentative de maturité, et non de totaux sur toute la durée de vie."
-                            )}
-                          </p>
-                        </>
-                      );
-                    })()}
-                  </div>
-                ) : (
-                  <p className="text-sm text-slate-500">
-                    {t(
-                      "Run a calculation to see how benefits are distributed across categories.",
-                      "Lancez un calcul pour voir comment les bénéfices se répartissent entre les catégories."
-                    )}
-                  </p>
-                )}
-              </div>
-
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm w-full">
-                <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
-                  {t("Benefit groups comparison", "Comparaison des groupes de bénéfices")}
-                </h4>
-                {groupScores ? (
-                  <div className="space-y-4 text-sm">
-                    {(() => {
-                      const gs = groupScores!;
-                      return [
-                      {
-                        key: "climate",
-                        label: t("Climate / carbon", "Climat / carbone"),
-                        color: "bg-primary-500",
-                        value: gs.climate
-                      },
-                      {
-                        key: "water",
-                        label: t("Stormwater / flooding", "Eaux pluviales / inondations"),
-                        color: "bg-secondary-500",
-                        value: gs.water
-                      },
-                      {
-                        key: "health",
-                        label: t("Health / equity (proxy)", "Santé / équité (proxy)"),
-                        color: "bg-accent-500",
-                        value: gs.health
-                      },
-                      {
-                        key: "biodiversity",
-                        label: t("Biodiversity", "Biodiversité"),
-                        color: "bg-green-500",
-                        value: gs.biodiversity
-                      }
-                      ].map(group => {
-                        const ratio = group.value / gs.max;
-                        const widthPct = Math.max(8, Math.round(ratio * 100));
-                        const strength =
-                          ratio >= 0.75
-                            ? t("very strong", "très fort")
-                            : ratio >= 0.5
-                            ? t("strong", "fort")
-                            : ratio >= 0.25
-                            ? t("moderate", "modéré")
-                            : t("emerging", "émergent");
-                        return (
-                          <div key={group.key}>
-                            <div className="flex justify-between mb-1.5 text-sm">
-                              <span className="text-slate-700 font-medium">
-                                {group.label}
-                              </span>
-                              <span className="text-slate-500">{strength}</span>
-                            </div>
-                            <div className="h-5 rounded-full bg-slate-100 overflow-hidden">
-                              <div
-                                className={`h-5 rounded-full ${group.color}`}
-                                style={{ width: `${widthPct}%` }}
-                              />
-                            </div>
-                          </div>
-                        );
-                      });
-                    })()}
-                    <p className="mt-3 text-xs text-slate-500">
-                      {t(
-                        "Relative strength of each group is scaled to the strongest impact in your project.",
-                        "L’intensité relative de chaque groupe est mise à l’échelle par rapport à l’impact le plus fort de votre projet."
-                      )}
-                    </p>
-                  </div>
-                ) : (
-                  <p className="text-sm text-slate-500">
-                    {t(
-                      "Run a calculation to compare climate, water, health and biodiversity contributions.",
-                      "Lancez un calcul pour comparer les contributions climat, eau, santé et biodiversité."
-                    )}
-                  </p>
-                )}
-              </div>
-            </div>
 
             {/* Additional impact perspectives – optional panels to add to report */}
             <div className="mt-4 space-y-3">
