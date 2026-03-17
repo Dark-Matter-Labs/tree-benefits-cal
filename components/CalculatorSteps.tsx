@@ -535,6 +535,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
   const [treeSharePercent, setTreeSharePercent] = useState(100);
 
   const [results, setResults] = useState<BenefitResults | null>(null);
+  const [viewMode, setViewMode] = useState<'total' | 'perTree' | 'perResident' | 'perHousehold'>('total');
+  const [expandedChainRows, setExpandedChainRows] = useState<Set<string>>(new Set());
 
   // Simple local save / restore of core inputs so work isn't lost when navigating away
   useEffect(() => {
@@ -3922,8 +3924,8 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               )}
 
               {selectedBenefits.includes("health") && (
-                <div className="rounded-xl border border-accent-200 bg-accent-50/30 p-4 space-y-3">
-                  <h4 className="text-xs font-semibold text-accent-900 uppercase tracking-wide">
+                <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-violet-800 uppercase tracking-wide">
                     {t("Health & well-being", "Santé et bien-être")}
                   </h4>
                   <div className="grid gap-3 sm:grid-cols-2">
@@ -3945,7 +3947,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                               | "high"
                           }))
                         }
-                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 transition"
+                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition"
                       >
                         <option value="high">
                           {t(
@@ -4211,6 +4213,116 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
 
         {step === 5 && results && (
           <div className="space-y-5">
+
+            {/* ── Section 1: Page header ── */}
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                {projectName && (
+                  <p className="text-xs font-medium text-slate-400 mb-0.5">
+                    {projectName} · {projectLocationLabel}
+                  </p>
+                )}
+                <h2 className="text-[18px] font-semibold text-slate-900">
+                  {t("Project benefit results", "Résultats des bénéfices du projet")}
+                </h2>
+              </div>
+              <div className="flex gap-2 items-center flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+                  style={{ background: '#1D9E75' }}
+                >
+                  {t("Print / export", "Imprimer / exporter")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStep(4)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+                >
+                  {t("Edit inputs", "Modifier les données")}
+                </button>
+              </div>
+            </div>
+
+            {/* ── Section 2: Headline KPI strip ── */}
+            {valueMix && (() => {
+              const kpiDivisor = viewMode === 'perTree' ? Math.max(1, numberOfTrees)
+                : viewMode === 'perResident' ? Math.max(1, populationServed)
+                : viewMode === 'perHousehold' ? Math.max(1, householdsServed)
+                : 1;
+              return (
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-3">
+                    {t("Headline figures at canopy maturity", "Données clés à la maturité du couvert")}
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="rounded-xl p-4" style={{ background: '#F8FAFB' }}>
+                      <p className="text-xs text-slate-500 mb-1">{t("Total annual value", "Valeur annuelle totale")}</p>
+                      <p className="text-2xl font-bold" style={{ color: '#0F6E56' }}>
+                        ${Math.round(valueMix.total / kpiDivisor).toLocaleString()}
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        {viewMode === 'total' ? t("CAD per year", "CAD par an")
+                          : viewMode === 'perTree' ? t("CAD / tree / yr", "CAD / arbre / an")
+                          : viewMode === 'perResident' ? t("CAD / capita / yr", "CAD / hab. / an")
+                          : t("CAD / household / yr", "CAD / ménage / an")}
+                      </p>
+                    </div>
+                    <div className="rounded-xl p-4" style={{ background: '#F8FAFB' }}>
+                      <p className="text-xs text-slate-500 mb-1">{t("Value per tree", "Valeur par arbre")}</p>
+                      <p className="text-2xl font-bold text-slate-900">
+                        ${Math.round(valueMix.total / Math.max(1, numberOfTrees) / kpiDivisor).toLocaleString()}
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">{t("CAD / tree / yr", "CAD / arbre / an")}</p>
+                    </div>
+                    <div className="rounded-xl p-4" style={{ background: '#F8FAFB' }}>
+                      <p className="text-xs text-slate-500 mb-1">{t("Value per resident", "Valeur par habitant·e")}</p>
+                      <p className="text-2xl font-bold text-slate-900">
+                        ${Math.round(valueMix.total / Math.max(1, populationServed) / kpiDivisor).toLocaleString()}
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">{t("CAD / capita / yr", "CAD / hab. / an")}</p>
+                    </div>
+                    <div className="rounded-xl p-4" style={{ background: '#F8FAFB' }}>
+                      <p className="text-xs text-slate-500 mb-1">CO₂ {t("sequestered", "séquestré")}</p>
+                      <p className="text-2xl font-bold text-slate-900">
+                        {results.total.carbonTonnes.toFixed(1)} t
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">{t("tCO₂e per year", "tCO₂e par an")}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* ── Section 3: View toggle ── */}
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm text-slate-600">{t("Show values as:", "Afficher les valeurs :")}</span>
+              <div className="flex gap-1.5 flex-wrap">
+                {(
+                  [
+                    ['total', t('Total / yr', 'Total / an')],
+                    ['perTree', t('Per tree', 'Par arbre')],
+                    ['perResident', t('Per resident', 'Par habitant·e')],
+                    ['perHousehold', t('Per household', 'Par ménage')],
+                  ] as Array<['total' | 'perTree' | 'perResident' | 'perHousehold', string]>
+                ).map(([mode, label]) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setViewMode(mode)}
+                    className="rounded-full px-4 py-1.5 text-sm font-medium transition"
+                    style={viewMode === mode
+                      ? { background: '#1D9E75', color: '#fff', border: '1px solid #1D9E75' }
+                      : { background: 'transparent', color: '#374151', border: '1px solid #D1D5DB' }
+                    }
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 text-white p-4 md:p-5 shadow-md flex flex-col gap-3">
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary-900/50 border border-white/30 text-sm">
@@ -4646,14 +4758,14 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               )}
 
               {selectedBenefits.includes("health") && (
-                <div className="rounded-xl border border-accent-300 bg-gradient-to-br from-accent-50 to-accent-100/50 p-4 shadow-sm">
+                <div className="rounded-xl border border-violet-200 bg-gradient-to-br from-violet-50 to-violet-100/60 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
                       {t("Health & well-being", "Santé et bien-être")}
                     </h4>
                     <button
                       type="button"
-                      className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-accent-200 bg-white text-[11px] text-accent-800 hover:bg-accent-50"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-violet-200 bg-white text-[11px] text-violet-700 hover:bg-violet-50"
                       onClick={() =>
                         window.alert(
                           t(
@@ -4687,7 +4799,7 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
                         "_blank",
                       )
                     }
-                    className="mt-2 inline-flex items-center gap-1 rounded-full border border-accent-200 bg-white px-3 py-1.5 text-[11px] font-medium text-accent-800 hover:bg-accent-50 transition"
+                    className="mt-2 inline-flex items-center gap-1 rounded-full border border-violet-300 bg-white px-3 py-1.5 text-[11px] font-medium text-violet-800 hover:bg-violet-50 transition"
                   >
                     {t(
                       "Learn more in GMF health resources",
@@ -4796,28 +4908,363 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               )}
             </div>
 
-            <div className="flex justify-between items-center pt-2 border-t border-slate-200 mt-2">
-              <button
-                type="button"
-                onClick={() => setStep(4)}
-                className="text-xs text-slate-600 hover:text-slate-900 transition"
-              >
-                {t(
-                  "Adjust benefit details",
-                  "Ajuster les détails des bénéfices"
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 hover:border-slate-400 transition"
-              >
-                {t("Print / export", "Imprimer / exporter")}
-              </button>
-            </div>
 
-            {/* Project benefits summary – table + charts (full width) */}
-            <div className="mt-4 grid gap-6 grid-cols-1 w-full">
+            {/* ── Sections 4-7: Dashboard charts, chain rows, equity ── */}
+            {valueMix && (() => {
+              const vm = valueMix!;
+              const divisor = viewMode === 'perTree' ? Math.max(1, numberOfTrees)
+                : viewMode === 'perResident' ? Math.max(1, populationServed)
+                : viewMode === 'perHousehold' ? Math.max(1, householdsServed)
+                : 1;
+              const unitLabel = viewMode === 'total' ? t('CAD / yr', 'CAD / an')
+                : viewMode === 'perTree' ? t('/ tree', '/ arbre')
+                : viewMode === 'perResident' ? t('/ capita', '/ hab.')
+                : t('/ household', '/ ménage');
+
+              // 30-yr NPV at 3% discount rate
+              const npvFactor = (1 - Math.pow(1.03, -30)) / 0.03;
+              const npv30yr = Math.round(vm.total * npvFactor);
+              const projectCost = projectCapitalCost ?? 8500;
+              const maxBarVal = Math.max(npv30yr, vm.total, projectCost, 1);
+
+              const formatBarLabel = (val: number) => {
+                if (val >= 1_000_000) return `$${(val / 1_000_000).toFixed(1)}M`;
+                if (val >= 1_000) return `$${Math.round(val / 1_000)}k`;
+                return `$${val}`;
+              };
+
+              // Donut chart segments
+              const totalVal = vm.total || 1;
+              const donutSegments = [
+                { label: t('Property & economic', 'Foncière et économique'), color: '#1D9E75', value: vm.property },
+                { label: t('Health & community', 'Santé et communauté'), color: '#7F77DD', value: vm.health },
+                { label: t('Water & flood', 'Eau et inondations'), color: '#378ADD', value: vm.stormwater },
+                { label: t('Climate / carbon', 'Climat / carbone'), color: '#5DCAA5', value: vm.carbon },
+              ];
+              let accPct = 0;
+              const conicParts = donutSegments.map(seg => {
+                const start = (accPct / totalVal) * 100;
+                accPct += seg.value;
+                const end = (accPct / totalVal) * 100;
+                return `${seg.color} ${start.toFixed(1)}% ${end.toFixed(1)}%`;
+              });
+              const conicGradient = `conic-gradient(${conicParts.join(', ')})`;
+
+              // SVG line chart
+              const svgW = 800, svgH = 160;
+              const pad = { t: 16, r: 16, b: 32, l: 52 };
+              const plotW = svgW - pad.l - pad.r;
+              const plotH = svgH - pad.t - pad.b;
+              const lineData = Array.from({ length: 30 }, (_, i) => {
+                const factor = Math.min(1, 0.15 + Math.pow((i + 1) / 30, 1.5) * 0.85);
+                return vm.total * factor;
+              });
+              const toX = (i: number) => pad.l + (i / 29) * plotW;
+              const toY = (val: number) => pad.t + plotH - (val / vm.total) * plotH;
+              const linePath = lineData.map((v, i) => `${i === 0 ? 'M' : 'L'} ${toX(i).toFixed(1)} ${toY(v).toFixed(1)}`).join(' ');
+              const areaPath = `M ${toX(0).toFixed(1)} ${(pad.t + plotH).toFixed(1)} ${lineData.map((v, i) => `L ${toX(i).toFixed(1)} ${toY(v).toFixed(1)}`).join(' ')} L ${toX(29).toFixed(1)} ${(pad.t + plotH).toFixed(1)} Z`;
+              const yTicks = [0, 0.25, 0.5, 0.75, 1].map(p => ({ val: vm.total * p, y: toY(vm.total * p) }));
+              const xTicks = [0, 4, 8, 12, 16, 20, 24, 28].map(i => ({ label: `Yr ${i + 1}`, x: toX(i) }));
+
+              // Benefit chain rows data
+              const chainRows = [
+                {
+                  key: 'carbon',
+                  categoryLabel: t('Climate / carbon', 'Climat / carbone'),
+                  badgeBg: '#E1F5EE', badgeText: '#085041', dotColor: '#5DCAA5',
+                  functionLabel: t('Carbon sequestration', 'Séquestration du carbone'),
+                  physicalMetric: `${results.total.carbonTonnes.toFixed(1)} tCO₂e ${t('removed per year', 'retirés par an')}`,
+                  benefitLabel: t('Reduced atmospheric carbon', 'Réduction du carbone atmosphérique'),
+                  valuationMethod: t('Canadian social cost of carbon ($/tCO₂e)', 'Coût social canadien du carbone ($/tCO₂e)'),
+                  econLabel: t('Avoided carbon cost', 'Coût carbone évité'),
+                  value: vm.carbon,
+                },
+                {
+                  key: 'stormwater',
+                  categoryLabel: t('Water & flood', 'Eau et inondations'),
+                  badgeBg: '#E6F1FB', badgeText: '#0C447C', dotColor: '#378ADD',
+                  functionLabel: t('Rainfall interception', 'Interception des précipitations'),
+                  physicalMetric: t('Canopy slows & retains stormwater', 'Le couvert ralentit et retient les eaux pluviales'),
+                  benefitLabel: t('Reduced flood risk & infrastructure load', 'Risque d\'inondation et charge d\'infrastructure réduits'),
+                  valuationMethod: t('Avoids cost of equivalent grey infrastructure', 'Évite le coût d\'une infrastructure grise équivalente'),
+                  econLabel: t('Avoided infrastructure cost', 'Coût d\'infrastructure évité'),
+                  value: vm.stormwater,
+                },
+                {
+                  key: 'health',
+                  categoryLabel: t('Health & community', 'Santé et communauté'),
+                  badgeBg: '#EEEDFE', badgeText: '#3C3489', dotColor: '#7F77DD',
+                  functionLabel: t('Heat reduction & air filtering', 'Réduction de la chaleur et filtration de l\'air'),
+                  physicalMetric: `−${results.total.heatIslandReductionDegC.toFixed(2)}°C ${t('cooling · PM2.5 & NO₂ removal', 'refroidissement · élimination PM2.5 & NO₂')}`,
+                  benefitLabel: t('Reduced illness & improved well-being', 'Réduction des maladies et amélioration du bien-être'),
+                  valuationMethod: t('Damage costs proxy — health & heat exposure', 'Proxy des coûts de dommages — santé et chaleur'),
+                  econLabel: t('Avoided health costs', 'Coûts de santé évités'),
+                  value: vm.health,
+                },
+                {
+                  key: 'property',
+                  categoryLabel: t('Property & economic', 'Foncière et économique'),
+                  badgeBg: '#E1F5EE', badgeText: '#085041', dotColor: '#1D9E75',
+                  functionLabel: t('Canopy amenity & shade', 'Aménité du couvert et ombrage'),
+                  physicalMetric: t('Mature trees raise neighbourhood desirability', 'Les arbres matures augmentent l\'attrait du quartier'),
+                  benefitLabel: t('Increased property values & local spend', 'Hausse de la valeur foncière et des dépenses locales'),
+                  valuationMethod: t('Hedonic pricing — willingness to pay', 'Prix hédoniques — consentement à payer'),
+                  econLabel: t('Property & economic uplift', 'Hausse foncière et économique'),
+                  value: vm.property,
+                },
+              ];
+
+              return (
+                <>
+                  {/* ── Section 4: Cost vs benefit + Donut chart ── */}
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {/* Cost vs. benefit comparison */}
+                    <div className="rounded-xl bg-white p-5 shadow-sm" style={{ borderRadius: '12px', border: '0.5px solid #E2E8F0' }}>
+                      <h4 className="text-sm font-semibold text-slate-900 mb-4">{t('Cost vs. benefit comparison', 'Coût vs. bénéfice')}</h4>
+                      <div className="space-y-1">
+                        {[
+                          { label: t('Project cost', 'Coût du projet'), value: projectCost, color: '#B4B2A9' },
+                          { label: t('Annual benefit value', 'Valeur annuelle des bénéfices'), value: vm.total, color: '#1D9E75' },
+                          { label: t('30-yr NPV', 'VAN sur 30 ans'), value: npv30yr, color: '#5DCAA5' },
+                        ].map(bar => (
+                          <div key={bar.label}>
+                            <div className="h-7 rounded overflow-hidden bg-slate-50 flex items-stretch">
+                              <div
+                                className="h-full rounded transition-all duration-500"
+                                style={{
+                                  width: `${Math.max(2, Math.round((bar.value / maxBarVal) * 100))}%`,
+                                  backgroundColor: bar.color,
+                                  minWidth: '4px',
+                                }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-xs text-slate-600 mt-0.5 mb-3">
+                              <span>{bar.label}</span>
+                              <span className="font-medium">{formatBarLabel(bar.value)}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-1">
+                        {t('30-year NPV at 3% discount rate. Project cost includes planting and 10-yr maintenance estimate.', 'VAN sur 30 ans à 3% de taux d\'actualisation. Le coût inclut la plantation et 10 ans d\'entretien.')}
+                      </p>
+                    </div>
+
+                    {/* Share of total value — donut */}
+                    <div className="rounded-xl bg-white p-5 shadow-sm" style={{ borderRadius: '12px', border: '0.5px solid #E2E8F0' }}>
+                      <h4 className="text-sm font-semibold text-slate-900 mb-4">{t('Share of total value', 'Répartition de la valeur totale')}</h4>
+                      <div className="flex items-center gap-5">
+                        <div className="relative flex-shrink-0" style={{ width: 120, height: 120 }}>
+                          <div className="w-full h-full rounded-full" style={{ background: conicGradient }} />
+                          <div
+                            className="absolute bg-white rounded-full"
+                            style={{ top: '14%', left: '14%', width: '72%', height: '72%' }}
+                          />
+                        </div>
+                        <div className="space-y-2 flex-1">
+                          {donutSegments.map(seg => {
+                            const pct = Math.round((seg.value / totalVal) * 100);
+                            return (
+                              <div key={seg.label} className="flex items-center gap-2 text-xs">
+                                <span className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: seg.color }} />
+                                <span className="text-slate-700 flex-1">{seg.label}</span>
+                                <span className="font-semibold text-slate-900">{pct}%</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ── Section 5: Value over time ── */}
+                  <div className="rounded-xl bg-white p-5 shadow-sm" style={{ borderRadius: '12px', border: '0.5px solid #E2E8F0' }}>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-semibold text-slate-900">{t('Value over time as trees mature', 'Valeur au fil du temps')}</h4>
+                      <span className="text-xs text-slate-400">{t('Year 1 → Year 30', 'Année 1 → Année 30')}</span>
+                    </div>
+                    <div className="w-full overflow-hidden">
+                      <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full" style={{ height: 160, display: 'block' }} aria-hidden="true">
+                        {yTicks.map((tick, i) => (
+                          <line key={i} x1={pad.l} y1={tick.y} x2={svgW - pad.r} y2={tick.y} stroke="#F1F5F9" strokeWidth="1" />
+                        ))}
+                        <path d={areaPath} fill="rgba(29,158,117,0.08)" />
+                        <path d={linePath} fill="none" stroke="#1D9E75" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        {yTicks.map((tick, i) => (
+                          <text key={i} x={pad.l - 6} y={tick.y + 4} textAnchor="end" fontSize="10" fill="#94A3B8">
+                            {tick.val >= 1000 ? `$${Math.round(tick.val / 1000)}k` : `$${Math.round(tick.val)}`}
+                          </text>
+                        ))}
+                        {xTicks.map((tick, i) => (
+                          <text key={i} x={tick.x} y={svgH - 4} textAnchor="middle" fontSize="10" fill="#94A3B8">
+                            {tick.label}
+                          </text>
+                        ))}
+                      </svg>
+                    </div>
+                    <p className="text-[10px] text-slate-400 mt-1">
+                      {t('Benefits grow as canopy cover increases. Full maturity reached ~2045. Values are indicative order-of-magnitude estimates.', 'Les bénéfices augmentent avec la couverture du couvert. Maturité complète vers 2045. Estimations indicatives.')}
+                    </p>
+                  </div>
+
+                  {/* ── Section 6: Benefit chain rows ── */}
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-3">
+                      {t('Benefit breakdown — function → benefit → economic value', 'Décomposition — fonction → bénéfice → valeur économique')}
+                    </p>
+                    <div className="space-y-2">
+                      {chainRows.map(row => {
+                        const isExpanded = expandedChainRows.has(row.key);
+                        const displayValue = Math.round(row.value / divisor);
+                        return (
+                          <div key={row.key} className="rounded-xl bg-white overflow-hidden" style={{ borderRadius: '12px', border: '0.5px solid #E2E8F0' }}>
+                            <button
+                              type="button"
+                              className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-slate-50 transition text-left"
+                              onClick={() => {
+                                setExpandedChainRows(prev => {
+                                  const next = new Set(prev);
+                                  if (next.has(row.key)) next.delete(row.key);
+                                  else next.add(row.key);
+                                  return next;
+                                });
+                              }}
+                            >
+                              <div className="flex items-center gap-3">
+                                <span
+                                  className="rounded-full px-2.5 py-0.5 text-xs font-medium flex-shrink-0"
+                                  style={{ background: row.badgeBg, color: row.badgeText }}
+                                >
+                                  {row.categoryLabel}
+                                </span>
+                                <span className="text-sm text-slate-700">{row.functionLabel}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5 flex-shrink-0 ml-4">
+                                <span className="text-sm font-semibold text-slate-900">${displayValue.toLocaleString()}</span>
+                                <span className="text-[10px] text-slate-400">{unitLabel}</span>
+                                <span className="text-slate-400 text-[10px] ml-1">{isExpanded ? '▲' : '▼'}</span>
+                              </div>
+                            </button>
+                            {isExpanded && (
+                              <div className="border-t border-slate-100 px-5 py-4">
+                                <div className="grid gap-2" style={{ gridTemplateColumns: '1fr 20px 1fr 20px 1fr' }}>
+                                  {/* Function */}
+                                  <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                                    <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400 mb-1.5">{t('FUNCTION', 'FONCTION')}</p>
+                                    <p className="text-sm font-semibold text-slate-900 mb-1">{row.functionLabel}</p>
+                                    <p className="text-[11px] text-slate-600 mb-3">{row.physicalMetric}</p>
+                                    <div className="h-[3px] rounded-full bg-slate-200">
+                                      <div className="h-full rounded-full w-1/2" style={{ backgroundColor: row.dotColor }} />
+                                    </div>
+                                    <div className="flex justify-between mt-1">
+                                      <span className="text-[9px] text-slate-400">{t('Lower', 'Plus faible')}</span>
+                                      <span className="text-[9px] text-slate-400">{t('Typical', 'Typique')}</span>
+                                      <span className="text-[9px] text-slate-400">{t('High', 'Élevé')}</span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center justify-center text-slate-300 text-base">→</div>
+                                  {/* Benefit */}
+                                  <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                                    <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400 mb-1.5">{t('BENEFIT', 'BÉNÉFICE')}</p>
+                                    <p className="text-sm font-semibold text-slate-900 mb-1">{row.benefitLabel}</p>
+                                    <p className="text-[11px] text-slate-600">{row.valuationMethod}</p>
+                                  </div>
+                                  <div className="flex items-center justify-center text-slate-300 text-base">→</div>
+                                  {/* Economic value */}
+                                  <div className="rounded-lg p-3" style={{ background: row.badgeBg }}>
+                                    <p className="text-[9px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: row.badgeText, opacity: 0.7 }}>{t('ECONOMIC VALUE', 'VALEUR ÉCONOMIQUE')}</p>
+                                    <p className="text-xs font-semibold mb-2" style={{ color: row.badgeText }}>{row.econLabel}</p>
+                                    <p className="text-xl font-bold" style={{ color: row.dotColor }}>${displayValue.toLocaleString()}</p>
+                                    <p className="text-[9px] mt-0.5" style={{ color: row.badgeText, opacity: 0.6 }}>{unitLabel}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <p className="mt-3 text-xs text-slate-500">
+                      {t(
+                        "Tree functions and proxies are grouped into climate/carbon, water & flood management, health & community and property & economic uplift. These are simplified annual estimates for a representative year at maturity, not full-lifespan totals.",
+                        "Les fonctions des arbres et leurs proxys sont regroupées en climat/carbone, gestion de l'eau et des inondations, santé et communauté, et hausse foncière et économique. Il s'agit d'estimations annuelles simplifiées pour une année représentative de maturité, et non de totaux sur toute la durée de vie."
+                      )}
+                    </p>
+                  </div>
+
+                  {/* ── Section 7: Equity context + comparable projects ── */}
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {/* Equity & vulnerability context */}
+                    <div className="rounded-xl bg-white p-5 shadow-sm" style={{ borderRadius: '12px', border: '0.5px solid #E2E8F0' }}>
+                      <h4 className="text-sm font-semibold text-slate-900 mb-3">{t('Equity & vulnerability context', 'Contexte d\'équité et de vulnérabilité')}</h4>
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        <span className="rounded-full px-2.5 py-1 text-xs font-medium" style={{ background: '#FAEEDA', color: '#854F0B' }}>
+                          {t('High canopy gap area', 'Zone à fort déficit de couvert')}
+                        </span>
+                        <span className="rounded-full px-2.5 py-1 text-xs font-medium" style={{ background: '#FAEEDA', color: '#854F0B' }}>
+                          {t('High heat vulnerability', 'Forte vulnérabilité à la chaleur')}
+                        </span>
+                        <span className="rounded-full px-2.5 py-1 text-xs font-medium" style={{ background: '#E1F5EE', color: '#085041' }}>
+                          {t('Moderate income area', 'Zone à revenu modéré')}
+                        </span>
+                      </div>
+                      <div className="space-y-3">
+                        {[
+                          { label: t('Canopy gap score', 'Score de déficit de couvert'), score: 7, max: 10, color: '#BA7517' },
+                          { label: t('Social vulnerability index', 'Indice de vulnérabilité sociale'), score: 6, max: 10, color: '#BA7517' },
+                          { label: t('Flood risk score', 'Score de risque d\'inondation'), score: 4, max: 10, color: '#1D9E75' },
+                        ].map(bar => (
+                          <div key={bar.label}>
+                            <div className="flex justify-between text-xs mb-1">
+                              <span className="text-slate-700">{bar.label}</span>
+                              <span className="font-semibold text-slate-900">{bar.score}/{bar.max}</span>
+                            </div>
+                            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all duration-500"
+                                style={{ width: `${(bar.score / bar.max) * 100}%`, backgroundColor: bar.color }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="mt-3 text-[10px] text-slate-400">
+                        {t('High gap + high vulnerability projects receive priority weighting in FCM portfolio reporting.', 'Les projets à fort déficit et haute vulnérabilité reçoivent une pondération prioritaire dans les rapports FCM.')}
+                      </p>
+                    </div>
+
+                    {/* Comparable GCCC projects */}
+                    <div className="rounded-xl bg-white p-5 shadow-sm" style={{ borderRadius: '12px', border: '0.5px solid #E2E8F0' }}>
+                      <h4 className="text-sm font-semibold text-slate-900 mb-3">{t('Comparable GCCC projects', 'Projets CCMV comparables')}</h4>
+                      <div className="space-y-3">
+                        <div className="rounded-lg border border-slate-100 p-3">
+                          <span className="rounded-full px-2.5 py-0.5 text-xs font-medium" style={{ background: '#E1F5EE', color: '#085041' }}>
+                            {t('Street trees · Calgary, AB', 'Arbres de rue · Calgary, AB')}
+                          </span>
+                          <p className="text-xl font-bold mt-2" style={{ color: '#1D9E75' }}>$18,400 / yr</p>
+                          <p className="text-[11px] text-slate-500 mt-0.5">120 {t('trees · 2.1 ha · planted 2022', 'arbres · 2,1 ha · planté 2022')}</p>
+                          <p className="text-[11px] text-slate-500">{t('Property & economic dominant (68%)', 'Foncier & économique dominant (68%)')}</p>
+                        </div>
+                        <div className="rounded-lg border border-slate-100 p-3">
+                          <span className="rounded-full px-2.5 py-0.5 text-xs font-medium" style={{ background: '#E6F1FB', color: '#185FA5' }}>
+                            {t('Park woodland · Moncton, NB', 'Boisé de parc · Moncton, NB')}
+                          </span>
+                          <p className="text-xl font-bold mt-2" style={{ color: '#378ADD' }}>$11,200 / yr</p>
+                          <p className="text-[11px] text-slate-500 mt-0.5">85 {t('trees · 1.4 ha · planted 2021', 'arbres · 1,4 ha · planté 2021')}</p>
+                          <p className="text-[11px] text-slate-500">{t('Health & community dominant (41%)', 'Santé & communauté dominant (41%)')}</p>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-[10px] text-slate-400">
+                        {t('Similar projects by tree count and typology. Values at estimated canopy maturity.', 'Projets similaires par nombre d\'arbres et typologie. Valeurs à maturité estimée du couvert.')}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
+
+            {/* Project benefits summary – replaced by dashboard above */}
+            <div className="mt-4 grid gap-6 grid-cols-1 w-full" style={{ display: 'none' }}>
               <div className="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm w-full">
                 <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
                   {t("Project benefits summary", "Résumé des bénéfices du projet")}
