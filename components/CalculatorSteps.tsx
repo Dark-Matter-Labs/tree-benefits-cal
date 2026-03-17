@@ -4511,50 +4511,6 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </p>
             </div>
 
-            {/* Data & methodology – demo */}
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-2">
-                {t("Data & methodology (demo)", "Données et méthodologie (démo)")}
-              </h4>
-              <p className="text-[11px] text-slate-700 mb-2">
-                {t(
-                  "Results are generated using simplified Canadian default assumptions for tree carbon, stormwater and health benefits. They are designed for order-of-magnitude exploration, not for official reporting or carbon crediting.",
-                  "Les résultats sont générés à partir d’hypothèses canadiennes simplifiées concernant les bénéfices en carbone, eaux pluviales et santé. Ils servent à explorer des ordres de grandeur, et non à la reddition de comptes officielle ni à la création de crédits carbone."
-                )}
-              </p>
-              <ul className="list-disc list-inside text-[11px] text-slate-600 space-y-1">
-                <li>
-                  {t(
-                    "Per-tree and per-hectare multipliers are constant across the lifespan of the project in this prototype.",
-                    "Les multiplicateurs par arbre et par hectare sont constants sur la durée de vie du projet dans ce prototype."
-                  )}
-                </li>
-                <li>
-                  {t(
-                    "Regional factors adjust results by broad Canadian regions, not by municipality-level measurements.",
-                    "Des facteurs régionaux ajustent les résultats par grandes régions canadiennes, et non à l’échelle précise de la municipalité."
-                  )}
-                </li>
-                <li>
-                  {t(
-                    "Equity and access metrics are illustrative proxies only and do not yet incorporate detailed demographic data.",
-                    "Les indicateurs d’équité et d’accessibilité sont des proxys illustratifs et n’intègrent pas encore de données démographiques détaillées."
-                  )}
-                </li>
-              </ul>
-              <button
-                type="button"
-                onClick={() =>
-                  window.open("https://greenmunicipalfund.ca/trees", "_blank")
-                }
-                className="mt-2 inline-flex items-center gap-1 rounded-full border border-primary-200 bg-primary-50 px-3 py-1.5 text-[11px] font-medium text-primary-800 hover:bg-primary-100 transition"
-              >
-                {t(
-                  "Learn more about GCCC context",
-                  "En savoir plus sur le contexte de GCCC"
-                )}
-              </button>
-            </div>
 
             {(projectDescription || projectCapitalCost !== null || projectAnnualCost !== null) && (
               <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -4613,7 +4569,166 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
               </div>
             )}
 
-            <div className="grid gap-4 md:grid-cols-2">
+            {/* ── Collapsible benefit chain rows (replaces individual cards) ── */}
+            {results && valueMix && (() => {
+              const total = valueMix.total || 1;
+              const chainDivisor = viewMode === 'perTree' ? Math.max(1, numberOfTrees)
+                : viewMode === 'perResident' ? Math.max(1, populationServed)
+                : viewMode === 'perHousehold' ? Math.max(1, householdsServed)
+                : 1;
+
+              const benefitRows = [
+                selectedBenefits.includes("carbon") && {
+                  key: 'carbon',
+                  badgeBg: '#E1F5EE', badgeText: '#085041', barColor: '#1D9E75',
+                  econBg: '#E1F5EE',
+                  categoryLabel: t('Climate / carbon', 'Climat / carbone'),
+                  functionLabel: t('Carbon storage & avoided emissions', 'Stockage de carbone et émissions évitées'),
+                  functionTitle: t('Carbon sequestration', 'Séquestration du carbone'),
+                  physicalMetric: `${results.total.carbonTonnes.toFixed(1)} tCO₂e ${t('removed per year', 'retirés par an')}`,
+                  benefitTitle: t('Reduced atmospheric carbon', 'Réduction du carbone atmosphérique'),
+                  benefitDesc: t('Based on Canadian social carbon value assumptions — order-of-magnitude estimate', 'Basé sur la valeur sociale canadienne du carbone — ordre de grandeur'),
+                  econLabel: t('Avoided carbon cost', 'Coût carbone évité'),
+                  value: valueMix.carbon,
+                },
+                selectedBenefits.includes("stormwater") && {
+                  key: 'stormwater',
+                  badgeBg: '#E6F1FB', badgeText: '#0C447C', barColor: '#378ADD',
+                  econBg: '#E6F1FB',
+                  categoryLabel: t('Water & flood', 'Eau et inondations'),
+                  functionLabel: t('Stormwater retention & flood alleviation', 'Rétention des eaux pluviales et réduction des inondations'),
+                  functionTitle: t('Rainfall interception', 'Interception des précipitations'),
+                  physicalMetric: t('Canopy intercepts & slows runoff, reducing peak stormwater flow', 'Le couvert intercepte et ralentit le ruissellement'),
+                  benefitTitle: t('Reduced flood risk & infrastructure load', 'Risque d\'inondation et charge d\'infrastructure réduits'),
+                  benefitDesc: t('Avoids costs of equivalent grey infrastructure (pipes, retention tanks)', 'Évite les coûts d\'une infrastructure grise équivalente'),
+                  econLabel: t('Avoided infrastructure cost', 'Coût d\'infrastructure évité'),
+                  value: valueMix.stormwater,
+                },
+                selectedBenefits.includes("health") && {
+                  key: 'health',
+                  badgeBg: '#FEF3C7', badgeText: '#92400E', barColor: '#F59E0B',
+                  econBg: '#FEF3C7',
+                  categoryLabel: t('Health & community', 'Santé et communauté'),
+                  functionLabel: t('Health, well-being & exposure reduction', 'Santé, bien-être et réduction des expositions'),
+                  functionTitle: t('Heat reduction & air filtering', 'Réduction de la chaleur et filtration de l\'air'),
+                  physicalMetric: `−${results.total.heatIslandReductionDegC.toFixed(2)}°C ${t('cooling effect; particulate and pollutant removal', 'effet refroidissant; élimination des particules et polluants')}`,
+                  benefitTitle: t('Reduced illness & improved mental well-being', 'Réduction des maladies et amélioration du bien-être'),
+                  benefitDesc: t('Proxy value — see GMF health resources for methodology', 'Valeur proxy — voir les ressources GMF sur la santé pour la méthodologie'),
+                  econLabel: t('Avoided health costs', 'Coûts de santé évités'),
+                  value: valueMix.health,
+                },
+                selectedBenefits.includes("propertyValue") && {
+                  key: 'property',
+                  badgeBg: '#EEEDFE', badgeText: '#3C3489', barColor: '#7F77DD',
+                  econBg: '#EEEDFE',
+                  categoryLabel: t('Property & economic', 'Foncière et économique'),
+                  functionLabel: t('Property value & local economic uplift', 'Valeur foncière et retombées économiques locales'),
+                  functionTitle: t('Canopy amenity & shade', 'Aménité du couvert et ombrage'),
+                  physicalMetric: t('Mature tree cover increases neighbourhood desirability and land value', 'Le couvert d\'arbres matures augmente l\'attrait et la valeur foncière du quartier'),
+                  benefitTitle: t('Increased property values & local spend', 'Hausse de la valeur foncière et des dépenses locales'),
+                  benefitDesc: t('Hedonic pricing model based on comparable Canadian datasets', 'Modèle de prix hédoniques basé sur des données canadiennes comparables'),
+                  econLabel: t('Property & economic uplift', 'Hausse foncière et économique'),
+                  value: valueMix.property,
+                },
+              ].filter(Boolean) as NonNullable<{
+                key: string; badgeBg: string; badgeText: string; barColor: string; econBg: string;
+                categoryLabel: string; functionLabel: string; functionTitle: string; physicalMetric: string;
+                benefitTitle: string; benefitDesc: string; econLabel: string; value: number;
+              }>[];
+
+              return (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-1 px-1">
+                    <p className="text-[11px] text-slate-400 italic">
+                      {t('Expand each benefit to see the function → benefit → economic value chain', 'Développez chaque bénéfice pour voir la chaîne fonction → bénéfice → valeur économique')}
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      {t('Total:', 'Total :')} <span className="font-semibold text-slate-600">${Math.round(total / chainDivisor).toLocaleString()}</span>
+                    </p>
+                  </div>
+                  {benefitRows.map(row => {
+                    const isOpen = expandedChainRows.has(row.key);
+                    const displayVal = Math.round(row.value / chainDivisor);
+                    const sharePct = Math.round((row.value / total) * 100);
+                    return (
+                      <div key={row.key} className="rounded-xl overflow-hidden bg-white" style={{ border: '0.5px solid #E2E8F0', borderRadius: '12px' }}>
+                        {/* Collapsed header */}
+                        <button
+                          type="button"
+                          className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-slate-50 transition text-left gap-3"
+                          onClick={() => setExpandedChainRows(prev => {
+                            const next = new Set(prev);
+                            if (next.has(row.key)) next.delete(row.key); else next.add(row.key);
+                            return next;
+                          })}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold flex-shrink-0 whitespace-nowrap" style={{ background: row.badgeBg, color: row.badgeText }}>
+                              {row.categoryLabel}
+                            </span>
+                            <span className="text-sm text-slate-700 truncate">{row.functionLabel}</span>
+                          </div>
+                          <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                            <span className="text-base font-bold text-slate-900">${displayVal.toLocaleString()}</span>
+                            <span className="text-[11px] text-slate-400">/ yr ·</span>
+                            <span className="text-[11px] font-medium text-slate-500 w-8 text-right">{sharePct}%</span>
+                            <span className="text-slate-300 text-xs ml-1">{isOpen ? '▲' : '▼'}</span>
+                          </div>
+                        </button>
+
+                        {/* Expanded chain */}
+                        {isOpen && (
+                          <div className="border-t border-slate-100 p-4">
+                            <div className="grid gap-2 items-stretch" style={{ gridTemplateColumns: '1fr 20px 1fr 20px 1fr' }}>
+
+                              {/* Column 1: Function */}
+                              <div className="rounded-lg bg-slate-50 border border-slate-100 p-3 flex flex-col gap-2">
+                                <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400">{t('FUNCTION', 'FONCTION')}</p>
+                                <p className="text-sm font-bold text-slate-900">{row.functionTitle}</p>
+                                <p className="text-[11px] text-slate-600 flex-1">{row.physicalMetric}</p>
+                                <div>
+                                  <div className="h-[3px] rounded-full bg-slate-200 overflow-hidden">
+                                    <div className="h-full rounded-full w-1/2" style={{ backgroundColor: row.barColor }} />
+                                  </div>
+                                  <div className="flex justify-between mt-1">
+                                    <span className="text-[9px] text-slate-400">{t('Lower', 'Plus faible')}</span>
+                                    <span className="text-[9px] text-slate-400">{t('Typical', 'Typique')}</span>
+                                    <span className="text-[9px] text-slate-400">{t('High', 'Élevé')}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Arrow */}
+                              <div className="flex items-center justify-center text-slate-300">→</div>
+
+                              {/* Column 2: Benefit */}
+                              <div className="rounded-lg bg-slate-50 border border-slate-100 p-3 flex flex-col gap-2">
+                                <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400">{t('BENEFIT', 'BÉNÉFICE')}</p>
+                                <p className="text-sm font-bold text-slate-900">{row.benefitTitle}</p>
+                                <p className="text-[11px] text-slate-600 flex-1">{row.benefitDesc}</p>
+                              </div>
+
+                              {/* Arrow */}
+                              <div className="flex items-center justify-center text-slate-300">→</div>
+
+                              {/* Column 3: Economic value */}
+                              <div className="rounded-lg p-3 flex flex-col gap-2" style={{ background: row.econBg }}>
+                                <p className="text-[9px] font-semibold uppercase tracking-widest" style={{ color: row.badgeText, opacity: 0.6 }}>{t('ECONOMIC VALUE', 'VALEUR ÉCONOMIQUE')}</p>
+                                <p className="text-xs font-medium" style={{ color: row.badgeText, opacity: 0.5 }}>{row.econLabel}</p>
+                                <p className="text-xl font-bold mt-auto" style={{ color: row.barColor }}>${displayVal.toLocaleString()} / yr</p>
+                              </div>
+
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
+            <div className="grid gap-4 md:grid-cols-2" style={{ display: 'none' }}>
               {selectedBenefits.includes("carbon") && (
                 <div className="rounded-xl border border-primary-300 bg-gradient-to-br from-primary-50 to-primary-100/50 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
@@ -5470,6 +5585,31 @@ export function CalculatorSteps({ language }: CalculatorStepsProps) {
       </section>
 
       <aside className="space-y-4">
+        {step === 5 && results && (
+          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-2">
+              {t("Data & methodology (demo)", "Données et méthodologie (démo)")}
+            </h4>
+            <p className="text-[11px] text-slate-700 mb-2">
+              {t(
+                "Results are generated using simplified Canadian default assumptions for tree carbon, stormwater and health benefits. They are designed for order-of-magnitude exploration, not for official reporting or carbon crediting.",
+                "Les résultats sont générés à partir d'hypothèses canadiennes simplifiées concernant les bénéfices en carbone, eaux pluviales et santé. Ils servent à explorer des ordres de grandeur, et non à la reddition de comptes officielle ni à la création de crédits carbone."
+              )}
+            </p>
+            <ul className="list-disc list-inside text-[11px] text-slate-600 space-y-1">
+              <li>{t("Per-tree and per-hectare multipliers are constant across the lifespan of the project in this prototype.", "Les multiplicateurs par arbre et par hectare sont constants sur la durée de vie du projet dans ce prototype.")}</li>
+              <li>{t("Regional factors adjust results by broad Canadian regions, not by municipality-level measurements.", "Des facteurs régionaux ajustent les résultats par grandes régions canadiennes, et non à l'échelle précise de la municipalité.")}</li>
+              <li>{t("Equity and access metrics are illustrative proxies only and do not yet incorporate detailed demographic data.", "Les indicateurs d'équité et d'accessibilité sont des proxys illustratifs et n'intègrent pas encore de données démographiques détaillées.")}</li>
+            </ul>
+            <button
+              type="button"
+              onClick={() => window.open("https://greenmunicipalfund.ca/trees", "_blank")}
+              className="mt-2 inline-flex items-center gap-1 rounded-full border border-primary-200 bg-primary-50 px-3 py-1.5 text-[11px] font-medium text-primary-800 hover:bg-primary-100 transition"
+            >
+              {t("Learn more about GCCC context", "En savoir plus sur le contexte de GCCC")}
+            </button>
+          </div>
+        )}
         <div className="rounded-2xl border border-primary-200 bg-gradient-to-b from-primary-50 to-white p-5 shadow-md">
           <h3 className="text-sm font-semibold text-primary-900 mb-1">
             {t("Grant-ready snapshot", "Résumé prêt pour la demande")}
