@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Canadian Tree Benefits Calculator",
+  title: "Community Canopy Benefits Tool",
   description:
     "Demo tool to estimate environmental, economic, and social benefits of urban tree planting projects in Canada.",
   icons: {

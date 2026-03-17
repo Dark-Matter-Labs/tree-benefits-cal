@@ -1,6 +1,6 @@
-## Canadian Tree Benefits Calculator – Workshop Prototype
+## Community Canopy Benefits Tool – Workshop Prototype
 
-This is a lightweight Next.js prototype used to demonstrate the **Canadian Tree Benefits Calculator** concept in a workshop setting. It focuses on the **simulation flow for municipalities** and a **portfolio-style overview for FCM**, not on final calculation methodology.
+This is a lightweight Next.js prototype used to demonstrate the **Community Canopy Benefits Tool** concept in a workshop setting. It focuses on the **simulation flow for municipalities** and a **portfolio-style overview for FCM**, not on final calculation methodology.
 
 ### What’s Included
 

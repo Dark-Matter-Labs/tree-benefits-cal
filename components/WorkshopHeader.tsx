@@ -2,7 +2,7 @@
 
 import { LanguageToggle } from "./LanguageToggle";
 import Image from "next/image";
-import gcccLogo from "../assets/Green Roofs copy.png";
+import gcccLogo from "../assets/logo.png";
 
 type Language = "en" | "fr";
 
@@ -42,14 +42,14 @@ export function WorkshopHeader({
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-lg sm:text-2xl font-semibold text-slate-900 leading-tight">
                 {language === "fr"
-                  ? "Calculatrice canadienne des bénéfices des arbres"
-                  : "Canadian Tree Benefits Calculator"}
+                  ? "Outil d'aide à la création d'une canopée communautaire"
+                  : "Community Canopy Benefits Tool"}
               </h1>
             </div>
             <p className="text-[11px] sm:text-xs text-slate-600 mt-0.5">
               {language === "fr"
-                ? "Démonstration de flux pour les municipalités et le FCM"
-                : "Demo flow for municipalities and FCM portfolio view"}
+                ? "Version prototype de l'outil de données du GCCC"
+                : "Prototype-version of GCCC’s data tool"}
             </p>
           </div>
         </div>

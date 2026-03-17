@@ -35,8 +35,8 @@ export default function HomePage() {
               </h2>
               <p className="text-sm md:text-base text-slate-700 max-w-xl">
                 {language === "fr"
-                  ? "Prototype inspiré de l’initiative « Growing Canada’s Community Canopies » du Fonds municipal vert. Explorez comment les projets de plantation d’arbres peuvent générer des bénéfices climatiques, économiques, de santé et d’équité."
-                  : "A prototype inspired by the Green Municipal Fund’s Growing Canada’s Community Canopies initiative. Explore how tree planting projects can generate climate, economic, health and equity benefits."}
+                  ? "Un outil prototype pour aider les municipalités et le personnel du FMV à quantifier, communiquer et justifier les bénéfices de la plantation d’arbres en milieu urbain."
+                  : "A prototype tool to help municipalities and FCM staff quantify, communicate, and justify the benefits of urban tree planting."}
               </p>
               <div className="flex flex-wrap gap-3">
                 <button
