@@ -138,21 +138,29 @@ export default function HomePage() {
             </ol>
           </section>
 
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={() =>
-                document
-                  .getElementById("how-to")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white/90 px-4 py-2 text-xs font-medium text-slate-800 shadow-sm hover:bg-slate-50 transition"
-            >
+          <section className="rounded-[24px] border border-slate-200 bg-white/95 shadow-sm p-4 md:p-5 space-y-3">
+            <h3 className="text-sm md:text-base font-semibold text-primary-800">
               {language === "fr"
                 ? "Comment fonctionne ce prototype ?"
                 : "How does this prototype work?"}
-            </button>
-          </div>
+            </h3>
+            <p className="text-xs md:text-sm text-slate-700">
+              {language === "fr"
+                ? "Cet outil utilise une estimation des bénéfices par ordre de grandeur basée sur l'espèce d'arbres, la localisation et la taille du projet. La note méthodologique complète est en cours de développement et sera liée ici."
+                : "This tool uses order-of-magnitude benefit estimation based on tree species, location, and project size. The full methodology note is being developed and will be linked here."}
+            </p>
+            <a
+              href="#"
+              aria-disabled="true"
+              onClick={e => e.preventDefault()}
+              className="inline-flex items-center gap-1 rounded-full border border-primary-300 bg-white px-3 py-1.5 text-[11px] font-medium text-primary-400 cursor-not-allowed select-none"
+              title={language === "fr" ? "Disponible prochainement" : "Coming soon"}
+            >
+              {language === "fr"
+                ? "Lire la méthodologie →"
+                : "Read the methodology →"}
+            </a>
+          </section>
         </main>
       )}
 
