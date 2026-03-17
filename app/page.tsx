@@ -5,7 +5,7 @@ import Image from "next/image";
 import { WorkshopHeader } from "@/components/WorkshopHeader";
 import { CalculatorSteps } from "@/components/CalculatorSteps";
 import { PortfolioDemo } from "@/components/PortfolioDemo";
-import gcccHero from "../assets/Woodland_Woodland.png";
+import gcccHero from "../assets/Hero.png";
 
 type Language = "en" | "fr";
 
