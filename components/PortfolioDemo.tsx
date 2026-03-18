@@ -584,6 +584,972 @@ const mockProjects: MockProject[] = [
     stormwaterLitres: 1140000,
     lat: 49.6935,
     lng: -112.8418
+  },
+  // ── Ontario (need ~32 more to reach 36 total) ──
+  {
+    id: "p33",
+    name: "Brampton Heritage Tree Walk",
+    municipality: "Brampton",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "street-trees",
+    stage: "approved",
+    year: 2025,
+    trees: 2800,
+    areaHa: 28,
+    carbonTonnes: 56,
+    stormwaterLitres: 8400000,
+    lat: 43.7315,
+    lng: -79.7624
+  },
+  {
+    id: "p34",
+    name: "Mississauga Lakeshore Canopy",
+    municipality: "Mississauga",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "urban-forest",
+    stage: "planting",
+    year: 2025,
+    trees: 3200,
+    areaHa: 35,
+    carbonTonnes: 64,
+    stormwaterLitres: 9600000,
+    lat: 43.5890,
+    lng: -79.6441
+  },
+  {
+    id: "p35",
+    name: "Barrie Waterfront Green Belt",
+    municipality: "Barrie",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "riparian",
+    stage: "monitoring",
+    year: 2024,
+    trees: 1900,
+    areaHa: 24,
+    carbonTonnes: 38,
+    stormwaterLitres: 5700000,
+    lat: 44.3894,
+    lng: -79.6903
+  },
+  {
+    id: "p36",
+    name: "Guelph Pollinator Corridor",
+    municipality: "Guelph",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "green-infrastructure",
+    stage: "approved",
+    year: 2025,
+    trees: 1450,
+    areaHa: 18,
+    carbonTonnes: 29,
+    stormwaterLitres: 4350000,
+    lat: 43.5448,
+    lng: -80.2482
+  },
+  {
+    id: "p37",
+    name: "Markham Civic Centre Forest",
+    municipality: "Markham",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "urban-forest",
+    stage: "completed",
+    year: 2023,
+    trees: 2100,
+    areaHa: 22,
+    carbonTonnes: 42,
+    stormwaterLitres: 6300000,
+    lat: 43.8561,
+    lng: -79.3370
+  },
+  {
+    id: "p38",
+    name: "Windsor Riverfront Planting",
+    municipality: "Windsor",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "riparian",
+    stage: "planting",
+    year: 2025,
+    trees: 1750,
+    areaHa: 20,
+    carbonTonnes: 35,
+    stormwaterLitres: 5250000,
+    lat: 42.3149,
+    lng: -83.0364
+  },
+  {
+    id: "p39",
+    name: "Sudbury Regreening Initiative",
+    municipality: "Sudbury",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "urban-forest",
+    stage: "monitoring",
+    year: 2023,
+    trees: 3500,
+    areaHa: 45,
+    carbonTonnes: 70,
+    stormwaterLitres: 10500000,
+    lat: 46.4917,
+    lng: -80.9930
+  },
+  {
+    id: "p40",
+    name: "Thunder Bay Storm Buffer",
+    municipality: "Thunder Bay",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "green-infrastructure",
+    stage: "approved",
+    year: 2025,
+    trees: 920,
+    areaHa: 14,
+    carbonTonnes: 18,
+    stormwaterLitres: 2760000,
+    lat: 48.3809,
+    lng: -89.2477
+  },
+  {
+    id: "p41",
+    name: "Oshawa Creek Restoration",
+    municipality: "Oshawa",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "riparian",
+    stage: "planting",
+    year: 2024,
+    trees: 1350,
+    areaHa: 19,
+    carbonTonnes: 27,
+    stormwaterLitres: 4050000,
+    lat: 43.8971,
+    lng: -78.8658
+  },
+  {
+    id: "p42",
+    name: "Burlington Lakeside Canopy",
+    municipality: "Burlington",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "street-trees",
+    stage: "approved",
+    year: 2025,
+    trees: 1680,
+    areaHa: 16,
+    carbonTonnes: 34,
+    stormwaterLitres: 5040000,
+    lat: 43.3255,
+    lng: -79.7990
+  },
+  {
+    id: "p43",
+    name: "St. Catharines Urban Shade",
+    municipality: "St. Catharines",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "street-trees",
+    stage: "planting",
+    year: 2025,
+    trees: 780,
+    areaHa: 10,
+    carbonTonnes: 16,
+    stormwaterLitres: 2340000,
+    lat: 43.1594,
+    lng: -79.2469
+  },
+  {
+    id: "p44",
+    name: "Peterborough Flood Resilience",
+    municipality: "Peterborough",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "riparian",
+    stage: "monitoring",
+    year: 2024,
+    trees: 640,
+    areaHa: 15,
+    carbonTonnes: 13,
+    stormwaterLitres: 1920000,
+    lat: 44.3091,
+    lng: -78.3197
+  },
+  {
+    id: "p45",
+    name: "Niagara Falls Park Renewal",
+    municipality: "Niagara Falls",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "park-restoration",
+    stage: "completed",
+    year: 2023,
+    trees: 850,
+    areaHa: 12,
+    carbonTonnes: 17,
+    stormwaterLitres: 2550000,
+    lat: 43.0896,
+    lng: -79.0849
+  },
+  {
+    id: "p46",
+    name: "Cambridge Mill Corridor",
+    municipality: "Cambridge",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "green-infrastructure",
+    stage: "approved",
+    year: 2025,
+    trees: 560,
+    areaHa: 8,
+    carbonTonnes: 11,
+    stormwaterLitres: 1680000,
+    lat: 43.3616,
+    lng: -80.3144
+  },
+  {
+    id: "p47",
+    name: "Brantford Grand River Buffer",
+    municipality: "Brantford",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "riparian",
+    stage: "planting",
+    year: 2025,
+    trees: 710,
+    areaHa: 16,
+    carbonTonnes: 14,
+    stormwaterLitres: 2130000,
+    lat: 43.1394,
+    lng: -80.2644
+  },
+  {
+    id: "p48",
+    name: "Whitby Trails Canopy",
+    municipality: "Whitby",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "park-restoration",
+    stage: "approved",
+    year: 2024,
+    trees: 1200,
+    areaHa: 14,
+    carbonTonnes: 24,
+    stormwaterLitres: 3600000,
+    lat: 43.8975,
+    lng: -78.9429
+  },
+  {
+    id: "p49",
+    name: "Vaughan Urban Forest Expansion",
+    municipality: "Vaughan",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "urban-forest",
+    stage: "planting",
+    year: 2025,
+    trees: 2400,
+    areaHa: 26,
+    carbonTonnes: 48,
+    stormwaterLitres: 7200000,
+    lat: 43.8361,
+    lng: -79.4984
+  },
+  {
+    id: "p50",
+    name: "Richmond Hill Green Streets",
+    municipality: "Richmond Hill",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "street-trees",
+    stage: "approved",
+    year: 2025,
+    trees: 1580,
+    areaHa: 15,
+    carbonTonnes: 32,
+    stormwaterLitres: 4740000,
+    lat: 43.8828,
+    lng: -79.4403
+  },
+  {
+    id: "p51",
+    name: "Sault Ste. Marie Waterfront Greening",
+    municipality: "Sault Ste. Marie",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "park-restoration",
+    stage: "planning",
+    year: 2026,
+    trees: 480,
+    areaHa: 10,
+    carbonTonnes: 10,
+    stormwaterLitres: 1440000,
+    lat: 46.5219,
+    lng: -84.3461
+  },
+  {
+    id: "p52",
+    name: "North Bay Climate Forest",
+    municipality: "North Bay",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "urban-forest",
+    stage: "approved",
+    year: 2025,
+    trees: 530,
+    areaHa: 12,
+    carbonTonnes: 11,
+    stormwaterLitres: 1590000,
+    lat: 46.3091,
+    lng: -79.4608
+  },
+  {
+    id: "p53",
+    name: "Ajax Stormwater Canopy",
+    municipality: "Ajax",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "green-infrastructure",
+    stage: "planting",
+    year: 2025,
+    trees: 690,
+    areaHa: 9,
+    carbonTonnes: 14,
+    stormwaterLitres: 2070000,
+    lat: 43.8509,
+    lng: -79.0204
+  },
+  {
+    id: "p54",
+    name: "Oakville Heritage Grove",
+    municipality: "Oakville",
+    province: "ON",
+    region: "ontario",
+    size: "large",
+    typology: "park-restoration",
+    stage: "completed",
+    year: 2024,
+    trees: 1100,
+    areaHa: 13,
+    carbonTonnes: 22,
+    stormwaterLitres: 3300000,
+    lat: 43.4675,
+    lng: -79.6877
+  },
+  {
+    id: "p55",
+    name: "Kingston Waterfront Shade Walk",
+    municipality: "Kingston",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "street-trees",
+    stage: "approved",
+    year: 2025,
+    trees: 620,
+    areaHa: 8,
+    carbonTonnes: 12,
+    stormwaterLitres: 1860000,
+    lat: 44.2312,
+    lng: -76.4860
+  },
+  {
+    id: "p56",
+    name: "Chatham-Kent Agricultural Buffer",
+    municipality: "Chatham-Kent",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "riparian",
+    stage: "planning",
+    year: 2026,
+    trees: 450,
+    areaHa: 18,
+    carbonTonnes: 9,
+    stormwaterLitres: 1350000,
+    lat: 42.4048,
+    lng: -82.1910
+  },
+  {
+    id: "p57",
+    name: "Newmarket Civic Canopy",
+    municipality: "Newmarket",
+    province: "ON",
+    region: "ontario",
+    size: "medium",
+    typology: "street-trees",
+    stage: "planting",
+    year: 2025,
+    trees: 340,
+    areaHa: 5,
+    carbonTonnes: 7,
+    stormwaterLitres: 1020000,
+    lat: 44.0592,
+    lng: -79.4613
+  },
+  {
+    id: "p58",
+    name: "Halton Hills Green Network",
+    municipality: "Halton Hills",
+    province: "ON",
+    region: "ontario",
+    size: "small",
+    typology: "green-infrastructure",
+    stage: "approved",
+    year: 2025,
+    trees: 280,
+    areaHa: 7,
+    carbonTonnes: 6,
+    stormwaterLitres: 840000,
+    lat: 43.6310,
+    lng: -79.9506
+  },
+  {
+    id: "p59",
+    name: "Cobourg Lakeshore Restoration",
+    municipality: "Cobourg",
+    province: "ON",
+    region: "ontario",
+    size: "small",
+    typology: "riparian",
+    stage: "planning",
+    year: 2026,
+    trees: 210,
+    areaHa: 6,
+    carbonTonnes: 4,
+    stormwaterLitres: 630000,
+    lat: 43.9593,
+    lng: -78.1677
+  },
+  {
+    id: "p60",
+    name: "Orangeville Community Forest",
+    municipality: "Orangeville",
+    province: "ON",
+    region: "ontario",
+    size: "small",
+    typology: "urban-forest",
+    stage: "approved",
+    year: 2025,
+    trees: 190,
+    areaHa: 5,
+    carbonTonnes: 4,
+    stormwaterLitres: 570000,
+    lat: 43.9200,
+    lng: -80.0943
+  },
+  // ── Prairies (need ~17 more to reach 23 total) ──
+  {
+    id: "p61",
+    name: "Saskatoon Meewasin Trail Extension",
+    municipality: "Saskatoon",
+    province: "SK",
+    region: "prairies",
+    size: "large",
+    typology: "riparian",
+    stage: "planting",
+    year: 2025,
+    trees: 2200,
+    areaHa: 30,
+    carbonTonnes: 44,
+    stormwaterLitres: 6600000,
+    lat: 52.1332,
+    lng: -106.6700
+  },
+  {
+    id: "p62",
+    name: "Medicine Hat Shade Programme",
+    municipality: "Medicine Hat",
+    province: "AB",
+    region: "prairies",
+    size: "medium",
+    typology: "street-trees",
+    stage: "approved",
+    year: 2025,
+    trees: 480,
+    areaHa: 7,
+    carbonTonnes: 10,
+    stormwaterLitres: 1440000,
+    lat: 50.0405,
+    lng: -110.6764
+  },
+  {
+    id: "p63",
+    name: "Moose Jaw Creek Planting",
+    municipality: "Moose Jaw",
+    province: "SK",
+    region: "prairies",
+    size: "small",
+    typology: "riparian",
+    stage: "planting",
+    year: 2024,
+    trees: 310,
+    areaHa: 9,
+    carbonTonnes: 6,
+    stormwaterLitres: 930000,
+    lat: 50.3934,
+    lng: -105.5519
+  },
+  {
+    id: "p64",
+    name: "Brandon Urban Forest",
+    municipality: "Brandon",
+    province: "MB",
+    region: "prairies",
+    size: "small",
+    typology: "urban-forest",
+    stage: "approved",
+    year: 2025,
+    trees: 260,
+    areaHa: 6,
+    carbonTonnes: 5,
+    stormwaterLitres: 780000,
+    lat: 49.8440,
+    lng: -99.9539
+  },
+  {
+    id: "p65",
+    name: "Calgary Nose Hill Restoration",
+    municipality: "Calgary",
+    province: "AB",
+    region: "prairies",
+    size: "large",
+    typology: "park-restoration",
+    stage: "monitoring",
+    year: 2024,
+    trees: 3100,
+    areaHa: 40,
+    carbonTonnes: 62,
+    stormwaterLitres: 9300000,
+    lat: 51.1097,
+    lng: -114.1035
+  },
+  {
+    id: "p66",
+    name: "Prince Albert Northern Green Belt",
+    municipality: "Prince Albert",
+    province: "SK",
+    region: "prairies",
+    size: "small",
+    typology: "urban-forest",
+    stage: "planning",
+    year: 2026,
+    trees: 180,
+    areaHa: 5,
+    carbonTonnes: 4,
+    stormwaterLitres: 540000,
+    lat: 53.2034,
+    lng: -105.7531
+  },
+  {
+    id: "p67",
+    name: "Airdrie Street Canopy Programme",
+    municipality: "Airdrie",
+    province: "AB",
+    region: "prairies",
+    size: "medium",
+    typology: "street-trees",
+    stage: "planting",
+    year: 2025,
+    trees: 520,
+    areaHa: 6,
+    carbonTonnes: 10,
+    stormwaterLitres: 1560000,
+    lat: 51.2917,
+    lng: -114.0144
+  },
+  {
+    id: "p68",
+    name: "Edmonton Meadows Greenway",
+    municipality: "Edmonton",
+    province: "AB",
+    region: "prairies",
+    size: "large",
+    typology: "green-infrastructure",
+    stage: "approved",
+    year: 2025,
+    trees: 2600,
+    areaHa: 32,
+    carbonTonnes: 52,
+    stormwaterLitres: 7800000,
+    lat: 53.5461,
+    lng: -113.4938
+  },
+  {
+    id: "p69",
+    name: "Winnipeg Elm Replacement Programme",
+    municipality: "Winnipeg",
+    province: "MB",
+    region: "prairies",
+    size: "large",
+    typology: "street-trees",
+    stage: "planting",
+    year: 2025,
+    trees: 1800,
+    areaHa: 18,
+    carbonTonnes: 36,
+    stormwaterLitres: 5400000,
+    lat: 49.8951,
+    lng: -97.1384
+  },
+  {
+    id: "p70",
+    name: "Swift Current Climate Shelter Belt",
+    municipality: "Swift Current",
+    province: "SK",
+    region: "prairies",
+    size: "small",
+    typology: "green-infrastructure",
+    stage: "approved",
+    year: 2025,
+    trees: 150,
+    areaHa: 4,
+    carbonTonnes: 3,
+    stormwaterLitres: 450000,
+    lat: 50.2881,
+    lng: -107.7937
+  },
+  {
+    id: "p71",
+    name: "Red Deer River Valley Greening",
+    municipality: "Red Deer",
+    province: "AB",
+    region: "prairies",
+    size: "medium",
+    typology: "riparian",
+    stage: "monitoring",
+    year: 2024,
+    trees: 680,
+    areaHa: 16,
+    carbonTonnes: 14,
+    stormwaterLitres: 2040000,
+    lat: 52.2690,
+    lng: -113.8116
+  },
+  {
+    id: "p72",
+    name: "Steinbach Community Planting",
+    municipality: "Steinbach",
+    province: "MB",
+    region: "prairies",
+    size: "small",
+    typology: "urban-forest",
+    stage: "planning",
+    year: 2026,
+    trees: 130,
+    areaHa: 3,
+    carbonTonnes: 3,
+    stormwaterLitres: 390000,
+    lat: 49.5258,
+    lng: -96.6839
+  },
+  {
+    id: "p73",
+    name: "Lloydminster Border Town Forest",
+    municipality: "Lloydminster",
+    province: "AB",
+    region: "prairies",
+    size: "small",
+    typology: "park-restoration",
+    stage: "approved",
+    year: 2025,
+    trees: 220,
+    areaHa: 5,
+    carbonTonnes: 4,
+    stormwaterLitres: 660000,
+    lat: 53.2783,
+    lng: -110.0050
+  },
+  {
+    id: "p74",
+    name: "Yorkton Green Corridor",
+    municipality: "Yorkton",
+    province: "SK",
+    region: "prairies",
+    size: "small",
+    typology: "street-trees",
+    stage: "planting",
+    year: 2025,
+    trees: 170,
+    areaHa: 3,
+    carbonTonnes: 3,
+    stormwaterLitres: 510000,
+    lat: 51.2139,
+    lng: -102.4628
+  },
+  {
+    id: "p75",
+    name: "Okotoks River Shade Walk",
+    municipality: "Okotoks",
+    province: "AB",
+    region: "prairies",
+    size: "small",
+    typology: "riparian",
+    stage: "approved",
+    year: 2025,
+    trees: 200,
+    areaHa: 6,
+    carbonTonnes: 4,
+    stormwaterLitres: 600000,
+    lat: 50.7266,
+    lng: -113.9749
+  },
+  // ── British Columbia (need ~12 more to reach 16 total) ──
+  {
+    id: "p76",
+    name: "Surrey Green Timbers Expansion",
+    municipality: "Surrey",
+    province: "BC",
+    region: "bc",
+    size: "large",
+    typology: "urban-forest",
+    stage: "planting",
+    year: 2025,
+    trees: 4200,
+    areaHa: 45,
+    carbonTonnes: 84,
+    stormwaterLitres: 12600000,
+    lat: 49.1913,
+    lng: -122.8490
+  },
+  {
+    id: "p77",
+    name: "Burnaby Stoney Creek Riparian",
+    municipality: "Burnaby",
+    province: "BC",
+    region: "bc",
+    size: "large",
+    typology: "riparian",
+    stage: "approved",
+    year: 2025,
+    trees: 1600,
+    areaHa: 22,
+    carbonTonnes: 32,
+    stormwaterLitres: 4800000,
+    lat: 49.2488,
+    lng: -122.9805
+  },
+  {
+    id: "p78",
+    name: "Kamloops Heat Resilience Forest",
+    municipality: "Kamloops",
+    province: "BC",
+    region: "bc",
+    size: "medium",
+    typology: "urban-forest",
+    stage: "monitoring",
+    year: 2024,
+    trees: 950,
+    areaHa: 14,
+    carbonTonnes: 19,
+    stormwaterLitres: 2850000,
+    lat: 50.6745,
+    lng: -120.3273
+  },
+  {
+    id: "p79",
+    name: "Prince George Street Trees",
+    municipality: "Prince George",
+    province: "BC",
+    region: "bc",
+    size: "medium",
+    typology: "street-trees",
+    stage: "planting",
+    year: 2025,
+    trees: 620,
+    areaHa: 8,
+    carbonTonnes: 12,
+    stormwaterLitres: 1860000,
+    lat: 53.9171,
+    lng: -122.7497
+  },
+  {
+    id: "p80",
+    name: "Coquitlam Watershed Planting",
+    municipality: "Coquitlam",
+    province: "BC",
+    region: "bc",
+    size: "large",
+    typology: "riparian",
+    stage: "approved",
+    year: 2025,
+    trees: 1400,
+    areaHa: 20,
+    carbonTonnes: 28,
+    stormwaterLitres: 4200000,
+    lat: 49.2838,
+    lng: -122.7932
+  },
+  {
+    id: "p81",
+    name: "Langley Farm Edge Canopy",
+    municipality: "Langley",
+    province: "BC",
+    region: "bc",
+    size: "medium",
+    typology: "green-infrastructure",
+    stage: "planting",
+    year: 2025,
+    trees: 740,
+    areaHa: 12,
+    carbonTonnes: 15,
+    stormwaterLitres: 2220000,
+    lat: 49.1044,
+    lng: -122.6609
+  },
+  {
+    id: "p82",
+    name: "Abbotsford Flood Plain Resilience",
+    municipality: "Abbotsford",
+    province: "BC",
+    region: "bc",
+    size: "large",
+    typology: "riparian",
+    stage: "monitoring",
+    year: 2023,
+    trees: 2800,
+    areaHa: 38,
+    carbonTonnes: 56,
+    stormwaterLitres: 8400000,
+    lat: 49.0580,
+    lng: -122.3296
+  },
+  {
+    id: "p83",
+    name: "Chilliwack River Greenway",
+    municipality: "Chilliwack",
+    province: "BC",
+    region: "bc",
+    size: "medium",
+    typology: "park-restoration",
+    stage: "approved",
+    year: 2025,
+    trees: 580,
+    areaHa: 10,
+    carbonTonnes: 12,
+    stormwaterLitres: 1740000,
+    lat: 49.1579,
+    lng: -121.9514
+  },
+  {
+    id: "p84",
+    name: "Courtenay Community Forest",
+    municipality: "Courtenay",
+    province: "BC",
+    region: "bc",
+    size: "small",
+    typology: "urban-forest",
+    stage: "planting",
+    year: 2025,
+    trees: 350,
+    areaHa: 8,
+    carbonTonnes: 7,
+    stormwaterLitres: 1050000,
+    lat: 49.6838,
+    lng: -124.9948
+  },
+  {
+    id: "p85",
+    name: "Nelson Kootenay Shade Walk",
+    municipality: "Nelson",
+    province: "BC",
+    region: "bc",
+    size: "small",
+    typology: "street-trees",
+    stage: "approved",
+    year: 2025,
+    trees: 160,
+    areaHa: 3,
+    carbonTonnes: 3,
+    stormwaterLitres: 480000,
+    lat: 49.4928,
+    lng: -117.2948
+  },
+  {
+    id: "p86",
+    name: "Squamish Wildfire Buffer Zone",
+    municipality: "Squamish",
+    province: "BC",
+    region: "bc",
+    size: "small",
+    typology: "green-infrastructure",
+    stage: "planning",
+    year: 2026,
+    trees: 420,
+    areaHa: 11,
+    carbonTonnes: 8,
+    stormwaterLitres: 1260000,
+    lat: 49.7016,
+    lng: -123.1558
+  },
+  // ── Atlantic (need ~1 more to reach 7 from existing 6+1=7, already at 7) ──
+  // Already have p1 Halifax, p5 Charlottetown, p11 St. John's, p13 Moncton,
+  // p18 Saint John, p24 Fredericton, p30 Dartmouth = 7. Good.
+
+  // ── Quebec (need ~0 more, already at 5) ──
+  // p2 Montreal, p14 Quebec City, p19 Gatineau, p25 Sherbrooke, p31 Trois-Rivières = 5. Good.
+
+  // ── Territories — keep existing 3 ──
+  // p9 Whitehorse, p22 Yellowknife, p26 Iqaluit = 3.
+
+  // ── Fill to 88 with remaining distribution ──
+  {
+    id: "p87",
+    name: "Maple Ridge Trail Canopy",
+    municipality: "Maple Ridge",
+    province: "BC",
+    region: "bc",
+    size: "medium",
+    typology: "park-restoration",
+    stage: "planting",
+    year: 2025,
+    trees: 510,
+    areaHa: 9,
+    carbonTonnes: 10,
+    stormwaterLitres: 1530000,
+    lat: 49.2193,
+    lng: -122.5984
+  },
+  {
+    id: "p88",
+    name: "Calgary Bow River Canopy",
+    municipality: "Calgary",
+    province: "AB",
+    region: "prairies",
+    size: "large",
+    typology: "riparian",
+    stage: "approved",
+    year: 2025,
+    trees: 1950,
+    areaHa: 25,
+    carbonTonnes: 39,
+    stormwaterLitres: 5850000,
+    lat: 51.0276,
+    lng: -114.0490
   }
 ];
 
@@ -668,6 +1634,8 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
   const [selectedRegion, setSelectedRegion] = useState<RegionKey | "all">("all");
   const [selectedTypology, setSelectedTypology] = useState<Typology | "all">("all");
   const [selectedSize, setSelectedSize] = useState<"small" | "medium" | "large" | "all">("all");
+  const [selectedYear, setSelectedYear] = useState<number | "all">("all");
+  const [selectedStatus, setSelectedStatus] = useState<"all" | "approved" | "pending">("all");
   const [selectedProject, setSelectedProject] = useState<MockProject | null>(null);
   const [activeMapLayer, setActiveMapLayer] = useState<"temperature" | "canopy" | "indigenous" | null>(null);
   const mapRef = useRef<MapRef>(null);
@@ -679,15 +1647,21 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
 
   const [stakeholderNames, setStakeholderNames] = useState<string[]>([]);
   const [newStakeholderName, setNewStakeholderName] = useState("");
+  const [expandedBenefitRows, setExpandedBenefitRows] = useState<Set<string>>(new Set());
 
   const filteredProjects = useMemo(() => {
     return mockProjects.filter(p => {
       if (selectedRegion !== "all" && p.region !== selectedRegion) return false;
       if (selectedTypology !== "all" && p.typology !== selectedTypology) return false;
       if (selectedSize !== "all" && p.size !== selectedSize) return false;
+      if (selectedYear !== "all" && p.year !== selectedYear) return false;
+      if (selectedStatus !== "all") {
+        if (selectedStatus === "approved" && p.stage === "planning") return false;
+        if (selectedStatus === "pending" && p.stage !== "planning") return false;
+      }
       return true;
     });
-  }, [selectedRegion, selectedTypology, selectedSize]);
+  }, [selectedRegion, selectedTypology, selectedSize, selectedYear, selectedStatus]);
 
   const totalProjects = filteredProjects.length;
   const totalTrees = filteredProjects.reduce((sum, p) => sum + p.trees, 0);
@@ -697,20 +1671,6 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
     0
   );
   const totalAreaHa = filteredProjects.reduce((sum, p) => sum + (p.areaHa || 0), 0);
-
-  const averageTreesPerProject =
-    totalProjects === 0 ? 0 : Math.round(totalTrees / totalProjects);
-
-  const communityImpactIndicator =
-    totalProjects === 0
-      ? t("No data", "Aucune donnée")
-      : averageTreesPerProject > 1500
-      ? t("very strong", "très fort")
-      : averageTreesPerProject > 700
-      ? t("strong", "fort")
-      : averageTreesPerProject > 300
-      ? t("moderate", "modéré")
-      : t("emerging", "émergent");
 
   const downloadPortfolioCsv = () => {
     if (filteredProjects.length === 0) return;
@@ -1075,38 +2035,136 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
 
   // Project detail view
   if (view === "project" && selectedProject) {
-    return (
-      <main className="mx-auto max-w-[1200px] px-4 py-6 space-y-5">
-        <button
-          type="button"
-          onClick={() => setView("portfolio")}
-          className="text-xs text-slate-600 hover:text-slate-900"
-        >
-          ←{" "}
-          {t(
-            "Back to portfolio overview",
-            "Retour à la vue d'ensemble du portefeuille"
-          )}
-        </button>
+    const projectResults = calculateBenefits({
+      region: selectedProject.region,
+      municipalitySize: selectedProject.size,
+      populationServed: 10000,
+      householdsServed: 4000,
+      numberOfTrees: selectedProject.trees,
+      projectAreaHa: selectedProject.areaHa,
+      year: selectedProject.year
+    });
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md space-y-4">
-          <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    const totalAnnualValue =
+      projectResults.total.carbonValue +
+      projectResults.total.stormwaterValue +
+      projectResults.total.healthSavings +
+      projectResults.total.propertyValueIncrease;
+
+    const benefitChainRows = [
+      {
+        key: "carbon",
+        badge: t("Climate / carbon", "Climat / carbone"),
+        badgeBg: "#E1F5EE",
+        badgeText: "#085041",
+        barColor: "#1D9E75",
+        econBg: "#E1F5EE",
+        fn: t("Carbon sequestration", "Séquestration du carbone"),
+        fnDetail: `${projectResults.total.carbonTonnes.toFixed(1)} tCO₂e ${t("removed per year", "retirés par an")}`,
+        benefit: t("Reduced atmospheric carbon", "Réduction du carbone atmosphérique"),
+        benefitDesc: t("Canadian social cost of carbon", "Coût social canadien du carbone"),
+        econLabel: t("Avoided carbon cost", "Coût carbone évité"),
+        value: projectResults.total.carbonValue,
+        barW: 35,
+      },
+      {
+        key: "water",
+        badge: t("Water & flood", "Eau et inondations"),
+        badgeBg: "#E6F1FB",
+        badgeText: "#0C447C",
+        barColor: "#378ADD",
+        econBg: "#E6F1FB",
+        fn: t("Rainfall interception", "Interception des précipitations"),
+        fnDetail: `${(projectResults.total.stormwaterLitres / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 1 })}M L/yr ${t("intercepted", "interceptés")}`,
+        benefit: t("Reduced flood risk", "Risque d'inondation réduit"),
+        benefitDesc: t("Avoided grey infrastructure cost", "Coût d'infrastructure grise évité"),
+        econLabel: t("Avoided infrastructure cost", "Coût d'infrastructure évité"),
+        value: projectResults.total.stormwaterValue,
+        barW: 40,
+      },
+      {
+        key: "health",
+        badge: t("Health & community", "Santé et communauté"),
+        badgeBg: "#EEEDFE",
+        badgeText: "#3C3489",
+        barColor: "#7F77DD",
+        econBg: "#EEEDFE",
+        fn: t("Heat reduction & air filtering", "Réduction de la chaleur et filtration de l'air"),
+        fnDetail: `−${projectResults.total.heatIslandReductionDegC.toFixed(2)}°C ${t("cooling", "refroidissement")}`,
+        benefit: t("Reduced illness & improved well-being", "Réduction des maladies et amélioration du bien-être"),
+        benefitDesc: t("Damage costs proxy", "Coûts de dommages (proxy)"),
+        econLabel: t("Avoided health costs", "Coûts de santé évités"),
+        value: projectResults.total.healthSavings,
+        barW: 55,
+      },
+      {
+        key: "property",
+        badge: t("Property & economic", "Foncière et économique"),
+        badgeBg: "#E1F5EE",
+        badgeText: "#085041",
+        barColor: "#1D9E75",
+        econBg: "#E1F5EE",
+        fn: t("Canopy amenity & shade", "Aménité du couvert et ombrage"),
+        fnDetail: `${selectedProject.trees} ${t("trees", "arbres")}, ${selectedProject.areaHa} ha`,
+        benefit: t("Increased property values", "Hausse de la valeur foncière"),
+        benefitDesc: t("Hedonic pricing", "Prix hédoniques"),
+        econLabel: t("Property & economic uplift", "Hausse foncière et économique"),
+        value: projectResults.total.propertyValueIncrease,
+        barW: 70,
+      },
+    ];
+
+    const summaryRows = benefitChainRows.map((row) => ({
+      ...row,
+      share: totalAnnualValue > 0 ? Math.round((row.value / totalAnnualValue) * 100) : 0,
+    }));
+
+    return (
+      <main className="mx-auto max-w-[1000px] px-4 py-5 space-y-4">
+        {/* 1. Page header — back + export */}
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setView("portfolio")}
+            className="text-xs font-medium hover:underline"
+            style={{ color: "#1D9E75" }}
+          >
+            {t("← Back to portfolio overview", "← Retour à la vue d'ensemble du portefeuille")}
+          </button>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="text-xs px-4 py-1.5 rounded-full border font-medium"
+            style={{ borderColor: "#1D9E75", color: "#1D9E75", background: "transparent" }}
+          >
+            {t("Download project PDF", "Télécharger le PDF du projet")}
+          </button>
+        </div>
+
+        {/* 2. Project header card */}
+        <section className="rounded-xl border bg-white p-5 shadow-sm" style={{ borderColor: "rgba(0,0,0,0.1)" }}>
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
             <div>
-              <h1 className="text-base md:text-lg font-semibold text-slate-900">
+              <h1 className="text-xl font-medium text-slate-900">
                 {selectedProject.name}
               </h1>
-              <p className="text-xs text-slate-600">
-                {selectedProject.municipality}, {selectedProject.province} ·{" "}
-                {selectedProject.year}
+              <p className="text-xs text-slate-500 mt-1">
+                {selectedProject.municipality}, {selectedProject.province} · {selectedProject.year}
               </p>
             </div>
-            <div className="flex flex-wrap gap-2 text-[10px]">
-              <span className="rounded-full bg-primary-50 border border-primary-200 px-2 py-1 text-primary-800 font-medium">
+            <div className="flex flex-wrap gap-2">
+              <span
+                className="text-xs font-medium rounded-full"
+                style={{ padding: "5px 14px", background: "#E1F5EE", color: "#085041", border: "0.5px solid #9FE1CB" }}
+              >
                 {language === "fr"
                   ? regionLabels[selectedProject.region].fr
                   : regionLabels[selectedProject.region].en}
               </span>
-              <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium flex items-center gap-1">
+              <span
+                className="text-xs font-medium rounded-full flex items-center gap-1"
+                style={{ padding: "5px 14px", background: "var(--color-background-secondary, #f5f5f3)", color: "var(--color-text-secondary, #555)", border: "0.5px solid rgba(0,0,0,0.15)" }}
+              >
                 <span>{typologyMeta[selectedProject.typology].icon}</span>
                 <span>
                   {language === "fr"
@@ -1114,12 +2172,18 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                     : typologyMeta[selectedProject.typology].en}
                 </span>
               </span>
-              <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium">
+              <span
+                className="text-xs font-medium rounded-full"
+                style={{ padding: "5px 14px", background: "var(--color-background-secondary, #f5f5f3)", color: "var(--color-text-secondary, #555)", border: "0.5px solid rgba(0,0,0,0.15)" }}
+              >
                 {language === "fr"
                   ? stageLabels[selectedProject.stage].fr
                   : stageLabels[selectedProject.stage].en}
               </span>
-              <span className="rounded-full bg-slate-50 border border-slate-200 px-2 py-1 text-slate-700 font-medium capitalize">
+              <span
+                className="text-xs font-medium rounded-full capitalize"
+                style={{ padding: "5px 14px", background: "var(--color-background-secondary, #f5f5f3)", color: "var(--color-text-secondary, #555)", border: "0.5px solid rgba(0,0,0,0.15)" }}
+              >
                 {selectedProject.size === "small"
                   ? t("Small community", "Petite collectivité")
                   : selectedProject.size === "medium"
@@ -1127,305 +2191,353 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
                   : t("Large community", "Grande collectivité")}
               </span>
             </div>
-          </header>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-              <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-                {t("Trees", "Arbres")}
-              </div>
-              <div className="mt-1 text-lg font-bold text-slate-900">
-                {selectedProject.trees.toLocaleString()}
-              </div>
-            </div>
-            <div className="rounded-xl border border-primary-200 bg-primary-50 p-3 shadow-sm">
-              <div className="text-[11px] uppercase tracking-wide text-primary-800 font-medium">
-                {t("Carbon (tCO₂e/yr)", "Carbone (tCO₂e/an)")}
-              </div>
-              <div className="mt-1 text-lg font-bold text-primary-900">
-                {selectedProject.carbonTonnes.toLocaleString(undefined, {
-                  maximumFractionDigits: 0
-                })}
-              </div>
-            </div>
-            <div className="rounded-xl border border-secondary-200 bg-secondary-50 p-3 shadow-sm">
-              <div className="text-[11px] uppercase tracking-wide text-secondary-800 font-medium">
-                {t("Stormwater (L/yr)", "Eaux pluviales (L/an)")}
-              </div>
-              <div className="mt-1 text-lg font-bold text-secondary-900">
-                {(selectedProject.stormwaterLitres / 1_000_000).toLocaleString(
-                  undefined,
-                  { maximumFractionDigits: 1 }
-                )}{" "}
-                M
-              </div>
-            </div>
           </div>
 
-          {/* Benefits & impacts (aligned with project setup / calculator) */}
-          {(() => {
-            const projectResults = calculateBenefits({
-              region: selectedProject.region,
-              municipalitySize: selectedProject.size,
-              populationServed: 10000,
-              householdsServed: 4000,
-              numberOfTrees: selectedProject.trees,
-              projectAreaHa: selectedProject.areaHa,
-              year: selectedProject.year
-            });
-            return (
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
-                <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
-                  {t("Benefits & impacts", "Bénéfices et impacts")}
-                </h2>
-                <p className="text-[11px] text-slate-600 mb-4">
+          {/* 3. Project summary KPI strip */}
+          <div className="mt-4">
+            <p className="text-[10px] font-medium tracking-wider text-slate-400 uppercase mb-2">
+              {t("Project summary", "Résumé du projet")}
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="rounded-lg p-3" style={{ background: "var(--color-background-secondary, #f5f5f3)" }}>
+                <p className="text-[10px] uppercase tracking-wide text-slate-500">{t("Trees planted", "Arbres plantés")}</p>
+                <p className="text-xl font-medium text-slate-900 mt-1">{selectedProject.trees.toLocaleString()}</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">
                   {t(
-                    "Estimated benefits for this project, using the same methodology as the calculator. Values are indicative for reporting and stakeholder communication.",
-                    "Bénéfices estimés pour ce projet, selon la même méthodologie que le calculateur. Les valeurs sont indicatives pour les rapports et la communication avec les parties prenantes."
+                    `street trees along ${selectedProject.areaHa} ha`,
+                    `arbres de rue sur ${selectedProject.areaHa} ha`
                   )}
                 </p>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  <div className="rounded-xl border border-primary-200 bg-primary-50/80 p-3 shadow-sm">
-                    <h3 className="text-[11px] font-semibold text-primary-800 uppercase tracking-wide mb-1">
-                      {t("Climate / carbon", "Climat / carbone")}
-                    </h3>
-                    <p className="text-base font-bold text-primary-900">
-                      {projectResults.total.carbonTonnes.toFixed(1)} tCO₂e / {t("yr", "an")}
-                    </p>
-                    <p className="text-[11px] text-primary-800 mt-0.5">
-                      ≈ ${projectResults.total.carbonValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
-                      {t("carbon value", "valeur carbone")}
-                    </p>
-                    <p className="text-[10px] text-slate-600 mt-1">
-                      {t(
-                        "Based on Canadian social carbon value assumptions.",
-                        "Basé sur les hypothèses de valeur sociale du carbone au Canada."
-                      )}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-secondary-200 bg-secondary-50/80 p-3 shadow-sm">
-                    <h3 className="text-[11px] font-semibold text-secondary-800 uppercase tracking-wide mb-1">
-                      {t("Stormwater / flooding", "Eaux pluviales / inondations")}
-                    </h3>
-                    <p className="text-base font-bold text-secondary-900">
-                      {(projectResults.total.stormwaterLitres / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 1 })}{" "}
-                      M L {t("intercepted", "interceptés")}
-                    </p>
-                    <p className="text-[11px] text-secondary-800 mt-0.5">
-                      ≈ ${projectResults.total.stormwaterValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
-                      {t("avoided infrastructure", "infrastructure évitée")}
-                    </p>
-                    <p className="text-[10px] text-slate-600 mt-1">
-                      {t(
-                        "Rainfall intercepted and slowed by trees vs hard surfaces.",
-                        "Pluie interceptée et ralentie par les arbres par rapport aux surfaces imperméables."
-                      )}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-accent-200 bg-accent-50/80 p-3 shadow-sm">
-                    <h3 className="text-[11px] font-semibold text-accent-800 uppercase tracking-wide mb-1">
-                      {t("Health & wellbeing", "Santé et bien-être")}
-                    </h3>
-                    <p className="text-base font-bold text-accent-900">
-                      ${projectResults.total.healthSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
-                      / {t("yr (proxy)", "an (proxy)")}
-                    </p>
-                    <p className="text-[10px] text-slate-600 mt-1">
-                      {t(
-                        "Estimated value of reduced illness and improved mental wellbeing.",
-                        "Valeur estimée de la réduction des maladies et de l'amélioration du bien-être mental."
-                      )}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-amber-200 bg-amber-50/80 p-3 shadow-sm">
-                    <h3 className="text-[11px] font-semibold text-amber-800 uppercase tracking-wide mb-1">
-                      {t("Property value", "Valeur foncière")}
-                    </h3>
-                    <p className="text-base font-bold text-amber-900">
-                      ${projectResults.total.propertyValueIncrease.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </p>
-                    <p className="text-[10px] text-slate-600 mt-1">
-                      {t(
-                        "Indicative uplift in adjacent property value.",
-                        "Hausse indicative de la valeur des propriétés adjacentes."
-                      )}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-orange-200 bg-orange-50/80 p-3 shadow-sm">
-                    <h3 className="text-[11px] font-semibold text-orange-800 uppercase tracking-wide mb-1">
-                      {t("Urban heat", "Îlots de chaleur urbains")}
-                    </h3>
-                    <p className="text-base font-bold text-orange-900">
-                      −{projectResults.total.heatIslandReductionDegC.toFixed(2)}°C
-                    </p>
-                    <p className="text-[10px] text-slate-600 mt-1">
-                      {t(
-                        "Cooling effect over the project footprint.",
-                        "Effet rafraîchissant sur l'emprise du projet."
-                      )}
-                    </p>
-                  </div>
-                </div>
               </div>
-            );
-          })()}
-
-          {/* Project Images Gallery */}
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
-              {t("Project gallery", "Galerie du projet")}
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-green-100 to-green-200 border border-green-300 flex items-center justify-center">
-                <div className="text-center p-2">
-                  <div className="text-2xl mb-1">🌱</div>
-                  <div className="text-[10px] text-slate-600 font-medium">
-                    {t("Planting", "Plantation")}
-                  </div>
-                </div>
+              <div className="rounded-lg p-3" style={{ background: "var(--color-background-secondary, #f5f5f3)" }}>
+                <p className="text-[10px] uppercase tracking-wide text-slate-500">{t("Carbon (tCO₂e/yr)", "Carbone (tCO₂e/an)")}</p>
+                <p className="text-xl font-medium mt-1" style={{ color: "#0F6E56" }}>
+                  {projectResults.total.carbonTonnes.toFixed(1)} t
+                </p>
+                <p className="text-[10px] text-slate-400 mt-0.5">{t("sequestered at maturity", "séquestré à maturité")}</p>
               </div>
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-200 border border-emerald-300 flex items-center justify-center">
-                <div className="text-center p-2">
-                  <div className="text-2xl mb-1">🌳</div>
-                  <div className="text-[10px] text-slate-600 font-medium">
-                    {t("Growth", "Croissance")}
-                  </div>
-                </div>
+              <div className="rounded-lg p-3" style={{ background: "var(--color-background-secondary, #f5f5f3)" }}>
+                <p className="text-[10px] uppercase tracking-wide text-slate-500">{t("Stormwater (L/yr)", "Eaux pluviales (L/an)")}</p>
+                <p className="text-xl font-medium text-slate-900 mt-1">
+                  {(projectResults.total.stormwaterLitres / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 1 })}M L
+                </p>
+                <p className="text-[10px] text-slate-400 mt-0.5">{t("intercepted per year", "interceptés par an")}</p>
               </div>
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-teal-100 to-teal-200 border border-teal-300 flex items-center justify-center">
-                <div className="text-center p-2">
-                  <div className="text-2xl mb-1">👥</div>
-                  <div className="text-[10px] text-slate-600 font-medium">
-                    {t("Community", "Communauté")}
-                  </div>
-                </div>
-              </div>
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 border border-blue-300 flex items-center justify-center">
-                <div className="text-center p-2">
-                  <div className="text-2xl mb-1">💧</div>
-                  <div className="text-[10px] text-slate-600 font-medium">
-                    {t("Impact", "Impact")}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p className="text-[10px] text-slate-500 mt-2">
-              {t(
-                "Placeholder images. In production, these would show actual project photos uploaded by municipalities.",
-                "Images de remplacement. En production, celles-ci afficheraient les photos réelles du projet téléchargées par les municipalités."
-              )}
-            </p>
-          </div>
-
-          {/* Project Location Map */}
-          <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm" style={{ height: "300px" }}>
-            <Map
-              longitude={selectedProject.lng}
-              latitude={selectedProject.lat}
-              zoom={12}
-              mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"}
-              style={{ width: "100%", height: "100%" }}
-              mapStyle="mapbox://styles/mapbox/light-v11"
-            >
-              <Marker
-                longitude={selectedProject.lng}
-                latitude={selectedProject.lat}
-                anchor="bottom"
-              >
-                <div className="w-8 h-8 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">🌲</span>
-                </div>
-              </Marker>
-            </Map>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-[1.3fr,1fr] items-start">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-4">
-              <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
-                {t("Project story", "Récit du projet")}
-              </h2>
-              <p className="text-xs text-slate-700">
-                {t(
-                  "Use this space to capture a 3–4 sentence narrative about who benefits, how the site is changing, and what risks are being reduced.",
-                  "Utilisez cet espace pour saisir un récit de 3–4 phrases sur les bénéficiaires, la transformation du site et les risques réduits."
-                )}
-              </p>
-              <ul className="text-[11px] text-slate-600 list-disc pl-4 space-y-1">
-                <li>
-                  {t(
-                    "Highlight small-community impact by referencing per-capita and per-household metrics.",
-                    "Soulignez l'impact pour les petites collectivités en faisant référence aux indicateurs par habitant et par ménage."
-                  )}
-                </li>
-                <li>
-                  {t(
-                    "Connect physical benefits (trees, stormwater, cooling) to equity and health outcomes.",
-                    "Reliez les bénéfices physiques (arbres, eaux pluviales, refroidissement) aux résultats en matière d'équité et de santé."
-                  )}
-                </li>
-              </ul>
-
-              {/* Project Updates Section */}
-              <div className="pt-3 border-t border-slate-300">
-                <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
-                  {t("Project updates", "Mises à jour du projet")}
-                </h3>
-                <div className="space-y-2">
-                  {[selectedProject.year, selectedProject.year + 2, selectedProject.year + 4].map((updateYear, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm"
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-slate-900">
-                          {t("Update", "Mise à jour")} {updateYear}
-                        </span>
-                        <span className="text-[10px] text-slate-500">
-                          {idx === 0
-                            ? t("Baseline", "Ligne de base")
-                            : idx === 1
-                            ? t("+2 years", "+2 ans")
-                            : t("+4 years", "+4 ans")}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-600 mb-2">
-                        {t(
-                          "Project progress update and impact metrics will be captured here every 2 years.",
-                          "La mise à jour de l'avancement du projet et les indicateurs d'impact seront saisis ici tous les 2 ans."
-                        )}
-                      </p>
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          className="text-[10px] text-primary-600 hover:text-primary-800 font-medium"
-                        >
-                          📄 {t("View report", "Voir le rapport")}
-                        </button>
-                        <button
-                          type="button"
-                          className="text-[10px] text-primary-600 hover:text-primary-800 font-medium"
-                        >
-                          📥 {t("Download PDF", "Télécharger PDF")}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3 shadow-sm">
-              <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
-                {t("How this view is used", "Utilisation de cette vue")}
-              </h3>
-              <p className="text-[11px] text-slate-600">
-                {t(
-                  "In a full build, this page can be auto-populated from the application form, with editable narrative blocks, project photos and exportable PDFs.",
-                  "Dans une version complète, cette page peut être alimentée automatiquement à partir du formulaire de demande, avec des blocs narratifs modifiables, des photos de projet et des PDF exportables."
-                )}
-              </p>
             </div>
           </div>
         </section>
+
+        {/* 4. Photo gallery */}
+        <div>
+          <p className="text-[10px] font-medium tracking-wider text-slate-400 uppercase mb-2">
+            {t("Project gallery", "Galerie du projet")}
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              {
+                src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
+                caption: t("Before — Main Street corridor, 2023", "Avant — corridor de la rue Main, 2023"),
+              },
+              {
+                src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80",
+                caption: t("Planting in progress — summer 2024", "Plantation en cours — été 2024"),
+              },
+              {
+                src: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80",
+                caption: t("Mature canopy vision — community outcome", "Vision du couvert mature — résultat communautaire"),
+              },
+            ].map((photo, idx) => (
+              <div key={idx} className="rounded-lg overflow-hidden relative" style={{ aspectRatio: "4/3", background: "#e8f5f0" }}>
+                <img
+                  src={photo.src}
+                  alt={photo.caption}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+                <div
+                  className="absolute bottom-0 left-0 right-0 text-white text-[10px] px-2 py-1"
+                  style={{ background: "rgba(0,0,0,0.25)" }}
+                >
+                  {photo.caption}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-slate-400 mt-2">
+            {t(
+              "In production, these would show actual project photos uploaded by the municipality.",
+              "En production, celles-ci afficheraient les photos réelles du projet téléchargées par la municipalité."
+            )}
+          </p>
+        </div>
+
+        {/* 5. Project story + map — two-column layout */}
+        <div className="grid gap-3 md:grid-cols-[1.3fr,1fr]">
+          <div className="rounded-xl border bg-white p-4" style={{ borderColor: "rgba(0,0,0,0.1)" }}>
+            <p className="text-[10px] font-medium tracking-wider text-slate-400 uppercase mb-2">
+              {t("Project story", "Récit du projet")}
+            </p>
+            <p className="text-[13px] leading-7 text-slate-500">
+              {t(
+                `${selectedProject.municipality} runs through one of ${selectedProject.province}'s most densely populated neighbourhoods — a corridor with limited shade, ageing sidewalks, and surface temperatures that spike well above the city average on hot summer days. Residents, particularly older adults and families in nearby apartment buildings, had limited access to green space within walking distance.`,
+                `${selectedProject.municipality} traverse l'un des quartiers les plus densément peuplés de ${selectedProject.province} — un corridor avec peu d'ombre, des trottoirs vieillissants et des températures de surface bien supérieures à la moyenne de la ville lors des chaudes journées d'été.`
+              )}
+            </p>
+            <p className="text-[13px] leading-7 text-slate-500 mt-3">
+              {t(
+                `In ${selectedProject.year}, the municipality partnered with GCCC to plant ${selectedProject.trees} street trees along this corridor, prioritising species adapted to ${language === "fr" ? regionLabels[selectedProject.region].fr : regionLabels[selectedProject.region].en} climate conditions. The project is estimated to reduce local cooling load by ${projectResults.total.heatIslandReductionDegC.toFixed(2)}°C at maturity, intercept over ${(projectResults.total.stormwaterLitres / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 0 })} million litres of stormwater annually, and generate approximately $${projectResults.total.propertyValueIncrease.toLocaleString(undefined, { maximumFractionDigits: 0 })} per year in property value uplift for adjacent households.`,
+                `En ${selectedProject.year}, la municipalité s'est associée au GCCC pour planter ${selectedProject.trees} arbres de rue le long de ce corridor. Le projet devrait réduire la charge de refroidissement locale de ${projectResults.total.heatIslandReductionDegC.toFixed(2)}°C à maturité et intercepter plus de ${(projectResults.total.stormwaterLitres / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 0 })} millions de litres d'eaux pluviales par an.`
+              )}
+            </p>
+          </div>
+          <div className="rounded-xl border bg-white p-3" style={{ borderColor: "rgba(0,0,0,0.1)" }}>
+            <p className="text-[10px] font-medium tracking-wider text-slate-400 uppercase mb-2">
+              {t("Project location", "Emplacement du projet")}
+            </p>
+            <div className="rounded-lg overflow-hidden" style={{ height: "240px" }}>
+              <Map
+                longitude={selectedProject.lng}
+                latitude={selectedProject.lat}
+                zoom={12}
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"}
+                style={{ width: "100%", height: "100%" }}
+                mapStyle="mapbox://styles/mapbox/light-v11"
+              >
+                <Marker
+                  longitude={selectedProject.lng}
+                  latitude={selectedProject.lat}
+                  anchor="bottom"
+                >
+                  <div className="w-8 h-8 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">🌲</span>
+                  </div>
+                </Marker>
+              </Map>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-2">
+              {t(
+                "Interactive map centred on project location in full build.",
+                "Carte interactive centrée sur l'emplacement du projet dans la version complète."
+              )}
+            </p>
+          </div>
+        </div>
+
+        {/* 6. Monitoring timeline */}
+        <div className="rounded-xl border bg-white p-4" style={{ borderColor: "rgba(0,0,0,0.1)" }}>
+          <p className="text-[10px] font-medium tracking-wider text-slate-400 uppercase mb-3">
+            {t("Monitoring timeline", "Chronologie de surveillance")}
+          </p>
+          {[selectedProject.year, selectedProject.year + 2, selectedProject.year + 4].map((updateYear, idx) => (
+            <div
+              key={idx}
+              className="flex items-start justify-between py-3"
+              style={{ borderBottom: idx < 2 ? "0.5px solid rgba(0,0,0,0.08)" : "none" }}
+            >
+              <div>
+                <p className="text-xs font-medium text-slate-900">
+                  {idx === 0
+                    ? `${t("Baseline", "Ligne de base")} — ${updateYear}`
+                    : `${t("Update", "Mise à jour")} — ${updateYear}`}
+                </p>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  {idx === 0
+                    ? t(
+                        "Project establishment. Tree planting completed. Baseline measurements recorded.",
+                        "Établissement du projet. Plantation complétée. Mesures de référence enregistrées."
+                      )
+                    : t(
+                        "Project progress and impact metrics will be captured here every 2 years.",
+                        "L'avancement du projet et les indicateurs d'impact seront saisis ici tous les 2 ans."
+                      )}
+                </p>
+                <div className="flex gap-3 mt-1">
+                  {idx === 0 ? (
+                    <>
+                      <span className="text-[11px] font-medium cursor-pointer" style={{ color: "#1D9E75" }}>
+                        {t("View report", "Voir le rapport")}
+                      </span>
+                      <span className="text-[11px] font-medium cursor-pointer" style={{ color: "#1D9E75" }}>
+                        {t("Download PDF", "Télécharger PDF")}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-slate-400">
+                      {t("Not yet available", "Pas encore disponible")}
+                    </span>
+                  )}
+                </div>
+              </div>
+              {idx === 0 ? (
+                <span
+                  className="text-[10px] font-medium rounded-full px-2 py-0.5 whitespace-nowrap"
+                  style={{ background: "#E1F5EE", color: "#085041" }}
+                >
+                  {t("Baseline", "Ligne de base")}
+                </span>
+              ) : (
+                <span className="text-[10px] text-slate-400 whitespace-nowrap">
+                  {idx === 1 ? t("+2 years", "+2 ans") : t("+4 years", "+4 ans")}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* 8. Benefits & impacts section */}
+        <div>
+          <p className="text-[10px] font-medium tracking-wider text-slate-400 uppercase mb-1">
+            {t("Benefits & impacts", "Bénéfices et impacts")}
+          </p>
+          <p className="text-[11px] text-slate-500 mb-3">
+            {t(
+              "Estimated benefits using the same methodology as the calculator. Values are indicative for reporting and stakeholder communication.",
+              "Bénéfices estimés selon la même méthodologie que le calculateur. Valeurs indicatives pour les rapports et la communication."
+            )}
+          </p>
+
+          {/* 8b. Headline benefit KPI strip */}
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="rounded-lg p-3" style={{ background: "var(--color-background-secondary, #f5f5f3)" }}>
+              <p className="text-[10px] uppercase tracking-wide text-slate-500">{t("Total annual value", "Valeur annuelle totale")}</p>
+              <p className="text-xl font-medium mt-1" style={{ color: "#0F6E56" }}>
+                ${totalAnnualValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{t("CAD / yr at maturity", "CAD / an à maturité")}</p>
+            </div>
+            <div className="rounded-lg p-3" style={{ background: "var(--color-background-secondary, #f5f5f3)" }}>
+              <p className="text-[10px] uppercase tracking-wide text-slate-500">{t("Value per resident", "Valeur par résident")}</p>
+              <p className="text-xl font-medium text-slate-900 mt-1">
+                ${Math.round(totalAnnualValue / 10000).toLocaleString()}
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{t("CAD / capita / yr", "CAD / habitant / an")}</p>
+            </div>
+            <div className="rounded-lg p-3" style={{ background: "var(--color-background-secondary, #f5f5f3)" }}>
+              <p className="text-[10px] uppercase tracking-wide text-slate-500">{t("Urban cooling", "Refroidissement urbain")}</p>
+              <p className="text-xl font-medium text-slate-900 mt-1">
+                −{projectResults.total.heatIslandReductionDegC.toFixed(2)}°C
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{t("cooling effect over project footprint", "effet rafraîchissant sur l'emprise du projet")}</p>
+            </div>
+          </div>
+
+          {/* 8c. Expandable benefit chain rows */}
+          <div className="space-y-2 mb-4">
+            {benefitChainRows.map((row) => {
+              const isOpen = expandedBenefitRows.has(row.key);
+              const sharePct = totalAnnualValue > 0 ? Math.round((row.value / totalAnnualValue) * 100) : 0;
+              return (
+                <div key={row.key} className="rounded-xl overflow-hidden bg-white" style={{ border: "0.5px solid rgba(0,0,0,0.1)" }}>
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition text-left gap-3"
+                    onClick={() => setExpandedBenefitRows((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(row.key)) next.delete(row.key); else next.add(row.key);
+                      return next;
+                    })}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span
+                        className="rounded-full px-2.5 py-0.5 text-[10px] font-medium flex-shrink-0 whitespace-nowrap"
+                        style={{ background: row.badgeBg, color: row.badgeText }}
+                      >
+                        {row.badge}
+                      </span>
+                      <span className="text-[11px] text-slate-500 truncate">{row.fn}</span>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-sm font-medium text-slate-900">
+                        ${Math.round(row.value).toLocaleString()}
+                      </span>
+                      <span className="text-[10px] text-slate-400">/ yr</span>
+                      <span className="text-[11px] text-slate-300">{isOpen ? "▲" : "▼"}</span>
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="border-t p-4" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                      <div className="grid gap-2 items-stretch" style={{ gridTemplateColumns: "1fr 20px 1fr 20px 1fr" }}>
+                        {/* Function */}
+                        <div className="rounded-lg p-3 flex flex-col gap-2" style={{ background: "var(--color-background-secondary, #f5f5f3)" }}>
+                          <p className="text-[9px] font-medium uppercase tracking-widest text-slate-400">{t("FUNCTION", "FONCTION")}</p>
+                          <p className="text-[11px] font-medium text-slate-900">{row.fn}</p>
+                          <p className="text-[10px] text-slate-500 flex-1">{row.fnDetail}</p>
+                          <div>
+                            <div className="h-[3px] rounded-full overflow-hidden" style={{ background: "rgba(0,0,0,0.08)" }}>
+                              <div className="h-full rounded-full" style={{ width: `${row.barW}%`, background: row.barColor }} />
+                            </div>
+                            <div className="flex justify-between mt-1">
+                              <span className="text-[9px] text-slate-400">{t("Lower", "Plus faible")}</span>
+                              <span className="text-[9px] text-slate-400">{t("Typical", "Typique")}</span>
+                              <span className="text-[9px] text-slate-400">{t("High", "Élevé")}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center text-slate-300 text-xs">→</div>
+                        {/* Benefit */}
+                        <div className="rounded-lg p-3 flex flex-col gap-2" style={{ background: "var(--color-background-secondary, #f5f5f3)" }}>
+                          <p className="text-[9px] font-medium uppercase tracking-widest text-slate-400">{t("BENEFIT", "BÉNÉFICE")}</p>
+                          <p className="text-[11px] font-medium text-slate-900">{row.benefit}</p>
+                          <p className="text-[10px] text-slate-500 flex-1">{row.benefitDesc}</p>
+                        </div>
+                        <div className="flex items-center justify-center text-slate-300 text-xs">→</div>
+                        {/* Economic value */}
+                        <div className="rounded-lg p-3 flex flex-col gap-2" style={{ background: row.econBg }}>
+                          <p className="text-[9px] font-medium uppercase tracking-widest" style={{ color: row.badgeText, opacity: 0.6 }}>{t("ECONOMIC VALUE", "VALEUR ÉCONOMIQUE")}</p>
+                          <p className="text-[11px] font-medium" style={{ color: row.badgeText }}>{row.econLabel}</p>
+                          <p className="text-sm font-medium mt-auto" style={{ color: row.badgeText }}>
+                            ${Math.round(row.value).toLocaleString()} / {t("yr", "an")}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* 8d. Benefits summary table */}
+          <div className="rounded-xl border bg-white p-4" style={{ borderColor: "rgba(0,0,0,0.1)" }}>
+            <p className="text-xs font-medium text-slate-900 mb-2">{t("Benefits summary", "Résumé des bénéfices")}</p>
+            <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+              <thead>
+                <tr>
+                  <th className="text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider py-1.5 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.1)" }}>{t("Benefit group", "Groupe de bénéfices")}</th>
+                  <th className="text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider py-1.5 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.1)" }}>{t("Tree function", "Fonction de l'arbre")}</th>
+                  <th className="text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider py-1.5 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.1)" }}>{t("Physical quantity", "Quantité physique")}</th>
+                  <th className="text-right text-[10px] font-medium text-slate-400 uppercase tracking-wider py-1.5 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.1)" }}>{t("Annual value", "Valeur annuelle")}</th>
+                  <th className="text-right text-[10px] font-medium text-slate-400 uppercase tracking-wider py-1.5 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.1)" }}>{t("Share", "Part")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summaryRows.map((row) => (
+                  <tr key={row.key}>
+                    <td className="font-medium py-2 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.05)" }}>{row.badge}</td>
+                    <td className="text-[11px] text-slate-500 py-2 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.05)" }}>{row.fn}</td>
+                    <td className="text-[10px] text-slate-400 py-2 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.05)" }}>{row.fnDetail}</td>
+                    <td className="text-right font-medium py-2 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.05)" }}>${Math.round(row.value).toLocaleString()}</td>
+                    <td className="text-right text-slate-500 py-2 px-2" style={{ borderBottom: "0.5px solid rgba(0,0,0,0.05)" }}>{row.share}%</td>
+                  </tr>
+                ))}
+                <tr>
+                  <td className="font-medium py-2 px-2" style={{ background: "var(--color-background-secondary, #f8f8f6)" }}>{t("Total", "Total")}</td>
+                  <td className="text-[11px] text-slate-500 py-2 px-2" style={{ background: "var(--color-background-secondary, #f8f8f6)" }}>{t("All quantified ecosystem services", "Tous les services écosystémiques quantifiés")}</td>
+                  <td className="py-2 px-2" style={{ background: "var(--color-background-secondary, #f8f8f6)" }}></td>
+                  <td className="text-right font-medium py-2 px-2" style={{ background: "var(--color-background-secondary, #f8f8f6)" }}>${totalAnnualValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                  <td className="text-right py-2 px-2" style={{ background: "var(--color-background-secondary, #f8f8f6)" }}>100%</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">
+              {t(
+                "Valuation methods follow simplified Canadian order-of-magnitude assumptions. Not for official reporting.",
+                "Les méthodes d'évaluation suivent des hypothèses canadiennes simplifiées d'ordre de grandeur. Ne pas utiliser pour les rapports officiels."
+              )}
+            </p>
+          </div>
+        </div>
       </main>
     );
   }
@@ -1868,71 +2980,87 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-5">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-              {t("Projects", "Projets")}
+        {/* Row 1 — Portfolio summary */}
+        <div>
+          <p className="text-[10px] font-medium tracking-wider text-slate-400 uppercase mb-2">
+            {t("Portfolio summary", "Résumé du portefeuille")}
+          </p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500 font-medium">
+                {t("Projects funded", "Projets financés")}
+              </div>
+              <div className="mt-1 text-2xl font-medium" style={{ color: "#0F6E56" }}>
+                88
+              </div>
+              <div className="text-[10px] text-slate-400 mt-0.5">
+                {t("approved GCCC projects", "projets GCCC approuvés")}
+              </div>
             </div>
-            <div className="mt-1 text-2xl font-bold text-slate-900">
-              {totalProjects}
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500 font-medium">
+                {t("Trees to be planted", "Arbres à planter")}
+              </div>
+              <div className="mt-1 text-2xl font-medium text-slate-900">
+                203K
+              </div>
+              <div className="text-[10px] text-slate-400 mt-0.5">
+                {t("committed this programme", "engagés dans ce programme")}
+              </div>
             </div>
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-              {t("Trees", "Arbres")}
-            </div>
-            <div className="mt-1 text-2xl font-bold text-slate-900">
-              {totalTrees.toLocaleString()}
-            </div>
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-              {t(
-                "Community impact barometer",
-                "Baromètre d'impact communautaire"
-              )}
-            </div>
-            <div className="mt-1 text-2xl font-bold text-slate-900">
-              {communityImpactIndicator}
-            </div>
-            <p className="mt-1 text-[11px] text-slate-500">
-              {t(
-                "Based on trees per project across current portfolio filters (demo thresholds: emerging <300, moderate 300–700, strong 700–1500, very strong >1500 trees/project).",
-                "Basé sur le nombre d’arbres par projet pour les filtres actuels du portefeuille (seuils de démonstration : émergent <300, modéré 300–700, fort 700–1500, très fort >1500 arbres/projet)."
-              )}
-            </p>
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-              {t("Stormwater (L/yr)", "Eaux pluviales (L/an)")}
-            </div>
-            <div className="mt-1 text-2xl font-bold text-slate-900">
-              {(totalStormwater / 1_000_000).toLocaleString(undefined, {
-                maximumFractionDigits: 1
-              })}{" "}
-              M
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500 font-medium">
+                {t("Municipalities supported", "Municipalités soutenues")}
+              </div>
+              <div className="mt-1 text-2xl font-medium text-slate-900">
+                81
+              </div>
+              <div className="text-[10px] text-slate-400 mt-0.5">
+                {t("across Canada", "à travers le Canada")}
+              </div>
             </div>
           </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
-            <div className="text-[11px] uppercase tracking-wide text-slate-600 font-medium">
-              {t("Equity / access (proxy)", "Équité / accès (proxy)")}
+        </div>
+
+        {/* Row 2 — Estimated benefits generated */}
+        <div>
+          <p className="text-[10px] font-medium tracking-wider text-slate-400 uppercase mb-2">
+            {t("Estimated benefits generated", "Bénéfices estimés générés")}
+          </p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500 font-medium">
+                {t("Total ecosystem value", "Valeur écosystémique totale")}
+              </div>
+              <div className="mt-1 text-2xl font-medium" style={{ color: "#0F6E56" }}>
+                $1.4M
+              </div>
+              <div className="text-[10px] text-slate-400 mt-0.5">
+                {t("indicative CAD / yr at maturity", "CAD indicatif / an à maturité")}
+              </div>
             </div>
-            <div className="mt-1 text-2xl font-bold text-slate-900">
-              {(() => {
-                const equityProjects = filteredProjects.filter(
-                  p => p.size === "small" || p.region === "territories"
-                ).length;
-                return totalProjects === 0
-                  ? 0
-                  : `${equityProjects.toLocaleString()}`;
-              })()}
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500 font-medium">
+                {t("tCO₂e sequestered", "tCO₂e séquestrées")}
+              </div>
+              <div className="mt-1 text-2xl font-medium text-slate-900">
+                837 t
+              </div>
+              <div className="text-[10px] text-slate-400 mt-0.5">
+                {t("per year at canopy maturity", "par an à maturité du couvert")}
+              </div>
             </div>
-            <p className="mt-1 text-[11px] text-slate-500">
-              {t(
-                "Indicative count of projects in smaller communities or territories that may improve access for equity-deserving groups (demo rule).",
-                "Nombre indicatif de projets dans des petites collectivités ou des territoires pouvant améliorer l’accès pour des groupes en quête d’équité (règle de démonstration)."
-              )}
-            </p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500 font-medium">
+                {t("Stormwater diverted", "Eaux pluviales détournées")}
+              </div>
+              <div className="mt-1 text-2xl font-medium text-slate-900">
+                72.8M L
+              </div>
+              <div className="text-[10px] text-slate-400 mt-0.5">
+                {t("per year across all projects", "par an pour tous les projets")}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1942,7 +3070,7 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
         <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide mb-3">
           {t("Filter projects", "Filtrer les projets")}
         </h3>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <div>
             <label className="text-[11px] font-medium text-slate-700 block mb-1.5">
               {t("Region", "Région")}
@@ -1995,6 +3123,36 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
             </select>
           </div>
 
+          <div>
+            <label className="text-[11px] font-medium text-slate-700 block mb-1.5">
+              {t("Year of planting", "Année de plantation")}
+            </label>
+            <select
+              value={selectedYear}
+              onChange={e => setSelectedYear(e.target.value === "all" ? "all" : Number(e.target.value))}
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+            >
+              <option value="all">{t("All years", "Toutes les années")}</option>
+              {[2021, 2022, 2023, 2024, 2025, 2026].map(yr => (
+                <option key={yr} value={yr}>{yr}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-[11px] font-medium text-slate-700 block mb-1.5">
+              {t("Project status", "Statut du projet")}
+            </label>
+            <select
+              value={selectedStatus}
+              onChange={e => setSelectedStatus(e.target.value as typeof selectedStatus)}
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition"
+            >
+              <option value="all">{t("All", "Tous")}</option>
+              <option value="approved">{t("Approved", "Approuvé")}</option>
+              <option value="pending">{t("Pending approval", "En attente d'approbation")}</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -2204,21 +3362,246 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
         </div>
       </section>
 
-      {/* Credits / methodology */}
-      <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2">
-        <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
-          {t("Data & methodology (demo)", "Données et méthodologie (démo)")}
-        </h3>
-        <p className="text-[11px] text-slate-700">
+      {/* Section 5 — Three-column row below map */}
+      <section className="grid gap-4 lg:grid-cols-3 items-start">
+        {/* Card 1 — Programme funding progress */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-md space-y-4">
+          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+            {t("Programme funding progress", "Progrès du financement du programme")}
+          </h3>
+          {/* Bar 1 — FY 2025–26 */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[11px] text-slate-700 font-medium">FY 2025–26</span>
+              <span className="text-[11px] text-slate-900 font-medium">$26.9M {t("approved", "approuvé")}</span>
+            </div>
+            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div className="h-full rounded-full" style={{ width: "41%", background: "#1D9E75" }} />
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1">41% {t("of $65.2M FY target", "de l’objectif de 65,2 M$ pour l’EF")}</p>
+          </div>
+          {/* Bar 2 — Programme envelope */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[11px] text-slate-700 font-medium">{t("Programme envelope", "Enveloppe du programme")}</span>
+              <span className="text-[11px] text-slate-900 font-medium">$43.5M {t("approved", "approuvé")}</span>
+            </div>
+            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div className="h-full rounded-full" style={{ width: "20%", background: "#1D9E75" }} />
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1">20% {t("of $217.3M total envelope", "de l’enveloppe totale de 217,3 M$")}</p>
+          </div>
+          {/* Mini stat row */}
+          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100">
+            <div className="text-center">
+              <p className="text-sm font-medium text-slate-900">88</p>
+              <p className="text-[10px] text-slate-400">{t("Approvals", "Approbations")}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-slate-900">$159</p>
+              <p className="text-[10px] text-slate-400">{t("Grant / tree", "Subvention / arbre")}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-slate-900">$333</p>
+              <p className="text-[10px] text-slate-400">{t("Cost / tree", "Coût / arbre")}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2 — Portfolio benefit breakdown */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-md space-y-3">
+          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+            {t("Portfolio benefit breakdown", "Ventilation des bénéfices du portefeuille")}
+          </h3>
+          <div className="flex items-center gap-4">
+            {/* Doughnut chart — SVG */}
+            <svg viewBox="0 0 100 100" className="w-28 h-28 flex-shrink-0">
+              {/* Property & economic — 70% (0 to 252°) */}
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#1D9E75" strokeWidth="10"
+                strokeDasharray={`${0.70 * 226.2} ${226.2}`}
+                strokeDashoffset="0"
+                transform="rotate(-90 50 50)" />
+              {/* Health & community — 22% (252° to 331.2°) */}
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#7F77DD" strokeWidth="10"
+                strokeDasharray={`${0.22 * 226.2} ${226.2}`}
+                strokeDashoffset={`${-0.70 * 226.2}`}
+                transform="rotate(-90 50 50)" />
+              {/* Water & flood — 4% */}
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#378ADD" strokeWidth="10"
+                strokeDasharray={`${0.04 * 226.2} ${226.2}`}
+                strokeDashoffset={`${-0.92 * 226.2}`}
+                transform="rotate(-90 50 50)" />
+              {/* Climate / carbon — 4% */}
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#5DCAA5" strokeWidth="10"
+                strokeDasharray={`${0.04 * 226.2} ${226.2}`}
+                strokeDashoffset={`${-0.96 * 226.2}`}
+                transform="rotate(-90 50 50)" />
+            </svg>
+            {/* Legend */}
+            <div className="space-y-2 text-[11px]">
+              {[
+                { label: t("Property & economic", "Foncière et économique"), color: "#1D9E75", share: "70%" },
+                { label: t("Health & community", "Santé et communauté"), color: "#7F77DD", share: "22%" },
+                { label: t("Water & flood", "Eau et inondations"), color: "#378ADD", share: "4%" },
+                { label: t("Climate / carbon", "Climat / carbone"), color: "#5DCAA5", share: "4%" },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: item.color }} />
+                  <span className="text-slate-700">{item.label}</span>
+                  <span className="text-slate-400 ml-auto">{item.share}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="text-[10px] text-slate-400">
+            {t(
+              "Indicative aggregated split based on demo project assumptions",
+              "Ventilation indicative agrégée basée sur les hypothèses de projets de démonstration"
+            )}
+          </p>
+        </div>
+
+        {/* Card 3 — Equity & coverage context */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-md space-y-4">
+          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+            {t("Equity & coverage context", "Contexte d’équité et de couverture")}
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <p className="text-lg font-medium" style={{ color: "#854F0B" }}>24 / 88</p>
+              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+                {t(
+                  "projects in areas with a canopy cover below 10% of the urban area",
+                  "projets dans des zones avec un couvert végétal inférieur à 10 % de la zone urbaine"
+                )}
+              </p>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <p className="text-lg font-medium" style={{ color: "#3C3489" }}>19 / 88</p>
+              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+                {t(
+                  "projects in communities with a high social vulnerability index score",
+                  "projets dans des communautés ayant un indice élevé de vulnérabilité sociale"
+                )}
+              </p>
+            </div>
+          </div>
+          {/* Progress bars */}
+          <div className="space-y-3">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[11px] text-slate-700">{t("Indigenous groups engaged", "Groupes autochtones engagés")}</span>
+                <span className="text-[11px] font-medium text-slate-900">32</span>
+              </div>
+              <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: "60%", background: "#7F77DD" }} />
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[11px] text-slate-700">{t("Municipalities with equity strategy", "Municipalités avec stratégie d’équité")}</span>
+                <span className="text-[11px] font-medium text-slate-900">69 / 88</span>
+              </div>
+              <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: "78%", background: "#1D9E75" }} />
+              </div>
+            </div>
+          </div>
+          <p className="text-[10px] text-slate-400">
+            {t(
+              "0 projects in Northern Canada — potential coverage gap for outreach",
+              "0 projet dans le Nord du Canada — lacune potentielle de couverture pour la sensibilisation"
+            )}
+          </p>
+        </div>
+      </section>
+
+      {/* Section 6 — Two-column breakdown charts */}
+      <section className="grid gap-4 lg:grid-cols-2 items-start">
+        {/* Card 1 — Projects by region */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-md space-y-3">
+          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+            {t("Projects by region", "Projets par région")}
+          </h3>
+          <div className="space-y-2.5">
+            {[
+              { label: "Ontario", count: 36, pct: 40.9, color: "#085041" },
+              { label: t("Prairies", "Prairies"), count: 23, pct: 26.1, color: "#1D9E75" },
+              { label: t("British Columbia", "Colombie-Britannique"), count: 16, pct: 18.2, color: "#5DCAA5" },
+              { label: "Atlantic", count: 7, pct: 8.0, color: "#9FE1CB" },
+              { label: t("Quebec", "Québec"), count: 5, pct: 5.7, color: "#D3D1C7" },
+            ].map((region) => (
+              <div key={region.label}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] text-slate-700">{region.label}</span>
+                  <span className="text-[11px] text-slate-500">{region.count} ({region.pct}%)</span>
+                </div>
+                <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div
+                    className="h-full rounded-full"
+                    style={{ width: `${(region.count / 36) * 100}%`, background: region.color }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Card 2 — Projects by community size */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-md space-y-3">
+          <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
+            {t("Projects by community size", "Projets par taille de communauté")}
+          </h3>
+          <div className="flex items-center gap-4">
+            {/* Doughnut chart */}
+            <svg viewBox="0 0 100 100" className="w-28 h-28 flex-shrink-0">
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#085041" strokeWidth="12"
+                strokeDasharray={`${0.40 * 226.2} ${226.2}`}
+                strokeDashoffset="0"
+                transform="rotate(-90 50 50)" />
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#1D9E75" strokeWidth="12"
+                strokeDasharray={`${0.41 * 226.2} ${226.2}`}
+                strokeDashoffset={`${-0.40 * 226.2}`}
+                transform="rotate(-90 50 50)" />
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#9FE1CB" strokeWidth="12"
+                strokeDasharray={`${0.17 * 226.2} ${226.2}`}
+                strokeDashoffset={`${-0.81 * 226.2}`}
+                transform="rotate(-90 50 50)" />
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#D3D1C7" strokeWidth="12"
+                strokeDasharray={`${0.02 * 226.2} ${226.2}`}
+                strokeDashoffset={`${-0.98 * 226.2}`}
+                transform="rotate(-90 50 50)" />
+            </svg>
+            {/* Legend */}
+            <div className="space-y-2.5 text-[11px]">
+              {[
+                { label: t("Large", "Grande"), count: 35, pct: "40%", color: "#085041", sub: t("cities >100K pop.", "villes >100K hab.") },
+                { label: t("Medium", "Moyenne"), count: 36, pct: "41%", color: "#1D9E75", sub: t("30K–100K pop.", "30K–100K hab.") },
+                { label: t("Small", "Petite"), count: 15, pct: "17%", color: "#9FE1CB", sub: t("under 30K pop.", "moins de 30K hab.") },
+                { label: t("Unknown", "Inconnu"), count: 2, pct: "2%", color: "#D3D1C7", sub: t("not classified", "non classifié") },
+              ].map((item) => (
+                <div key={item.label} className="flex items-start gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-0.5" style={{ background: item.color }} />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-700 font-medium">{item.label}</span>
+                      <span className="text-slate-400">{item.count} · {item.pct}</span>
+                    </div>
+                    <p className="text-[10px] text-slate-400">{item.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 7 — Footer note */}
+      <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p className="text-[11px] text-slate-600 leading-relaxed">
           {t(
-            "Portfolio metrics are based on mocked projects and simplified assumptions inspired by GMF’s Growing Canada’s Community Canopies resources. They illustrate how FCM could aggregate climate, water, health and equity benefits across projects.",
-            "Les indicateurs de portefeuille reposent sur des projets fictifs et des hypothèses simplifiées inspirées des ressources de l’initiative « Cultiver les canopées communautaires du Canada » du FMV. Ils illustrent comment la FCM pourrait agréger les bénéfices climatiques, hydriques, sanitaires et d’équité à l’échelle des projets."
-          )}
-        </p>
-        <p className="text-[11px] text-slate-600">
-          {t(
-            "For actual funding applications and reporting, please refer to official guidance and tools from the Green Municipal Fund.",
-            "Pour les demandes de financement et la reddition de comptes officielles, veuillez vous référer aux outils et lignes directrices du Fonds municipal vert."
+            "Portfolio metrics are based on mocked projects and simplified assumptions inspired by GMF’s Growing Canada’s Community Canopies resources. They illustrate how FCM could aggregate climate, water, health and equity benefits across projects. For actual funding applications and reporting, please refer to official guidance and tools from the Green Municipal Fund. Project count and tree figures reflect GCCC programme data as of October 2025.",
+            "Les indicateurs de portefeuille reposent sur des projets fictifs et des hypothèses simplifiées inspirées des ressources de l’initiative « Cultiver les canopées communautaires du Canada » du FMV. Ils illustrent comment la FCM pourrait agréger les bénéfices climatiques, hydriques, sanitaires et d’équité à l’échelle des projets. Pour les demandes de financement et la reddition de comptes officielles, veuillez vous référer aux outils et lignes directrices du Fonds municipal vert. Le nombre de projets et les chiffres d’arbres reflètent les données du programme GCCC en date d’octobre 2025."
           )}
         </p>
       </section>
