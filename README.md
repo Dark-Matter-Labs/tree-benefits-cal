@@ -29,10 +29,22 @@ From `/Users/gurden/Documents/code/tree-benefits-cal`:
 
 ```bash
 npm install
+cp .env.example .env.local   # then add your Mapbox token
 npm run dev
 ```
 
 Then open `http://localhost:3000` in your browser.
+
+### Environment Variables
+
+| Variable | Required | What it does |
+| --- | --- | --- |
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | Yes, for maps | Mapbox public token (`pk.…`) used by the portfolio maps. |
+
+- Locally, put it in `.env.local` (gitignored). `.env.example` lists every variable.
+- On Vercel, set it under **Project → Settings → Environment Variables** for Production and Preview.
+- If it is missing, the maps show "Map unavailable: set NEXT_PUBLIC_MAPBOX_TOKEN". The rest of the app still works.
+- It is a public token, so it ships to the browser. Restrict it to the site's URLs in the Mapbox account.
 
 ### Workshop Talking Points
 

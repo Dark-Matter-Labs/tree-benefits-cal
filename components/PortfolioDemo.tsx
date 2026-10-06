@@ -5,6 +5,22 @@ import Map, { Marker, Popup, MapRef } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { calculateBenefits } from "@/lib/benefitCalculator";
 
+// Set NEXT_PUBLIC_MAPBOX_TOKEN in .env.local (and in Vercel). There is no fallback token.
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+function MapUnavailable({ message }: { message: string }) {
+  return (
+    <div
+      role="status"
+      className="w-full h-full flex items-center justify-center bg-slate-50 p-4 text-center"
+    >
+      <p className="text-[12px] text-slate-500">
+        {message} <code className="font-mono">NEXT_PUBLIC_MAPBOX_TOKEN</code>
+      </p>
+    </div>
+  );
+}
+
 type Language = "en" | "fr";
 
 interface PortfolioDemoProps {
@@ -2295,24 +2311,28 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
               {t("Project location", "Emplacement du projet")}
             </p>
             <div className="rounded-lg overflow-hidden" style={{ height: "240px" }}>
-              <Map
-                longitude={selectedProject.lng}
-                latitude={selectedProject.lat}
-                zoom={12}
-                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"}
-                style={{ width: "100%", height: "100%" }}
-                mapStyle="mapbox://styles/mapbox/light-v11"
-              >
-                <Marker
+              {MAPBOX_TOKEN ? (
+                <Map
                   longitude={selectedProject.lng}
                   latitude={selectedProject.lat}
-                  anchor="bottom"
+                  zoom={12}
+                  mapboxAccessToken={MAPBOX_TOKEN}
+                  style={{ width: "100%", height: "100%" }}
+                  mapStyle="mapbox://styles/mapbox/light-v11"
                 >
-                  <div className="w-8 h-8 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">🌲</span>
-                  </div>
-                </Marker>
-              </Map>
+                  <Marker
+                    longitude={selectedProject.lng}
+                    latitude={selectedProject.lat}
+                    anchor="bottom"
+                  >
+                    <div className="w-8 h-8 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">🌲</span>
+                    </div>
+                  </Marker>
+                </Map>
+              ) : (
+                <MapUnavailable message={t("Map unavailable: set", "Carte indisponible : définir")} />
+              )}
             </div>
             <p className="text-[10px] text-slate-400 mt-2">
               {t(
@@ -3225,56 +3245,60 @@ export function PortfolioDemo({ language }: PortfolioDemoProps) {
               </button>
             )}
           </div>
-          <Map
-            ref={mapRef}
-            {...viewState}
-            onMove={evt => setViewState(evt.viewState)}
-            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"}
-            style={{ width: "100%", height: "100%" }}
-            mapStyle="mapbox://styles/mapbox/light-v11"
-          >
-            {filteredProjects.map(p => (
-              <Marker
-                key={p.id}
-                longitude={p.lng}
-                latitude={p.lat}
-                anchor="bottom"
-                onClick={() => {
-                  setSelectedProject(p);
-                  setView("project");
-                }}
-              >
-                <div className="cursor-pointer">
-                  <div className="w-6 h-6 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">🌲</span>
+          {MAPBOX_TOKEN ? (
+            <Map
+              ref={mapRef}
+              {...viewState}
+              onMove={evt => setViewState(evt.viewState)}
+              mapboxAccessToken={MAPBOX_TOKEN}
+              style={{ width: "100%", height: "100%" }}
+              mapStyle="mapbox://styles/mapbox/light-v11"
+            >
+              {filteredProjects.map(p => (
+                <Marker
+                  key={p.id}
+                  longitude={p.lng}
+                  latitude={p.lat}
+                  anchor="bottom"
+                  onClick={() => {
+                    setSelectedProject(p);
+                    setView("project");
+                  }}
+                >
+                  <div className="cursor-pointer">
+                    <div className="w-6 h-6 bg-primary-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">🌲</span>
+                    </div>
                   </div>
-                </div>
-              </Marker>
-            ))}
+                </Marker>
+              ))}
 
-            {selectedProject && (
-              <Popup
-                longitude={selectedProject.lng}
-                latitude={selectedProject.lat}
-                anchor="bottom"
-                onClose={() => setSelectedProject(null)}
-                closeButton={true}
-                closeOnClick={false}
-              >
-                <div className="p-2 text-xs">
-                  <div className="font-semibold text-slate-900 mb-1">
-                    {selectedProject.name}
+              {selectedProject && (
+                <Popup
+                  longitude={selectedProject.lng}
+                  latitude={selectedProject.lat}
+                  anchor="bottom"
+                  onClose={() => setSelectedProject(null)}
+                  closeButton={true}
+                  closeOnClick={false}
+                >
+                  <div className="p-2 text-xs">
+                    <div className="font-semibold text-slate-900 mb-1">
+                      {selectedProject.name}
+                    </div>
+                    <div className="text-slate-600 mb-1">
+                      {selectedProject.municipality}, {selectedProject.province}
+                    </div>
+                    <div className="text-slate-600">
+                      🌲 {selectedProject.trees.toLocaleString()} {t("trees", "arbres")}
+                    </div>
                   </div>
-                  <div className="text-slate-600 mb-1">
-                    {selectedProject.municipality}, {selectedProject.province}
-                  </div>
-                  <div className="text-slate-600">
-                    🌲 {selectedProject.trees.toLocaleString()} {t("trees", "arbres")}
-                  </div>
-                </div>
-              </Popup>
-            )}
-          </Map>
+                </Popup>
+              )}
+            </Map>
+          ) : (
+            <MapUnavailable message={t("Map unavailable: set", "Carte indisponible : définir")} />
+          )}
         </div>
 
         {/* Project List */}
